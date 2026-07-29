@@ -38,11 +38,11 @@
 
 ## Phase 2: Auth & User System
 
-### 2.1 Authentication
-- [ ] Sign up / Login pages (email/password)
-- [ ] Google OAuth integration
-- [ ] Password reset flow
-- [ ] Persistent auth (onAuthStateChanged → Zustand)
+### 2.1 Authentication (Firebase Auth)
+- [x] Login page (`/login`) — email/password + Google OAuth via Firebase Auth
+- [x] Register page (`/register`) — email/password + Google OAuth via Firebase Auth, auto-creates Firestore doc
+- [ ] Forgot password (`/forgot-password`) — Firebase Auth password reset
+- [x] Persistent auth (onAuthStateChanged → Zustand)
 - [ ] Protected routes (redirect to login if not authed)
 - [ ] Auth middleware for premium-only routes
 
@@ -83,14 +83,9 @@
   - `createdAt` / `updatedAt` (timestamps)
 - [ ] `templateFiles/{templateId}` — secure Storage path for premium files
 
-### 3.2 Admin Panel (Basic)
-- [ ] Admin dashboard (simple role-based: `role: 'admin'`)
-- [ ] Add / Edit / Delete templates
-- [ ] Bulk upload preview images
-- [ ] Manage template files (upload new version)
-- [ ] View download stats
-
 ---
+
+*Admin/template management is handled via a separate CMS — not part of this project.*
 
 ## Phase 4: Public Site — UI & Pages
 
@@ -237,8 +232,7 @@
 /forgot-password    → Reset Password
 /account            → Dashboard / Profile
 /account/downloads  → Download History
-/admin              → Admin Dashboard (admin role)
-/admin/templates    → Manage Templates
+# Admin is handled via a separate CMS
 ```
 
 ### Component Hierarchy
@@ -267,8 +261,7 @@ App
 │   │   └── PricingCard × 2 (Free / Premium)
 │   ├── AuthPage (Login / Register / ForgotPassword)
 │   ├── AccountPage
-│   └── AdminPage
-│       └── TemplateForm (add / edit)
+│   └── ...
 └── Shared Components
     ├── Button, Card, Badge, Input, Modal
     ├── PriceTierBadge, FrameworkBadge
@@ -284,7 +277,7 @@ users/{uid}
 ├── displayName: string
 ├── email: string
 ├── photoURL: string?
-├── role: 'user' | 'admin'
+├── role: 'user' | 'admin'  # admin role is for the external CMS
 ├── subscription: {
 │     status: 'active' | 'past_due' | 'canceled' | 'incomplete',
 │     stripeCustomerId: string?,

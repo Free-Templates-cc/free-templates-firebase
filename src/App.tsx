@@ -11,7 +11,6 @@ import { PricingPage } from './pages/PricingPage'
 import { LoginPage } from './pages/auth/LoginPage'
 import { RegisterPage } from './pages/auth/RegisterPage'
 import { AccountPage } from './pages/AccountPage'
-import { AdminPage } from './pages/admin/AdminPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 
 export default function App() {
@@ -29,7 +28,6 @@ export default function App() {
               <Route path="register" element={<RegisterPage />} />
               <Route path="account" element={<AccountPage />} />
               <Route path="account/downloads" element={<AccountPage />} />
-              <Route path="admin" element={<AdminPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>

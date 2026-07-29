@@ -4,11 +4,12 @@ import { useUIStore } from '../../stores/uiStore'
 import { Button } from '../ui/Button'
 import { Search, Menu, X, Moon, Sun, Download, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { auth } from '../../lib/firebase'
 import { signOut } from 'firebase/auth'
 
 export function Navbar() {
-  const { user, profile, isAdmin } = useAuthStore()
+  const { user, profile } = useAuthStore()
   const { isDarkMode, toggleDarkMode, isMobileMenuOpen, setMobileMenuOpen } = useUIStore()
   const navigate = useNavigate()
   const [showUserMenu, setShowUserMenu] = useState(false)
@@ -94,11 +95,7 @@ export function Navbar() {
                       <Download className="mr-2 inline h-4 w-4" />
                       My Downloads
                     </Link>
-                    {isAdmin && (
-                      <Link to="/admin" onClick={() => setShowUserMenu(false)} className="block px-4 py-2 text-sm font-medium text-primary-600 hover:bg-gray-100 dark:hover:bg-gray-800">
-                        Admin Panel
-                      </Link>
-                    )}
+
                     <hr className="my-1 border-gray-200 dark:border-gray-700" />
                     <button onClick={handleSignOut} className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800">
                       Sign Out
