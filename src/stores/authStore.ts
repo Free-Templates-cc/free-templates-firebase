@@ -43,7 +43,8 @@ export function initAuthListener() {
             useAuthStore.setState({
               profile,
               isPremium:
-                profile.subscription?.tier === 'premium' && profile.subscription?.status === 'active',
+                profile.subscription?.tier === 'premium' &&
+                profile.subscription?.status === 'active',
               isAdmin: profile.role === 'admin',
               isLoading: false,
               initialized: true,

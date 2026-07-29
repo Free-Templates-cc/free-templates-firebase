@@ -384,12 +384,12 @@ Comprehensive audit of every component, page, integration, and quality metric.
 |-----|--------|---------------|
 | **Firebase credentials in .env** | 🔴 App connects to test Firebase | Placeholder values in `.env` (test-project, test.firebaseapp.com). Need real API key, project ID, auth domain, storage bucket, etc. from Firebase Console |
 | **Live template images** | 🔴 No visuals | mock data has `mainImage: ''` and `previewImages: []` — no images anywhere. The existing free-templates.cc has 1,000+ template screenshots. Need to migrate or generate |
-| **Email verification** | 🔴 Users unverified after register | Registration creates account but doesn't send verification email. No `sendEmailVerification()` call. App doesn't check `emailVerified` status before allowing logins |
-| **Terms acceptance on register** | 🔴 Legal gap | RegisterPage doesn't require users to accept Terms of Service. Could be a compliance issue |
+| **Email verification** | ✅ Implemented | `sendEmailVerification()` called after account creation. User navigated to /login with toast to verify before signing in |
+| **Terms acceptance on register** | ✅ Implemented | RegisterPage has terms acceptance checkbox with zod validation (`z.literal(true)`). Links to /terms and /privacy |
 | **Analytics** | 🔴 No tracking | Firebase Analytics or Google Analytics not integrated. Can't measure page views, downloads, conversions |
 | **Domain configuration** | 🔴 custom domain not connected | free-templates.cc → Firebase Hosting custom domain not configured. Site only accessible at firebase- generated URL |
-| **Rate limiting on Cloud Functions** | 🔴 No DDoS protection | All onRequest functions have no rate limiting. A bad actor could call createCheckoutSession or getDownloadUrl in a loop |
-| **CSP / security headers** | 🔴 Missing | Firebase Hosting allows custom headers. No Content-Security-Policy, Strict-Transport-Security, or other security headers configured |
+| **Rate limiting on Cloud Functions** | ✅ Implemented | Token-bucket rate limiter (`functions/src/rateLimiter.ts`) applied to createCheckoutSession (10/min/IP), getDownloadUrl (30/min/IP), cancel/reactivate (5/min/uid), billing portal (10/min/uid) |
+| **CSP / security headers** | ✅ Configured | HSTS, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, and Content-Security-Policy added to firebase.json hosting headers |
 | **Image optimization** | 🔴 Missing | No build-time image optimization, no responsive image srcsets, no WebP/AVIF conversion. LazyImage exists but has nothing to lazy-load |
 | **Lighthouse audit** | 🔴 Needs deployment | Can't run Lighthouse until site is deployed to a real URL |
 
@@ -399,7 +399,7 @@ Comprehensive audit of every component, page, integration, and quality metric.
 
 | Area | Rating | Notes |
 |------|--------|-------|
-| **TypeScript strictness** | 🟡 Moderate | `tsconfig.app.json` uses Vite defaults: `skipLibCheck: true`, `noUnusedLocals: true`, `noUnusedParameters: true`. No `strict: true` or `strictNullChecks`. Functioning well but could be tightened |
+| **TypeScript strictness** | ✅ Tightened | Added `strict: true`, `strictNullChecks: true`, `noUncheckedIndexedAccess: true` to `tsconfig.app.json`. Build passes with zero errors
 | **Error handling** | ✅ Good | ErrorBoundary wraps the entire app. Try/catch in Cloud Functions. BrowsePage has error state with retry button. Missing: no offline detection, no React Query retry config |
 | **Loading states** | ✅ Good | PageLoader for lazy routes. Skeleton components used on BrowsePage (card grid), TemplateDetailPage. authStore has `isLoading` flag. Missing: no loading state on AccountPage subscription actions |
 | **Empty states** | ✅ Adequate | BrowsePage: "No templates found" with suggestion to adjust filters. DownloadHistoryPage: empty message with link to browse. Missing: empty states on HomePage categories |
@@ -422,15 +422,15 @@ Ordered by impact vs effort:
 | 🔴 P0 | Deploy Cloud Functions with real Stripe keys + Price IDs | 1h | Enables subscription payments |
 | 🔴 P0 | Migrate 1,000+ template images from free-templates.cc | 4-8h | Makes the site visually functional |
 | 🟡 P1 | Wire up getDownloadUrl → download buttons | 2h | Enables actual template downloads |
-| 🟡 P1 | Add email verification flow | 1h | Auth security + best practice |
+| 🟡 P1 | Add email verification flow | ✅ Done | `sendEmailVerification()` on register, redirect to /login with toast |
 | 🟡 P1 | Set up Firebase Hosting + connect custom domain | 1h | Site goes live at free-templates.cc |
-| 🟡 P1 | Add terms acceptance checkbox to RegisterPage | 30 min | Legal compliance |
-| 🟡 P1 | Auth store onSnapshot error callback | 15 min | Prevents infinite loading state |
+| 🟡 P1 | Add terms acceptance checkbox to RegisterPage | ✅ Done | zod-validated checkbox, links to /terms and /privacy |
+| 🟡 P1 | Auth store onSnapshot error callback | ✅ Done | Error callback prevents infinite loading on Firestore read failure |
 | 🟢 P2 | Replace PricingPage "Register" links with createCheckoutSession | 2h | Working subscription purchase flow |
-| 🟢 P2 | Add rate limiting to critical Cloud Functions | 1h | DDoS protection |
-| 🟢 P2 | Configure CSP + security headers in firebase.json | 30 min | Security baseline |
+| 🟢 P2 | Add rate limiting to critical Cloud Functions | ✅ Done | Token-bucket rate limiter on all payment/download endpoints |
+| 🟢 P2 | Configure CSP + security headers in firebase.json | ✅ Done | HSTS, CSP, X-Content-Type-Options, Referrer-Policy, Permissions-Policy |
 | 🟢 P2 | Integrate Firebase Analytics | 1h | User behavior insights |
-| 🔵 P3 | Tighten TypeScript config (strict: true) | 1h | Better type safety |
+| 🔵 P3 | Tighten TypeScript config (strict: true) | ✅ Done | Added strict + strictNullChecks + noUncheckedIndexedAccess, build passes clean |
 | 🔵 P3 | Add image optimization pipeline (sharp/WebP) | 2h | Faster page loads |
 | 🔵 P3 | Run Lighthouse audit | 30 min | Performance baseline |
 | 🔵 P3 | Accessibility audit + fixes | 2-4h | Inclusive design |

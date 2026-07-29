@@ -19,6 +19,7 @@ import { getStorage } from 'firebase-admin/storage'
 import Stripe from 'stripe'
 import * as admin from 'firebase-admin'
 import { PLANS, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, APP_CURRENCY } from './config'
+import { rateLimitByIp, rateLimitByUid } from './rateLimiter'
 import type { PlanKey } from './config'
 
 // ---------------------------------------------------------------------------
@@ -45,6 +46,12 @@ const storage = getStorage()
 export const createCheckoutSession = onRequest(
   { cors: true, secrets: [STRIPE_SECRET_KEY] },
   async (req, res) => {
+    // Rate limit: 10 requests per minute per IP
+    if (!rateLimitByIp(req.ip, 10, 60_000)) {
+      res.status(429).json({ error: 'Too many requests. Please slow down.' })
+      return
+    }
+
     // Only allow POST
     if (req.method !== 'POST') {
       res.status(405).json({ error: 'Method not allowed' })
@@ -365,6 +372,12 @@ async function handleSubscriptionDeleted(
 export const getDownloadUrl = onRequest(
   { cors: true },
   async (req, res) => {
+    // Rate limit: 30 req/min per IP (permissive since free templates need no auth)
+    if (!rateLimitByIp(req.ip, 30, 60_000)) {
+      res.status(429).json({ error: 'Too many requests. Please slow down.' })
+      return
+    }
+
     if (req.method !== 'POST') {
       res.status(405).json({ error: 'Method not allowed' })
       return
@@ -477,6 +490,12 @@ export const cancelSubscription = onRequest(
         return
       }
 
+      // Rate limit: 5 requests per minute per user
+      if (!rateLimitByUid(uid, 5, 60_000)) {
+        res.status(429).json({ error: 'Too many requests. Please slow down.' })
+        return
+      }
+
       // Fetch user
       const userDoc = await db.collection('users').doc(uid).get()
       if (!userDoc.exists) {
@@ -555,6 +574,12 @@ export const reactivateSubscription = onRequest(
         return
       }
 
+      // Rate limit: 5 requests per minute per user
+      if (!rateLimitByUid(uid, 5, 60_000)) {
+        res.status(429).json({ error: 'Too many requests. Please slow down.' })
+        return
+      }
+
       // Fetch user
       const userDoc = await db.collection('users').doc(uid).get()
       if (!userDoc.exists) {
@@ -627,6 +652,12 @@ export const createBillingPortalSession = onRequest(
 
       if (!uid || typeof uid !== 'string') {
         res.status(400).json({ error: 'Missing or invalid uid.' })
+        return
+      }
+
+      // Rate limit: 10 requests per minute per user
+      if (!rateLimitByUid(uid, 10, 60_000)) {
+        res.status(429).json({ error: 'Too many requests. Please slow down.' })
         return
       }
 
