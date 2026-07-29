@@ -1,13 +1,18 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '../../components/ui/Button'
 import { SEOHead } from '../../components/seo/SEOHead'
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from 'firebase/auth'
 import { auth } from '../../lib/firebase'
 import { Mail, Lock } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -18,6 +23,8 @@ type LoginForm = z.infer<typeof loginSchema>
 
 export function LoginPage() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const redirectTo = searchParams.get('redirect') || '/'
   const [error, setError] = useState('')
   const [googleLoading, setGoogleLoading] = useState(false)
 
@@ -32,8 +39,15 @@ export function LoginPage() {
   const onEmailLogin = async (data: LoginForm) => {
     setError('')
     try {
-      await signInWithEmailAndPassword(auth, data.email, data.password)
-      navigate('/')
+      const cred = await signInWithEmailAndPassword(auth, data.email, data.password)
+      if (!cred.user.emailVerified) {
+        // Allow login but warn the user
+        toast(
+          'Please verify your email address. Check your inbox (and spam folder) for the verification link.',
+          { duration: 8000, icon: '✉️' },
+        )
+      }
+      navigate(redirectTo)
     } catch (err: any) {
       setError(err.message.replace('Firebase: ', '').replace(/\(.*\)/, ''))
     }
@@ -44,7 +58,7 @@ export function LoginPage() {
     setGoogleLoading(true)
     try {
       await signInWithPopup(auth, new GoogleAuthProvider())
-      navigate('/')
+      navigate(redirectTo)
     } catch (err: any) {
       if (err.code !== 'auth/popup-closed-by-user') {
         setError(err.message.replace('Firebase: ', '').replace(/\(.*\)/, ''))

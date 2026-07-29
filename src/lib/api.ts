@@ -870,6 +870,25 @@ interface CancelSubscriptionResponse {
   status: string
 }
 
+interface CreateCheckoutSessionResponse {
+  url: string
+}
+
+/** Create a Stripe Checkout Session for subscription purchase. */
+export async function createCheckoutSession(
+  uid: string,
+  plan: string,
+  successUrl?: string,
+  cancelUrl?: string,
+): Promise<CreateCheckoutSessionResponse> {
+  return callFunction<CreateCheckoutSessionResponse>('createCheckoutSession', {
+    uid,
+    plan,
+    ...(successUrl ? { successUrl } : {}),
+    ...(cancelUrl ? { cancelUrl } : {}),
+  })
+}
+
 /** Cancel a premium subscription at period end. */
 export async function cancelSubscription(uid: string): Promise<CancelSubscriptionResponse> {
   return callFunction<CancelSubscriptionResponse>('cancelSubscription', { uid })

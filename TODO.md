@@ -426,7 +426,7 @@ Ordered by impact vs effort:
 | 🟡 P1 | Set up Firebase Hosting + connect custom domain | 1h | Site goes live at free-templates.cc |
 | 🟡 P1 | Add terms acceptance checkbox to RegisterPage | ✅ Done | zod-validated checkbox, links to /terms and /privacy |
 | 🟡 P1 | Auth store onSnapshot error callback | ✅ Done | Error callback prevents infinite loading on Firestore read failure |
-| 🟢 P2 | Replace PricingPage "Register" links with createCheckoutSession | 2h | Working subscription purchase flow |
+| 🟢 P2 | Replace PricingPage "Register" links with createCheckoutSession | ✅ Done | PricingPage calls createCheckoutSession CF; login page handles ?redirect param |
 | 🟢 P2 | Add rate limiting to critical Cloud Functions | ✅ Done | Token-bucket rate limiter on all payment/download endpoints |
 | 🟢 P2 | Configure CSP + security headers in firebase.json | ✅ Done | HSTS, CSP, X-Content-Type-Options, Referrer-Policy, Permissions-Policy |
 | 🟢 P2 | Integrate Firebase Analytics | 1h | User behavior insights |

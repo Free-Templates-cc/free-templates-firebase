@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { SEOHead } from '../components/seo/SEOHead'
 import { useAuthStore } from '../stores/authStore'
-import { Check, X } from 'lucide-react'
+import { createCheckoutSession } from '../lib/api'
+import toast from 'react-hot-toast'
+import { Check, X, Loader2 } from 'lucide-react'
 
 const plans = [
   {
@@ -37,7 +39,8 @@ const plans = [
 
 export function PricingPage() {
   const [annual, setAnnual] = useState(false)
-  const { user } = useAuthStore()
+  const [loading, setLoading] = useState(false)
+  const { user, profile } = useAuthStore()
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
@@ -131,8 +134,41 @@ export function PricingPage() {
             <div className="mt-8">
               {user ? (
                 plan.name === 'Premium' ? (
-                  <Button variant="premium" size="lg" className="w-full">
-                    Upgrade Now
+                  <Button
+                    variant="premium"
+                    size="lg"
+                    className="w-full"
+                    disabled={loading}
+                    onClick={async () => {
+                      if (!user?.uid) return
+                      setLoading(true)
+                      try {
+                        const planKey = annual ? 'premium_yearly' : 'premium_monthly'
+                        const { url } = await createCheckoutSession(
+                          user.uid,
+                          planKey,
+                          `${window.location.origin}/account?checkout=success`,
+                          `${window.location.origin}/pricing?checkout=canceled`,
+                        )
+                        window.location.href = url
+                      } catch (err: any) {
+                        toast.error(
+                          err.message || 'Failed to start checkout. Please try again.',
+                        )
+                        setLoading(false)
+                      }
+                    }}
+                  >
+                    {loading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Redirecting…
+                      </span>
+                    ) : profile?.subscription?.tier === 'premium' ? (
+                      'Manage Subscription'
+                    ) : (
+                      'Upgrade Now'
+                    )}
                   </Button>
                 ) : (
                   <Button variant="outline" size="lg" className="w-full" disabled>
@@ -140,13 +176,15 @@ export function PricingPage() {
                   </Button>
                 )
               ) : (
-                <Link to={plan.name === 'Premium' ? '/register' : '/templates'}>
+                <Link
+                  to={plan.name === 'Premium' ? `/login?redirect=${encodeURIComponent('/pricing')}` : '/templates'}
+                >
                   <Button
                     variant={plan.popular ? 'premium' : 'outline'}
                     size="lg"
                     className="w-full"
                   >
-                    {plan.name === 'Premium' ? 'Get Started' : 'Browse Free Templates'}
+                    {plan.name === 'Premium' ? 'Sign In to Upgrade' : 'Browse Free Templates'}
                   </Button>
                 </Link>
               )}
