@@ -15,7 +15,7 @@
 - [ ] Configure ESLint / Prettier
 - [x] Initialize Git with good `.gitignore`
 
-### 1.2 Firebase Setup (requires project credentials)
+### 1.2 Firebase Setup (requires project credentials) 🔲 Deferred
 - [ ] Create Firebase project
 - [ ] Enable **Firestore** (with proper indexes)
 - [ ] Enable **Firebase Auth** (email/password + Google OAuth)
@@ -41,10 +41,11 @@
 ### 2.1 Authentication (Firebase Auth)
 - [x] Login page (`/login`) — email/password + Google OAuth via Firebase Auth
 - [x] Register page (`/register`) — email/password + Google OAuth via Firebase Auth, auto-creates Firestore doc
-- [ ] Forgot password (`/forgot-password`) — Firebase Auth password reset
+- [x] Forgot password (`/forgot-password`) — Firebase Auth password reset via `sendPasswordResetEmail`
 - [x] Persistent auth (onAuthStateChanged → Zustand)
-- [ ] Protected routes (redirect to login if not authed)
-- [ ] Auth middleware for premium-only routes
+- [x] Protected routes (`ProtectedRoute` + `PremiumRoute` components)
+- [x] Form validation (react-hook-form + zod) on login and register pages
+- [ ] Auth middleware for premium-only routes (optional)
 
 ### 2.2 User Profiles
 - [ ] Firestore user document (`users/{uid}`)

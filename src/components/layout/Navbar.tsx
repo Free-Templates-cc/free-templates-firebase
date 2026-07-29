@@ -4,7 +4,6 @@ import { useUIStore } from '../../stores/uiStore'
 import { Button } from '../ui/Button'
 import { Search, Menu, X, Moon, Sun, Download, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import { auth } from '../../lib/firebase'
 import { signOut } from 'firebase/auth'
 

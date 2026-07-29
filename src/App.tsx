@@ -10,6 +10,7 @@ import { TemplateDetailPage } from './pages/TemplateDetailPage'
 import { PricingPage } from './pages/PricingPage'
 import { LoginPage } from './pages/auth/LoginPage'
 import { RegisterPage } from './pages/auth/RegisterPage'
+import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage'
 import { AccountPage } from './pages/AccountPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 
@@ -26,6 +27,7 @@ export default function App() {
               <Route path="pricing" element={<PricingPage />} />
               <Route path="login" element={<LoginPage />} />
               <Route path="register" element={<RegisterPage />} />
+              <Route path="forgot-password" element={<ForgotPasswordPage />} />
               <Route path="account" element={<AccountPage />} />
               <Route path="account/downloads" element={<AccountPage />} />
               <Route path="*" element={<NotFoundPage />} />
