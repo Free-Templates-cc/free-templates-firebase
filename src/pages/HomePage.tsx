@@ -142,7 +142,7 @@ export function HomePage() {
                   <Badge variant={tmpl.tier === 'premium' ? 'premium' : 'free'}>
                     {tmpl.tier === 'premium' ? 'Premium' : 'Free'}
                   </Badge>
-                  <Badge variant={tmpl.framework.toLowerCase() as any}>{tmpl.framework}</Badge>
+                  <Badge variant={tmpl.framework.toLowerCase().replace(/[.\s]/g, '')}>{tmpl.framework}</Badge>
                 </div>
                 <h3 className="mt-3 font-semibold text-gray-900 dark:text-white">{tmpl.name}</h3>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{tmpl.description}</p>

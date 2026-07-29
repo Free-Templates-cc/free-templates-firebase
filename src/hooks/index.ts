@@ -1,2 +1,6 @@
 export { useScrollToTop } from './useScrollToTop'
 export { useDocumentTitle } from './useDocumentTitle'
+export { useTemplates, filtersFromParams } from './useTemplates'
+export { useTemplate, useRelatedTemplates } from './useTemplate'
+export { fetchTemplates, fetchTemplateBySlug, fetchRelatedTemplates } from '../lib/api'
+export type { PageData } from '../lib/api'

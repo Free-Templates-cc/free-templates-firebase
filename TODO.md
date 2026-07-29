@@ -115,8 +115,8 @@
   - Sort by (newest, most popular, name)
 - [x] Template grid with cards
 - [x] Active filter tags with clear
-- [ ] Pagination / infinite scroll
-- [ ] React Query for data fetching with URL-to-query sync
+- [x] Pagination (paginated page numbers + prev/next)
+- [x] React Query for data fetching with URL-to-query sync (`useTemplates` hook)
 
 ### 4.4 Template Detail Page (`/templates/:slug`)
 - [x] Gallery of preview images
@@ -128,7 +128,7 @@
   - Premium + subscriber → download
   - Premium + not subscriber → "Upgrade" CTA
   - Not logged in → "Sign in to download"
-- [ ] Related templates section
+- [x] Related templates section (`useRelatedTemplates` hook)
 - [ ] Download counter (live)
 
 ### 4.5 Pricing Page (`/pricing`)
@@ -193,7 +193,7 @@
 - [x] Global error boundary
 - [x] Toast notifications for actions (download, auth, subscribe)
 - [x] Skeleton loading components
-- [ ] Empty states for search / no results
+- [x] Empty states for search / no results (BrowsePage)
 - [x] 404 page
 
 ### 6.3 Final Touches
