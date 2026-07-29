@@ -331,19 +331,109 @@ downloads/{downloadId}
 
 ---
 
-## Priorities (Progress)
+## Milestone: Implementation Audit — 2026-07-29
 
-1. ✅ Phase 1 — Project scaffold & Firebase setup
-2. ✅ Phase 4.1 — Design system & shared components
-3. ✅ Phase 2.1 — Auth pages & flow
-4. ✅ Phase 4.2–4.4 — Homepage, Browse, Detail pages
-5. 🔄 Phase 2.2–2.3 — User profiles & subscriptions (partial)
-6. 🔲 Phase 3 — Admin template management (separate CMS)
-7. ✅ Phase 5 — Cloud Functions & security rules (code written, deploy pending Firebase project)
-8. ✅ Phase 4.5–4.8 — Remaining pages (pricing, account, static)
-9. ✅ Phase 6.1 — Performance & SEO (lazy loading, sitemap, robots.txt)
-10. ✅ Phase 6.3–6.4 — Responsive design, testing, CI/CD (Vitest + E2E done; CI workflow file exists but needs admin commit with `workflow` PAT scope)
+Comprehensive audit of every component, page, integration, and quality metric.
+
+### ✅ 1. WHAT WORKS (Solid Foundations)
+
+| Category | Status | Details |
+|----------|--------|--------|
+| **Build** | ✅ Clean | Vite + TypeScript + Tailwind — zero errors, zero warnings |
+| **Tests (unit)** | ✅ 22/22 | Vitest — cn, formatNumber, formatDate, slugify, Button variants/states/ref |
+| **Tests (E2E)** | ✅ 19/19 | Playwright — home, browse filters, pricing, static pages, navigation |
+| **Lint** | ✅ 0 warnings | Oxlint — zero warnings across 58 source files |
+| **All 14 pages** | ✅ Built | Home, Browse, TemplateDetail, Pricing, Login, Register, ForgotPassword, Account, DownloadHistory, NotFound, Terms, Privacy, Contact, FAQ |
+| **UI components** | ✅ 11 built | Button (5 variants × 4 sizes), Card (Header/Content/Footer), Badge (3 variants), Input, Modal, Skeleton, Breadcrumbs, ErrorBoundary, SEOHead, LazyImage, SubscriptionBadge |
+| **Layout** | ✅ Responsive | Navbar (search, auth state, dark mode, mobile menu), Footer (4 link groups), Layout wrapper |
+| **Auth pages** | ✅ Complete | Login (email + Google), Register, ForgotPassword — all with react-hook-form + zod + Firebase Auth |
+| **Route guards** | ✅ 2 guards | ProtectedRoute (→ /login), PremiumRoute (→ /pricing) |
+| **Zustand stores** | ✅ 2 stores | authStore (onAuthStateChanged + onSnapshot to Firestore), uiStore (dark mode persistence + mobile menu) |
+| **React Query hooks** | ✅ 4 hooks | useTemplates (filtered/paginated), useTemplate (by slug), useRelatedTemplates, useTemplateDownloadCount (60s polling) |
+| **API layer** | ✅ Mock | 24 templates, filtering (search/category/framework/priceTier), sorting, pagination, download history, billing function helpers |
+| **Cloud Functions** | ✅ 8 functions | createCheckoutSession, stripeWebhook, getDownloadUrl, onTemplateDownloaded, cleanupExpiredSubscriptions, cancelSubscription, reactivateSubscription, createBillingPortalSession |
+| **Security rules** | ✅ 2 sets | Firestore (authenticated/owner/admin/premium gating) + Storage (auth download, public previews) |
+| **Seed script** | ✅ Built | scripts/seed-emulator.ts — seeds 24 templates to Firestore emulator via `npm run seed:emulators` |
+| **CI/CD workflows** | ✅ 2 files | ci.yml (lint → test → build) + deploy.yml (Firebase Hosting — production + preview channels) |
+| **Performance** | ✅ Configured | Route-level code splitting (React.lazy), LazyImage (IntersectionObserver), manualChunks (vendor/firebase/UI), sitemap + robots.txt |
+| **Code quality** | ✅ Enforced | Prettier, Husky pre-commit hook (oxlint + prettier), lint-staged, noUnusedLocals/Parameters |
+| **Config** | ✅ Complete | .env.example (18 vars), Tailwind v4 theme (indigo/amber), firebase.json, firestore.indexes.json, vite-plugin-sitemap |
+| **README** | ✅ Thorough | Setup guide, deployment commands, project tree, full CI/CD secrets table (8 secrets) |
 
 ---
 
-*Last updated: 2026-07-29 (16:45 CET)* — Fixed lint warning, husky v10 deprecation, tests/build green
+### 🟡 2. PARTIAL / NEEDS WORK
+
+| Issue | Status | What's Missing |
+|-------|--------|----------------|
+| **Mock data instead of Firestore** | 🔶 All data is mock | BrowsePage, TemplateDetailPage, HomePage (categories), DownloadHistoryPage all use mock data. No Firestore reads exist in the frontend. Swap `fetchTemplates()` → Firestore queries. |
+| **Account page subscription UI** | 🟡 Functionally built | Cancel/reactivate/portal buttons call Cloud Function APIs, but functions aren't deployed, so they'll fail in production |
+| **PricingPage subscriptions** | 🟡 Register is dead-end | "Upgrade" buttons link to /register instead of calling createCheckoutSession Cloud Function. No Stripe checkout flow wired up on the frontend. |
+| **Download button** | 🟡 UI only | TemplateDetailPage download buttons don't trigger actual downloads — no call to getDownloadUrl Cloud Function, no Storage file serving |
+| **Auth store onSnapshot** | 🟡 No error handling | `onSnapshot` listener for user profile has no error callback. If Firestore read fails (permissions, network), `isLoading` never resolves |
+| **Cloud Functions config** | 🟡 Placeholder IDs | config.ts uses placeholder Stripe Price IDs (`price_premium_monthly`, `price_premium_yearly`). Need real Price IDs from Stripe Dashboard before deploying |
+| **Build chunk warning** | 🟡 571 kB chunk | Firebase vendor chunk is 571 kB / 169 kB gzip — exceeds Vite's 500 kB default warning threshold. Needs dynamic import or further splitting |
+| **Hook index re-exports** | 🟡 Minimal | `src/hooks/index.ts` exists but only exports a subset of hooks. Some pages import directly from files |
+| **11 architect components** | 🟡 Inlined — intentional | HeroSection, FeaturedTemplates, CategoryGrid, PremiumCTA, SearchFilters, TemplateGrid, TemplateCard, ImageGallery, TemplateInfo, DownloadSection, PricingCard are inlined into pages. The architecture doc lists them but they don't exist as separate files — intentional for v1 simplicity |
+
+---
+
+### 🔴 3. MISSING / NOT IMPLEMENTED
+
+| Gap | Impact | What's Needed |
+|-----|--------|---------------|
+| **Firebase credentials in .env** | 🔴 App connects to test Firebase | Placeholder values in `.env` (test-project, test.firebaseapp.com). Need real API key, project ID, auth domain, storage bucket, etc. from Firebase Console |
+| **Live template images** | 🔴 No visuals | mock data has `mainImage: ''` and `previewImages: []` — no images anywhere. The existing free-templates.cc has 1,000+ template screenshots. Need to migrate or generate |
+| **Email verification** | 🔴 Users unverified after register | Registration creates account but doesn't send verification email. No `sendEmailVerification()` call. App doesn't check `emailVerified` status before allowing logins |
+| **Terms acceptance on register** | 🔴 Legal gap | RegisterPage doesn't require users to accept Terms of Service. Could be a compliance issue |
+| **Analytics** | 🔴 No tracking | Firebase Analytics or Google Analytics not integrated. Can't measure page views, downloads, conversions |
+| **Domain configuration** | 🔴 custom domain not connected | free-templates.cc → Firebase Hosting custom domain not configured. Site only accessible at firebase- generated URL |
+| **Rate limiting on Cloud Functions** | 🔴 No DDoS protection | All onRequest functions have no rate limiting. A bad actor could call createCheckoutSession or getDownloadUrl in a loop |
+| **CSP / security headers** | 🔴 Missing | Firebase Hosting allows custom headers. No Content-Security-Policy, Strict-Transport-Security, or other security headers configured |
+| **Image optimization** | 🔴 Missing | No build-time image optimization, no responsive image srcsets, no WebP/AVIF conversion. LazyImage exists but has nothing to lazy-load |
+| **Lighthouse audit** | 🔴 Needs deployment | Can't run Lighthouse until site is deployed to a real URL |
+
+---
+
+### 📊 4. CODE QUALITY OBSERVATIONS
+
+| Area | Rating | Notes |
+|------|--------|-------|
+| **TypeScript strictness** | 🟡 Moderate | `tsconfig.app.json` uses Vite defaults: `skipLibCheck: true`, `noUnusedLocals: true`, `noUnusedParameters: true`. No `strict: true` or `strictNullChecks`. Functioning well but could be tightened |
+| **Error handling** | ✅ Good | ErrorBoundary wraps the entire app. Try/catch in Cloud Functions. BrowsePage has error state with retry button. Missing: no offline detection, no React Query retry config |
+| **Loading states** | ✅ Good | PageLoader for lazy routes. Skeleton components used on BrowsePage (card grid), TemplateDetailPage. authStore has `isLoading` flag. Missing: no loading state on AccountPage subscription actions |
+| **Empty states** | ✅ Adequate | BrowsePage: "No templates found" with suggestion to adjust filters. DownloadHistoryPage: empty message with link to browse. Missing: empty states on HomePage categories |
+| **Error states** | 🟡 Partial | BrowsePage: error with retry. TemplateDetailPage: 404 + link back. Missing: error state in DownloadHistoryPage, AccountPage (silent failures for subscription actions), HomePage |
+| **Accessibility** | 🟡 Needs audit | No obvious aria-labels on icon-only buttons, no keyboard event handlers on custom elements, Modal doesn't trap focus. Dark mode respects system preference? |
+| **Responsive design** | ✅ Good baseline | Tailwind breakpoints used consistently (sm/md/lg/xl). Mobile hamburger menu works. Template grid adapts 1→2→3 columns. Filters collapse on mobile |
+| **Edge cases** | 🟡 Partial | Slugify handles edge cases correctly (tested). But: empty search results handled, what about very long template names? What about special characters in URLs? |
+| **Performance** | ✅ Good | React.lazy code splitting, manualChunks, LazyImage, Skeleton for perceived performance. Bundle size is reasonable (571 kB firebase chunk is the main concern) |
+
+---
+
+### 🎯 PRIORITY ACTION ITEMS
+
+Ordered by impact vs effort:
+
+| Priority | Task | Effort | Impact |
+|----------|------|--------|--------|
+| 🔴 P0 | Fill in real Firebase credentials → test dev builds | 15 min | Unblocks all Firebase features |
+| 🔴 P0 | Connect BrowsePage → Firestore for live template data | 2-3h | Site becomes real instead of mock |
+| 🔴 P0 | Deploy Cloud Functions with real Stripe keys + Price IDs | 1h | Enables subscription payments |
+| 🔴 P0 | Migrate 1,000+ template images from free-templates.cc | 4-8h | Makes the site visually functional |
+| 🟡 P1 | Wire up getDownloadUrl → download buttons | 2h | Enables actual template downloads |
+| 🟡 P1 | Add email verification flow | 1h | Auth security + best practice |
+| 🟡 P1 | Set up Firebase Hosting + connect custom domain | 1h | Site goes live at free-templates.cc |
+| 🟡 P1 | Add terms acceptance checkbox to RegisterPage | 30 min | Legal compliance |
+| 🟡 P1 | Auth store onSnapshot error callback | 15 min | Prevents infinite loading state |
+| 🟢 P2 | Replace PricingPage "Register" links with createCheckoutSession | 2h | Working subscription purchase flow |
+| 🟢 P2 | Add rate limiting to critical Cloud Functions | 1h | DDoS protection |
+| 🟢 P2 | Configure CSP + security headers in firebase.json | 30 min | Security baseline |
+| 🟢 P2 | Integrate Firebase Analytics | 1h | User behavior insights |
+| 🔵 P3 | Tighten TypeScript config (strict: true) | 1h | Better type safety |
+| 🔵 P3 | Add image optimization pipeline (sharp/WebP) | 2h | Faster page loads |
+| 🔵 P3 | Run Lighthouse audit | 30 min | Performance baseline |
+| 🔵 P3 | Accessibility audit + fixes | 2-4h | Inclusive design |
+| 🔵 P3 | Add offline detection / retry logic to React Query | 1h | Better UX on poor connections |
+
+---
