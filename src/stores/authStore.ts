@@ -35,19 +35,32 @@ export function initAuthListener() {
 
       // Listen to user profile in Firestore
       const userDocRef = doc(db, 'users', user.uid)
-      profileUnsubscribe = onSnapshot(userDocRef, (snapshot) => {
-        if (snapshot.exists()) {
-          const profile = snapshot.data() as UserProfile
-          useAuthStore.setState({
-            profile,
-            isPremium:
-              profile.subscription?.tier === 'premium' && profile.subscription?.status === 'active',
-            isAdmin: profile.role === 'admin',
-            isLoading: false,
-            initialized: true,
-          })
-        } else {
-          // User document doesn't exist yet (just signed up)
+      profileUnsubscribe = onSnapshot(
+        userDocRef,
+        (snapshot) => {
+          if (snapshot.exists()) {
+            const profile = snapshot.data() as UserProfile
+            useAuthStore.setState({
+              profile,
+              isPremium:
+                profile.subscription?.tier === 'premium' && profile.subscription?.status === 'active',
+              isAdmin: profile.role === 'admin',
+              isLoading: false,
+              initialized: true,
+            })
+          } else {
+            // User document doesn't exist yet (just signed up)
+            useAuthStore.setState({
+              profile: null,
+              isPremium: false,
+              isAdmin: false,
+              isLoading: false,
+              initialized: true,
+            })
+          }
+        },
+        (error) => {
+          console.error('Firestore onSnapshot error for user profile:', error)
           useAuthStore.setState({
             profile: null,
             isPremium: false,
@@ -55,8 +68,8 @@ export function initAuthListener() {
             isLoading: false,
             initialized: true,
           })
-        }
-      })
+        },
+      )
     } else {
       // Clean up profile listener
       if (profileUnsubscribe) {

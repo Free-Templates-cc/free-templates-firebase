@@ -10,9 +10,11 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   updateProfile,
+  sendEmailVerification,
 } from 'firebase/auth'
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '../../lib/firebase'
+import toast from 'react-hot-toast'
 import { Mail, Lock, User } from 'lucide-react'
 
 const registerSchema = z
@@ -21,6 +23,9 @@ const registerSchema = z
     email: z.string().email('Invalid email address'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
     confirmPassword: z.string(),
+    termsAccepted: z.literal(true, {
+      errorMap: () => ({ message: 'You must accept the Terms of Service' }),
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
@@ -64,7 +69,13 @@ export function RegisterPage() {
       const cred = await createUserWithEmailAndPassword(auth, data.email, data.password)
       await updateProfile(cred.user, { displayName: data.displayName })
       await createUserDoc(cred.user.uid, data.displayName, data.email)
-      navigate('/')
+      // Send email verification
+      await sendEmailVerification(cred.user)
+      toast.success(
+        'Account created! Please check your email to verify your address before signing in.',
+        { duration: 6000 },
+      )
+      navigate('/login')
     } catch (err: any) {
       setError(err.message.replace('Firebase: ', '').replace(/\(.*\)/, ''))
     }
@@ -190,6 +201,29 @@ export function RegisterPage() {
               <p className="mt-1 text-xs text-red-500">{errors.confirmPassword.message}</p>
             )}
           </div>
+
+          {/* Terms acceptance */}
+          <div className="flex items-start gap-2">
+            <input
+              type="checkbox"
+              id="termsAccepted"
+              {...register('termsAccepted')}
+              className="mt-1 h-4 w-4 shrink-0 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-gray-600"
+            />
+            <label htmlFor="termsAccepted" className="text-sm text-gray-600 dark:text-gray-400">
+              I accept the{' '}
+              <Link to="/terms" className="font-medium text-primary-600 hover:text-primary-500">
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link to="/privacy" className="font-medium text-primary-600 hover:text-primary-500">
+                Privacy Policy
+              </Link>
+            </label>
+          </div>
+          {errors.termsAccepted && (
+            <p className="text-xs text-red-500">{errors.termsAccepted.message}</p>
+          )}
 
           <Button type="submit" isLoading={isSubmitting} size="lg" className="w-full">
             Create Account
