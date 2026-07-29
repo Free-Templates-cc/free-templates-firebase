@@ -8,14 +8,14 @@
 ## Phase 1: Foundation
 
 ### 1.1 Project Setup
-- [ ] Scaffold Vite + React + TypeScript project (`npm create vite@latest . -- --template react-ts`)
-- [ ] Install & configure Tailwind CSS
-- [ ] Install dependencies: `react-router-dom`, `@tanstack/react-query`, `zustand`, `firebase`, `react-hook-form`, `zod`, `react-hot-toast`
-- [ ] Set up folder structure (see Architecture below)
+- [x] Scaffold Vite + React + TypeScript project (`npm create vite@latest . -- --template react-ts`)
+- [x] Install & configure Tailwind CSS
+- [x] Install dependencies: `react-router-dom`, `@tanstack/react-query`, `zustand`, `firebase`, `react-hook-form`, `zod`, `react-hot-toast`, `clsx`, `tailwind-merge`, `lucide-react`, `react-helmet-async`
+- [x] Set up folder structure
 - [ ] Configure ESLint / Prettier
-- [ ] Initialize Git with good `.gitignore`
+- [x] Initialize Git with good `.gitignore`
 
-### 1.2 Firebase Setup
+### 1.2 Firebase Setup (requires project credentials)
 - [ ] Create Firebase project
 - [ ] Enable **Firestore** (with proper indexes)
 - [ ] Enable **Firebase Auth** (email/password + Google OAuth)
@@ -25,10 +25,14 @@
 - [ ] Add Firebase config to `.env`
 
 ### 1.3 Core Configuration
-- [ ] Set up React Router (routes layout)
-- [ ] Initialize **React Query** client
-- [ ] Initialize **Zustand** stores (auth, UI, subscription)
-- [ ] Set up **Firebase** SDK initialization
+- [x] Set up React Router (routes layout)
+- [x] Initialize **React Query** client
+- [x] Initialize **Zustand** stores (auth, UI)
+- [x] Set up **Firebase** SDK initialization
+- [x] Create shared UI components (Button, Badge, Card)
+- [x] Build Navbar with auth state, search, dark mode
+- [x] Build Footer
+- [x] Build Layout component
 
 ---
 
@@ -126,21 +130,22 @@
 - [ ] Download counter
 
 ### 4.5 Pricing Page (`/pricing`)
-- [ ] Compare free vs premium tiers
-- [ ] Monthly / yearly toggle
-- [ ] Features table
-- [ ] CTA → Stripe checkout
+- [x] Compare free vs premium tiers
+- [x] Monthly / yearly toggle
+- [x] Features comparison
+- [x] CTA → Stripe checkout
 
 ### 4.6 Auth Pages
-- [ ] Login (`/login`)
-- [ ] Register (`/register`)
+- [x] Login (`/login`) — email/password + Google OAuth
+- [x] Register (`/register`) — email/password + Google OAuth, auto-creates Firestore doc
 - [ ] Reset password (`/reset-password`)
-- [ ] Clean form design with validation
+- [ ] Form validation (react-hook-form + zod)
 
 ### 4.7 Account Page (`/account`)
-- [ ] Profile details (name, email)
-- [ ] Subscription status & management
+- [x] Profile details (name, email)
+- [x] Subscription status & management
 - [ ] Download history / My downloads
+- [x] Loading state & redirect
 - [ ] Change password
 
 ### 4.8 Static Pages
