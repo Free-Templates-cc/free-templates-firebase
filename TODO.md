@@ -197,9 +197,14 @@
 - [ ] 404 page
 
 ### 6.3 Final Touches
+- [ ] Update README.md with project info, setup instructions, and stack
 - [ ] Responsive design (mobile-first)
 - [ ] Cross-browser testing
 - [ ] Analytics (Firebase Analytics or Google Analytics)
+
+### 6.4 Testing
+- [ ] Set up unit tests (Vitest)
+- [ ] Set up E2E tests (Playwright)
 - [ ] Domain config (free-templates.cc → Firebase Hosting custom domain)
 
 ---
