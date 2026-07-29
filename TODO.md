@@ -346,4 +346,4 @@ downloads/{downloadId}
 
 ---
 
-*Last updated: 2026-07-29 (13:35 CET)*
+*Last updated: 2026-07-29 (16:45 CET)* — Fixed lint warning, husky v10 deprecation, tests/build green
