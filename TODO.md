@@ -202,9 +202,10 @@
 - [ ] Cross-browser testing
 - [ ] Analytics (Firebase Analytics or Google Analytics)
 
-### 6.4 Testing
+### 6.4 Testing & CI
 - [ ] Set up unit tests (Vitest)
 - [ ] Set up E2E tests (Playwright)
+- [ ] CI/CD — GitHub Actions (lint, test, build, deploy)
 - [ ] Domain config (free-templates.cc → Firebase Hosting custom domain)
 
 ---
