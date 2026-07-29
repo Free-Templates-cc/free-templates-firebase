@@ -74,22 +74,10 @@
 ## Phase 3: Template Management (Admin)
 
 ### 3.1 Firestore Data Model
-- [ ] `templates/{templateId}` — fields:
-  - `name` (string)
-  - `slug` (string, unique)
-  - `description` (string)
-  - `category` (string — business, portfolio, ecommerce, landing, etc.)
-  - `framework` (string — Next.js, Gatsby, Nuxt, etc.)
-  - `priceTier` ('free' | 'premium')
-  - `demoUrl` (string, optional)
-  - `githubUrl` (string)
-  - `previewImages` (array of Storage URLs)
-  - `mainImage` (string URL)
-  - `tags` (array of strings)
-  - `features` (array of strings)
-  - `downloads` (number)
-  - `createdAt` / `updatedAt` (timestamps)
-- [ ] `templateFiles/{templateId}` — secure Storage path for premium files
+- [x] `templates/{templateId}` — fields (defined in TypeScript types, Firestore rules, and indexes)
+- [x] `templateFiles/{templateId}` — secure Storage path for premium files (defined in storage.rules)
+- [x] Seed script (`scripts/seed-emulator.ts`) — populates Firestore emulator with 24 mock templates
+- [x] npm script: `npm run seed:emulators` (runs via `npx tsx`)
 
 ---
 
