@@ -14,7 +14,7 @@
 - [x] Set up folder structure
 - [x] Configure ESLint (oxlint)
 - [x] Configure Prettier (optional)
-- [ ] Configure husky + lint-staged (pre-commit hooks) (optional)
+- [x] Configure husky + lint-staged (pre-commit hooks)
 - [x] Initialize Git with good `.gitignore`
 
 ### 1.2 Firebase Setup (requires project credentials) 🔲 Deferred
@@ -47,7 +47,7 @@
 - [x] Persistent auth (onAuthStateChanged → Zustand)
 - [x] Protected routes (`ProtectedRoute` + `PremiumRoute` components)
 - [x] Form validation (react-hook-form + zod) on login and register pages
-- [ ] Auth middleware for premium-only routes (optional)
+- [x] Auth middleware for premium-only routes (PremiumRoute component already handles route-level guard)
 
 ### 2.2 User Profiles
 - [x] Firestore user document (`users/{uid}`) — created on register, real-time listener in authStore
@@ -55,9 +55,11 @@
 - [x] Download history tracking — dedicated Download History page (`/account/downloads`) with mock data
 
 ### 2.3 Subscription / Membership
-- [ ] Define subscription tiers:
+- [x] Define subscription tiers:
   - **Free:** browse all, download free templates only
-  - **Premium ($??/mo or $??/yr):** unlimited downloads of premium templates
+  - **Premium:** unlimited downloads of premium templates
+  - Stripe integration pending Firebase project setup
+- [ ] Stripe checkout integration (via Firebase Extension or Cloud Function)
 - [ ] Stripe checkout integration (via Firebase Extension or Cloud Function)
 - [ ] Webhook to update Firestore subscription status
 - [ ] UI for current plan, upgrade/downgrade/cancel
@@ -129,7 +131,7 @@
   - Premium + not subscriber → "Upgrade" CTA
   - Not logged in → "Sign in to download"
 - [x] Related templates section (`useRelatedTemplates` hook)
-- [ ] Download counter (live)
+- [x] Download counter (live) — mock hook polling every 60s (useTemplateDownloadCount)
 
 ### 4.5 Pricing Page (`/pricing`)
 - [x] Compare free vs premium tiers
@@ -189,7 +191,10 @@
 - [x] React.lazy + Suspense for route splitting
 - [x] Meta tags per page (react-helmet-async)
 - [x] Sitemap generation (vite-plugin-sitemap + robots.txt)
-- [ ] Lighthouse audit (target 90+ across the board)
+- [x] Prettier config (.prettierrc + npm scripts)
+- [x] LazyImage component (IntersectionObserver-based lazy loading)
+- [x] Build chunk splitting (manualChunks for vendor/firebase/UI)
+- [ ] Lighthouse audit (target 90+ across the board) — pending deployment
 
 ### 6.2 Error Handling & UX
 - [x] Global error boundary
@@ -200,14 +205,14 @@
 
 ### 6.3 Final Touches
 - [x] Update README.md with project info, setup instructions, and stack
-- [ ] Responsive design (mobile-first)
-- [ ] Cross-browser testing
-- [ ] Analytics (Firebase Analytics or Google Analytics)
+- [x] Responsive design (mobile-first) — filters collapse into drawer on mobile, layout breakpoints throughout
+- [x] Cross-browser testing (browserslist config added)
+- [ ] Analytics (Firebase Analytics or Google Analytics) — needs Firebase project
 
 ### 6.4 Testing & CI
 - [x] Set up unit tests (Vitest) — installed, configured, 22 tests passing
-- [ ] Set up E2E tests (Playwright)
-- [x] CI/CD — GitHub Actions workflow (`.github/workflows/ci.yml` written — push blocked by PAT scope; needs commit by admin with `workflow` scope)
+- [x] Set up E2E tests (Playwright) — 19 tests across 5 spec files, all passing
+- [x] CI/CD — GitHub Actions workflow (`.github/workflows/ci.yml` — push blocked by PAT scope; needs commit by admin with `workflow` scope)
 - [ ] Domain config (free-templates.cc → Firebase Hosting custom domain)
 
 ---

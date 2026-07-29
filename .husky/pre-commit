@@ -1,0 +1,1 @@
+oxlint --fix && prettier --write

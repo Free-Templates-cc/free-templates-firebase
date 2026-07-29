@@ -5,6 +5,13 @@ import { Skeleton } from '../components/ui/Skeleton'
 import { SEOHead } from '../components/seo/SEOHead'
 import { useAuthStore } from '../stores/authStore'
 import { useTemplate, useRelatedTemplates } from '../hooks/useTemplate'
+import { useTemplateDownloadCount } from '../hooks/useTemplateDownloadCount'
+
+function LiveDownloadCount({ slug, staticCount }: { slug: string; staticCount: number }) {
+  const { data: liveCount } = useTemplateDownloadCount(slug)
+  const display = liveCount !== undefined ? liveCount.toLocaleString() : staticCount.toLocaleString()
+  return <>{display}</>
+}
 import { ArrowLeft, Download, ExternalLink, GitFork, Check } from 'lucide-react'
 
 /** Normalize framework name for Badge variant (e.g. 'Next.js' → 'nextjs'). */
@@ -110,7 +117,12 @@ export function TemplateDetailPage() {
           {/* Meta */}
           <div className="mt-6 flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
             <span>Category: <strong className="text-gray-900 dark:text-white">{template.category}</strong></span>
-            <span>Downloads: <strong className="text-gray-900 dark:text-white">{template.downloads.toLocaleString()}</strong></span>
+            <span>
+              Downloads:{' '}
+              <strong className="text-gray-900 dark:text-white">
+                <LiveDownloadCount slug={template.slug} staticCount={template.downloads} />
+              </strong>
+            </span>
           </div>
 
           {/* Download section */}
