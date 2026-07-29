@@ -1,0 +1,70 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // =====================================================================
+    // Helper functions
+    // =====================================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated()
+        && firestore.exists(/databases/(default)/documents/users/$(request.auth.uid))
+        && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function hasActivePremium() {
+      let user = firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data;
+      return user != null
+        && user.subscription.tier == 'premium'
+        && (user.subscription.status == 'active' || user.subscription.status == 'past_due')
+        && user.subscription.currentPeriodEnd >= request.time;
+    }
+
+    // =====================================================================
+    // Template preview images — public read
+    // =====================================================================
+    match /template-previews/{allPaths=**} {
+      allow read: if true; // publicly viewable
+      allow write: if isAdmin(); // admin only upload
+    }
+
+    // =====================================================================
+    // Free template files — public read
+    // =====================================================================
+    match /template-files/free/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // =====================================================================
+    // Premium template files — only accessible via signed URLs
+    // Direct reads are blocked; the Cloud Function `getDownloadUrl`
+    // generates signed URLs after checking subscription status.
+    // =====================================================================
+    match /template-files/premium/{allPaths=**} {
+      allow read: if false; // must go through getDownloadUrl
+      allow write: if isAdmin();
+    }
+
+    // =====================================================================
+    // User uploads (avatars) — owner can read/write own
+    // =====================================================================
+    match /user-avatars/{userId}/{fileName} {
+      allow read: if true; // publicly viewable avatars
+      allow write: if isAuthenticated() && request.auth.uid == userId
+        && request.resource.size < 2 * 1024 * 1024 // max 2 MB
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // =====================================================================
+    // Default deny
+    // =====================================================================
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

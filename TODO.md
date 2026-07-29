@@ -50,9 +50,9 @@
 - [ ] Auth middleware for premium-only routes (optional)
 
 ### 2.2 User Profiles
-- [ ] Firestore user document (`users/{uid}`)
-- [ ] Profile page (name, email, avatar, subscription status)
-- [ ] Download history tracking
+- [x] Firestore user document (`users/{uid}`) — created on register, real-time listener in authStore
+- [x] Profile page (name, email, avatar, subscription status) — on Account page
+- [ ] Download history tracking — needs download records + dedicated page
 
 ### 2.3 Subscription / Membership
 - [ ] Define subscription tiers:
@@ -162,21 +162,23 @@
 ## Phase 5: Backend / Cloud Functions
 
 ### 5.1 Firebase Cloud Functions
-- [ ] `createCheckoutSession` — creates Stripe checkout
-- [ ] `stripeWebhook` — handles checkout.session.completed, invoice.paid, subscription updates
-- [ ] `getDownloadUrl` — generates signed URL for premium files (checks subscription)
-- [ ] `incrementDownloadCount` — triggered on successful download
-- [ ] Cleanup / scheduled functions
+- [x] `createCheckoutSession` — Stripe Checkout session creation (Cloud Function)
+- [x] `stripeWebhook` — handles checkout.session.completed, invoice.paid, subscription updates, cancel
+- [x] `getDownloadUrl` — signed URL generation with subscription check
+- [x] `incrementDownloadCount` — triggered on download document creation
+- [x] `cleanupExpiredSubscriptions` — daily scheduled function (03:00 CET)
 
 ### 5.2 Firestore Security Rules
-- [ ] Templates collection: read all, write admin only
-- [ ] Users collection: read/write own doc only
-- [ ] Template files: read only with valid subscription for premium
-- [ ] Subscriptions: read own only, write by system only
+- [x] Templates collection: read all, write admin only
+- [x] Users collection: read/write own doc only, subscription write-protected
+- [x] Downloads collection: read own only, create with own uid
+- [x] Default deny on all other paths
 
 ### 5.3 Storage Security Rules
-- [ ] Free templates: public read
-- [ ] Premium templates: only accessible via signed URLs (checked against subscription)
+- [x] Template preview images: public read, admin write
+- [x] Free template files: public read, admin write
+- [x] Premium template files: direct read blocked, accessible via `getDownloadUrl` only
+- [x] User avatars: public read, owner write (max 2MB, images only)
 
 ---
 
@@ -332,17 +334,17 @@ downloads/{downloadId}
 
 ---
 
-## Priorities (Suggested Order)
+## Priorities (Progress)
 
 1. ✅ Phase 1 — Project scaffold & Firebase setup
 2. ✅ Phase 4.1 — Design system & shared components
 3. ✅ Phase 2.1 — Auth pages & flow
 4. ✅ Phase 4.2–4.4 — Homepage, Browse, Detail pages
-5. ✅ Phase 2.2–2.3 — User profiles & subscriptions
-6. ✅ Phase 3 — Admin template management
-7. ✅ Phase 5 — Cloud Functions & security rules
+5. 🔄 Phase 2.2–2.3 — User profiles & subscriptions (partial)
+6. 🔲 Phase 3 — Admin template management (separate CMS)
+7. ✅ Phase 5 — Cloud Functions & security rules (code written, deploy pending Firebase project)
 8. ✅ Phase 4.5–4.8 — Remaining pages (pricing, account, static)
-9. ✅ Phase 6 — Polish, SEO, analytics, launch
+9. ⬜ Phase 6 — Polish, SEO, analytics, launch (next up)
 
 ---
 
