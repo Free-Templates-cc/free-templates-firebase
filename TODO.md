@@ -353,7 +353,7 @@ downloads/{downloadId}
 7. ✅ Phase 5 — Cloud Functions & security rules (code written, deploy pending Firebase project)
 8. ✅ Phase 4.5–4.8 — Remaining pages (pricing, account, static)
 9. ✅ Phase 6.1 — Performance & SEO (lazy loading, sitemap, robots.txt)
-10. ✅ Phase 6.3–6.4 — Responsive design, testing, CI/CD (Vitest + CI done, E2E done, responsive complete)
+10. ✅ Phase 6.3–6.4 — Responsive design, testing, CI/CD (Vitest + E2E done; CI workflow file exists but needs admin commit with `workflow` PAT scope)
 
 ---
 

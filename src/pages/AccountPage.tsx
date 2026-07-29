@@ -18,11 +18,7 @@ import {
   RefreshCw,
   XCircle,
 } from 'lucide-react'
-import {
-  cancelSubscription,
-  reactivateSubscription,
-  createBillingPortalSession,
-} from '../lib/api'
+import { cancelSubscription, reactivateSubscription, createBillingPortalSession } from '../lib/api'
 import type { Timestamp } from 'firebase/firestore'
 import type { User as FirebaseUser } from 'firebase/auth'
 import type { UserProfile } from '../types'
@@ -56,11 +52,9 @@ function isInGracePeriod(profile: UserProfile | null): boolean {
 
 function SubscriptionBadge({
   status,
-  tier,
   isPremium,
 }: {
   status?: string
-  tier?: string
   isPremium: boolean
 }) {
   const label =
@@ -120,7 +114,12 @@ function SubscriptionContent({
   // --- Handlers ---
 
   const handleCancel = async () => {
-    if (!confirm('Are you sure you want to cancel your Premium subscription? You will retain access until the end of your current billing period.')) return
+    if (
+      !confirm(
+        'Are you sure you want to cancel your Premium subscription? You will retain access until the end of your current billing period.',
+      )
+    )
+      return
     setIsCanceling(true)
     try {
       await cancelSubscription(user.uid)
@@ -169,9 +168,7 @@ function SubscriptionContent({
               resolved.
             </p>
             {periodEnd && (
-              <p className="mt-1 text-xs text-red-500">
-                Current period ends: {periodEnd}
-              </p>
+              <p className="mt-1 text-xs text-red-500">Current period ends: {periodEnd}</p>
             )}
           </div>
         </div>
@@ -209,20 +206,11 @@ function SubscriptionContent({
                 you will be reverted to the Free plan.
               </p>
             )}
-            {canceledAt && (
-              <p className="mt-1 text-xs text-amber-500">
-                Canceled on {canceledAt}
-              </p>
-            )}
+            {canceledAt && <p className="mt-1 text-xs text-amber-500">Canceled on {canceledAt}</p>}
           </div>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            isLoading={isReactivating}
-            onClick={handleReactivate}
-          >
+          <Button variant="outline" size="sm" isLoading={isReactivating} onClick={handleReactivate}>
             <RefreshCw className="mr-1.5 h-4 w-4" />
             Reactivate Subscription
           </Button>
@@ -251,17 +239,13 @@ function SubscriptionContent({
           <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
             <Calendar className="h-4 w-4" />
             <span>
-              Next billing date: <strong className="text-gray-900 dark:text-white">{periodEnd}</strong>
+              Next billing date:{' '}
+              <strong className="text-gray-900 dark:text-white">{periodEnd}</strong>
             </span>
           </div>
         )}
         <div className="flex flex-wrap gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            isLoading={isCanceling}
-            onClick={handleCancel}
-          >
+          <Button variant="outline" size="sm" isLoading={isCanceling} onClick={handleCancel}>
             <XCircle className="mr-1.5 h-4 w-4" />
             Cancel Subscription
           </Button>
@@ -366,7 +350,8 @@ export function AccountPage() {
   }
 
   const isGoogleUser = user.providerData.some((p) => p?.providerId === 'google.com')
-  const isPremium = profile?.subscription?.tier === 'premium' && profile?.subscription?.status === 'active'
+  const isPremium =
+    profile?.subscription?.tier === 'premium' && profile?.subscription?.status === 'active'
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
@@ -405,17 +390,12 @@ export function AccountPage() {
               <h2 className="font-semibold text-gray-900 dark:text-white">Subscription</h2>
               <SubscriptionBadge
                 status={profile?.subscription?.status}
-                tier={profile?.subscription?.tier}
                 isPremium={isPremium}
               />
             </div>
           </CardHeader>
           <CardContent>
-            <SubscriptionContent
-              profile={profile}
-              isPremium={isPremium}
-              user={user}
-            />
+            <SubscriptionContent profile={profile} isPremium={isPremium} user={user} />
           </CardContent>
         </Card>
 

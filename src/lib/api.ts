@@ -850,10 +850,7 @@ interface FunctionResponse<T> {
   error?: string
 }
 
-async function callFunction<T>(
-  name: string,
-  payload: Record<string, unknown>,
-): Promise<T> {
+async function callFunction<T>(name: string, payload: Record<string, unknown>): Promise<T> {
   const url = getFunctionUrl(name)
   const res = await fetch(url, {
     method: 'POST',
