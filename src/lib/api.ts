@@ -13,8 +13,7 @@ import type { Template, TemplateFilters } from '../types'
 // Mock data
 // ---------------------------------------------------------------------------
 
-const frameworks = ['Next.js', 'Gatsby.js', 'Nuxt.js', 'Vue.js', 'React'] as const
-const categories = ['Business', 'Portfolio', 'Landing', 'E-Commerce', 'Blog', 'SaaS', 'Agency', 'Education']
+
 
 const allTemplates: Template[] = [
   {

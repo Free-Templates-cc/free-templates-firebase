@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '../../components/ui/Button'
+import { SEOHead } from '../../components/seo/SEOHead'
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
 import { Mail, Lock } from 'lucide-react'
@@ -55,6 +56,7 @@ export function LoginPage() {
 
   return (
     <div className="mx-auto flex min-h-[60vh] max-w-md items-center px-4 py-16">
+      <SEOHead title="Sign In — Free Templates" description="Sign in to your Free Templates account to download premium templates and manage your subscription." />
       <div className="w-full">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Welcome back</h1>
         <p className="mt-2 text-gray-600 dark:text-gray-400">Sign in to your account</p>

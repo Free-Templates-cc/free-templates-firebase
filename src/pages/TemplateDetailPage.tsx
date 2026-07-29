@@ -2,13 +2,13 @@ import { useParams, Link } from 'react-router-dom'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { Skeleton } from '../components/ui/Skeleton'
+import { SEOHead } from '../components/seo/SEOHead'
 import { useAuthStore } from '../stores/authStore'
 import { useTemplate, useRelatedTemplates } from '../hooks/useTemplate'
 import { ArrowLeft, Download, ExternalLink, GitFork, Check } from 'lucide-react'
-import type { Framework } from '../types'
 
 /** Normalize framework name for Badge variant (e.g. 'Next.js' → 'nextjs'). */
-const fwVariant = (fw: string) => fw.toLowerCase().replace(/[.\\s]/g, '')
+const fwVariant = (fw: string) => fw.toLowerCase().replace(/[.\\s]/g, '') as 'nextjs' | 'gatsby' | 'nuxt' | 'vue' | 'react'
 
 export function TemplateDetailPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -24,6 +24,7 @@ export function TemplateDetailPage() {
   if (isLoading || authLoading) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <SEOHead title="Loading Template... — Free Templates" noIndex />
         <Skeleton className="mb-6 h-4 w-32" />
         <div className="grid gap-8 lg:grid-cols-5">
           <div className="lg:col-span-3">
@@ -52,6 +53,7 @@ export function TemplateDetailPage() {
   if (isError || !template) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <SEOHead title="Template Not Found — Free Templates" noIndex />
         <Link to="/templates" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
           <ArrowLeft className="h-4 w-4" />
           Back to templates
@@ -71,6 +73,12 @@ export function TemplateDetailPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <SEOHead
+        title={`${template.name} — Free ${template.framework} Template`}
+        description={template.description}
+        ogImage={template.mainImage}
+        canonicalUrl={`https://free-templates.cc/templates/${template.slug}`}
+      />
       {/* Back */}
       <Link to="/templates" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
         <ArrowLeft className="h-4 w-4" />

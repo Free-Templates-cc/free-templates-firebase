@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
+import { SEOHead } from '../components/seo/SEOHead'
 import { useAuthStore } from '../stores/authStore'
 import { Check, X } from 'lucide-react'
 
@@ -40,6 +41,12 @@ export function PricingPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <SEOHead
+        title="Pricing — Free Templates"
+        description="Choose the perfect plan for your needs. Free access to hundreds of templates or go Premium for unlimited downloads of all premium templates."
+      />
+
+
       {/* Header */}
       <div className="text-center">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Simple, Transparent Pricing</h1>

@@ -186,8 +186,8 @@
 
 ### 6.1 Performance & SEO
 - [ ] Lazy loading for images / components
-- [ ] React.lazy + Suspense for route splitting
-- [ ] Meta tags per page (react-helmet-async)
+- [x] React.lazy + Suspense for route splitting
+- [x] Meta tags per page (react-helmet-async)
 - [ ] Sitemap generation
 - [ ] Lighthouse audit (target 90+ across the board)
 
@@ -199,7 +199,7 @@
 - [x] 404 page
 
 ### 6.3 Final Touches
-- [ ] Update README.md with project info, setup instructions, and stack
+- [x] Update README.md with project info, setup instructions, and stack
 - [ ] Responsive design (mobile-first)
 - [ ] Cross-browser testing
 - [ ] Analytics (Firebase Analytics or Google Analytics)

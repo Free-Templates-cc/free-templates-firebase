@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
+import { SEOHead } from '../../components/seo/SEOHead'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react'
@@ -28,6 +29,7 @@ export function ForgotPasswordPage() {
   if (sent) {
     return (
       <div className="mx-auto flex min-h-[60vh] max-w-md items-center px-4 py-16">
+        <SEOHead title="Password Reset Sent — Free Templates" noIndex />
         <div className="w-full text-center">
           <CheckCircle className="mx-auto h-12 w-12 text-green-500" />
           <h1 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">Check your email</h1>
@@ -51,6 +53,7 @@ export function ForgotPasswordPage() {
 
   return (
     <div className="mx-auto flex min-h-[60vh] max-w-md items-center px-4 py-16">
+      <SEOHead title="Forgot Password — Free Templates" description="Reset your Free Templates account password." noIndex />
       <div className="w-full">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Reset your password</h1>
         <p className="mt-2 text-gray-600 dark:text-gray-400">

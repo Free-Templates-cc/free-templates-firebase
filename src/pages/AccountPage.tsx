@@ -3,6 +3,7 @@ import { useAuthStore } from '../stores/authStore'
 import { Button } from '../components/ui/Button'
 import { Card, CardContent, CardHeader } from '../components/ui/Card'
 import { Input } from '../components/ui/Input'
+import { SEOHead } from '../components/seo/SEOHead'
 import { Navigate } from 'react-router-dom'
 import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
 import toast from 'react-hot-toast'
@@ -21,6 +22,7 @@ export function AccountPage() {
   if (isLoading) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16">
+        <SEOHead title="Account — Free Templates" noIndex />
         <div className="animate-pulse space-y-6">
           <div className="h-8 w-48 rounded bg-gray-200 dark:bg-gray-800" />
           <div className="h-32 rounded-xl bg-gray-200 dark:bg-gray-800" />
@@ -72,6 +74,7 @@ export function AccountPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+      <SEOHead title="My Account — Free Templates" description="Manage your Free Templates account, subscription, and downloads." noIndex />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Account</h1>
 
       <div className="mt-8 grid gap-6">

@@ -3,15 +3,15 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { Skeleton } from '../components/ui/Skeleton'
+import { SEOHead } from '../components/seo/SEOHead'
 import { useTemplates, filtersFromParams } from '../hooks/useTemplates'
 import { Search, SlidersHorizontal, X, ChevronLeft, ChevronRight } from 'lucide-react'
-import type { TemplateFilters } from '../types'
 
 const frameworks = ['Next.js', 'Gatsby.js', 'Nuxt.js', 'Vue.js', 'React']
 const categories = ['Business', 'Portfolio', 'Landing', 'E-Commerce', 'Blog', 'SaaS', 'Agency', 'Education']
 
 /** Normalize framework name for Badge variant (e.g. 'Next.js' → 'nextjs'). */
-const fwVariant = (fw: string) => fw.toLowerCase().replace(/[.\s]/g, '')
+const fwVariant = (fw: string) => fw.toLowerCase().replace(/[.\s]/g, '') as 'nextjs' | 'gatsby' | 'nuxt' | 'vue' | 'react'
 
 export function BrowsePage() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -19,6 +19,10 @@ export function BrowsePage() {
 
   const filters = filtersFromParams(searchParams)
   const page = Number(searchParams.get('page')) || 1
+
+  const pageTitle = searchParams.get('search')
+    ? `Search: ${searchParams.get('search')} — Templates`
+    : 'Browse Templates'
 
   const { data, isLoading, isFetching, isError } = useTemplates({ filters, page })
 
@@ -53,6 +57,10 @@ export function BrowsePage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <SEOHead
+        title={pageTitle}
+        description="Browse our collection of free and premium website templates. Filter by category, framework, and price tier to find the perfect template."
+      />
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>

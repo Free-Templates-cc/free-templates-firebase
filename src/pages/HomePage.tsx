@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { Badge } from '../components/ui/Badge'
+import { SEOHead } from '../components/seo/SEOHead'
 import { Search, ArrowRight, Star, Download, Grid3X3, Layers } from 'lucide-react'
 
 const categories = [
@@ -31,6 +32,10 @@ const stats = [
 export function HomePage() {
   return (
     <div>
+      <SEOHead
+        title="Free Website Templates — Next.js, Gatsby & More"
+        description="Browse 1,000+ free and premium website templates for Next.js, Gatsby.js, Nuxt.js, and React. Download production-ready starter templates for your next project."
+      />
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-gray-200 dark:border-gray-800">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-accent-50 dark:from-gray-950 dark:via-gray-950 dark:to-gray-900" />
@@ -142,7 +147,7 @@ export function HomePage() {
                   <Badge variant={tmpl.tier === 'premium' ? 'premium' : 'free'}>
                     {tmpl.tier === 'premium' ? 'Premium' : 'Free'}
                   </Badge>
-                  <Badge variant={tmpl.framework.toLowerCase().replace(/[.\s]/g, '')}>{tmpl.framework}</Badge>
+                  <Badge variant={tmpl.framework.toLowerCase().replace(/[.\s]/g, '') as 'nextjs' | 'gatsby' | 'nuxt' | 'vue' | 'react'}>{tmpl.framework}</Badge>
                 </div>
                 <h3 className="mt-3 font-semibold text-gray-900 dark:text-white">{tmpl.name}</h3>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{tmpl.description}</p>
