@@ -12,6 +12,10 @@ import { LoginPage } from './pages/auth/LoginPage'
 import { RegisterPage } from './pages/auth/RegisterPage'
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage'
 import { AccountPage } from './pages/AccountPage'
+import { TermsPage } from './pages/static/TermsPage'
+import { PrivacyPage } from './pages/static/PrivacyPage'
+import { ContactPage } from './pages/static/ContactPage'
+import { FAQPage } from './pages/static/FAQPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 
 export default function App() {
@@ -30,6 +34,10 @@ export default function App() {
               <Route path="forgot-password" element={<ForgotPasswordPage />} />
               <Route path="account" element={<AccountPage />} />
               <Route path="account/downloads" element={<AccountPage />} />
+              <Route path="terms" element={<TermsPage />} />
+              <Route path="privacy" element={<PrivacyPage />} />
+              <Route path="contact" element={<ContactPage />} />
+              <Route path="faq" element={<FAQPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>

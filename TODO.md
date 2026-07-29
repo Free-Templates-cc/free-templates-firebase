@@ -13,6 +13,9 @@
 - [x] Install dependencies: `react-router-dom`, `@tanstack/react-query`, `zustand`, `firebase`, `react-hook-form`, `zod`, `react-hot-toast`, `clsx`, `tailwind-merge`, `lucide-react`, `react-helmet-async`
 - [x] Set up folder structure
 - [ ] Configure ESLint / Prettier
+- [ ] Install & configure Prettier
+- [ ] Install & configure husky + lint-staged (pre-commit hooks)
+- [ ] Set up fallow-rs
 - [x] Initialize Git with good `.gitignore`
 
 ### 1.2 Firebase Setup (requires project credentials) 🔲 Deferred
@@ -91,39 +94,42 @@
 ## Phase 4: Public Site — UI & Pages
 
 ### 4.1 Design System
-- [ ] Color palette & typography (Tailwind config)
-- [ ] Shared components: Button, Card, Badge, Input, Modal, Navbar, Footer, Breadcrumbs, Skeleton loaders
-- [ ] Dark/light mode toggle (Zustand + Tailwind dark mode)
+- [x] Color palette & typography (Tailwind config)
+- [x] Shared components: Button, Card, Badge, Navbar, Footer
+- [ ] Input, Modal, Breadcrumbs, Skeleton loaders
+- [x] Dark/light mode toggle (Zustand + Tailwind dark mode)
 
 ### 4.2 Homepage (`/`)
-- [ ] Hero section with search bar
-- [ ] Featured templates grid (carousel or masonry)
-- [ ] Categories section (business, portfolio, landing, etc.)
-- [ ] Stats / trust signals (X templates, Y downloads, Z users)
-- [ ] CTA for premium membership
+- [x] Hero section with search bar
+- [x] Featured templates grid
+- [x] Categories section
+- [x] Stats / trust signals
+- [x] CTA for premium membership
 
 ### 4.3 Browse / Search Page (`/templates`)
-- [ ] Search bar with debounced input
-- [ ] Filters sidebar:
-  - Category (multi-select)
-  - Framework (Next.js, Gatsby, Nuxt, etc.)
+- [x] Search bar with input
+- [x] Filters sidebar:
+  - Category
+  - Framework (Next.js, Gatsby, Nuxt, Vue, React)
   - Price tier (Free / Premium)
   - Sort by (newest, most popular, name)
-- [ ] Template grid with pagination / infinite scroll
-- [ ] Each card shows: thumbnail, name, category, framework badge, price tier, download count
+- [x] Template grid with cards
+- [x] Active filter tags with clear
+- [ ] Pagination / infinite scroll
 - [ ] React Query for data fetching with URL-to-query sync
 
 ### 4.4 Template Detail Page (`/templates/:slug`)
-- [ ] Gallery of preview images
-- [ ] Template info: description, features, tags, framework, category
-- [ ] Demo link (opens new tab)
-- [ ] GitHub link
-- [ ] Download button:
-  - Free template → direct download (guest can download too, or require signup?)
-  - Premium template + subscriber → download
-  - Premium template + not subscriber → "Upgrade to Premium" CTA
+- [x] Gallery of preview images
+- [x] Template info: description, features, tags, framework, category
+- [x] Demo link (opens new tab)
+- [x] GitHub link
+- [x] Download button with conditional states:
+  - Free → download
+  - Premium + subscriber → download
+  - Premium + not subscriber → "Upgrade" CTA
+  - Not logged in → "Sign in to download"
 - [ ] Related templates section
-- [ ] Download counter
+- [ ] Download counter (live)
 
 ### 4.5 Pricing Page (`/pricing`)
 - [x] Compare free vs premium tiers
@@ -132,10 +138,10 @@
 - [x] CTA → Stripe checkout
 
 ### 4.6 Auth Pages
-- [x] Login (`/login`) — email/password + Google OAuth
-- [x] Register (`/register`) — email/password + Google OAuth, auto-creates Firestore doc
-- [ ] Reset password (`/reset-password`)
-- [ ] Form validation (react-hook-form + zod)
+- [x] Login (`/login`) — email/password + Google OAuth, zod validated
+- [x] Register (`/register`) — email/password + Google OAuth, zod validated
+- [x] Forgot password (`/forgot-password`) — Firebase Auth password reset
+- [x] Form validation (react-hook-form + zod)
 
 ### 4.7 Account Page (`/account`)
 - [x] Profile details (name, email)
@@ -143,6 +149,7 @@
 - [ ] Download history / My downloads
 - [x] Loading state & redirect
 - [ ] Change password
+- [x] Protected route guards
 
 ### 4.8 Static Pages
 - [ ] Terms of Service
