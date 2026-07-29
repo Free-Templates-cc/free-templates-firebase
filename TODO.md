@@ -52,7 +52,7 @@
 ### 2.2 User Profiles
 - [x] Firestore user document (`users/{uid}`) — created on register, real-time listener in authStore
 - [x] Profile page (name, email, avatar, subscription status) — on Account page
-- [ ] Download history tracking — needs download records + dedicated page
+- [x] Download history tracking — dedicated Download History page (`/account/downloads`) with mock data
 
 ### 2.3 Subscription / Membership
 - [ ] Define subscription tiers:
@@ -146,7 +146,7 @@
 ### 4.7 Account Page (`/account`)
 - [x] Profile details (name, email)
 - [x] Subscription status & management
-- [ ] Download history / My downloads
+- [x] Download history / My downloads (`/account/downloads`)
 - [x] Loading state & redirect
 - [x] Change password
 - [x] Protected route guards

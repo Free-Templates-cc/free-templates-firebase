@@ -190,3 +190,65 @@ export async function fetchRelatedTemplates(
     .filter((t) => t.slug !== currentSlug && t.category === category)
     .slice(0, limit)
 }
+
+// ---------------------------------------------------------------------------
+// Mock download history
+// ---------------------------------------------------------------------------
+
+import type { Download } from '../types'
+
+const mockDownloads: Download[] = [
+  {
+    id: 'dl-1',
+    userId: 'mock-user',
+    templateId: '2',
+    templateName: 'Business Plus',
+    templateSlug: 'business-plus',
+    templateCategory: 'Business',
+    downloadedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+  },
+  {
+    id: 'dl-2',
+    userId: 'mock-user',
+    templateId: '4',
+    templateName: 'ConstructPro',
+    templateSlug: 'construct-pro',
+    templateCategory: 'Agency',
+    downloadedAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+  },
+  {
+    id: 'dl-3',
+    userId: 'mock-user',
+    templateId: '6',
+    templateName: 'DevPortfolio',
+    templateSlug: 'dev-portfolio',
+    templateCategory: 'Portfolio',
+    downloadedAt: new Date(Date.now() - 86400000 * 10).toISOString(),
+  },
+  {
+    id: 'dl-4',
+    userId: 'mock-user',
+    templateId: '8',
+    templateName: 'ShopNow',
+    templateSlug: 'shop-now',
+    templateCategory: 'E-Commerce',
+    downloadedAt: new Date(Date.now() - 86400000 * 15).toISOString(),
+  },
+  {
+    id: 'dl-5',
+    userId: 'mock-user',
+    templateId: '12',
+    templateName: 'TechLand',
+    templateSlug: 'tech-land',
+    templateCategory: 'Landing',
+    downloadedAt: new Date(Date.now() - 86400000 * 30).toISOString(),
+  },
+]
+
+/**
+ * Fetch download history for the current user.
+ */
+export async function fetchDownloads(userId: string): Promise<Download[]> {
+  await delay(350)
+  return mockDownloads.filter((d) => d.userId === userId)
+}

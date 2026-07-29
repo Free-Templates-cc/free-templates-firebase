@@ -4,7 +4,7 @@ import { Button } from '../components/ui/Button'
 import { Card, CardContent, CardHeader } from '../components/ui/Card'
 import { Input } from '../components/ui/Input'
 import { SEOHead } from '../components/seo/SEOHead'
-import { Navigate } from 'react-router-dom'
+import { Navigate, Link } from 'react-router-dom'
 import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
 import toast from 'react-hot-toast'
 import { User, Crown, Download, Lock } from 'lucide-react'
@@ -198,7 +198,15 @@ export function AccountPage() {
         {/* Download history card */}
         <Card>
           <CardHeader>
-            <h2 className="font-semibold text-gray-900 dark:text-white">Download History</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="font-semibold text-gray-900 dark:text-white">Download History</h2>
+              <Link
+                to="/account/downloads"
+                className="text-sm font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400"
+              >
+                View all
+              </Link>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
@@ -207,10 +215,10 @@ export function AccountPage() {
                 Total downloads: <strong className="text-gray-900 dark:text-white">{profile?.downloadCount || 0}</strong>
               </span>
             </div>
-            {profile?.downloadCount === 0 && (
+            {(!profile?.downloadCount || profile.downloadCount === 0) && (
               <p className="mt-3 text-sm text-gray-400 dark:text-gray-500">
                 You haven't downloaded any templates yet.{' '}
-                <a href="/templates" className="text-primary-600 hover:text-primary-500">Browse templates</a>
+                <Link to="/templates" className="text-primary-600 hover:text-primary-500">Browse templates</Link>
               </p>
             )}
           </CardContent>

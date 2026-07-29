@@ -17,6 +17,7 @@ const LoginPage = lazy(() => import('./pages/auth/LoginPage').then(m => ({ defau
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage').then(m => ({ default: m.RegisterPage })))
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage').then(m => ({ default: m.ForgotPasswordPage })))
 const AccountPage = lazy(() => import('./pages/AccountPage').then(m => ({ default: m.AccountPage })))
+const DownloadHistoryPage = lazy(() => import('./pages/account/DownloadHistoryPage').then(m => ({ default: m.DownloadHistoryPage })))
 const TermsPage = lazy(() => import('./pages/static/TermsPage').then(m => ({ default: m.TermsPage })))
 const PrivacyPage = lazy(() => import('./pages/static/PrivacyPage').then(m => ({ default: m.PrivacyPage })))
 const ContactPage = lazy(() => import('./pages/static/ContactPage').then(m => ({ default: m.ContactPage })))
@@ -53,7 +54,7 @@ export default function App() {
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="account" element={<AccountPage />} />
-                <Route path="account/downloads" element={<AccountPage />} />
+                <Route path="account/downloads" element={<DownloadHistoryPage />} />
                 <Route path="terms" element={<TermsPage />} />
                 <Route path="privacy" element={<PrivacyPage />} />
                 <Route path="contact" element={<ContactPage />} />

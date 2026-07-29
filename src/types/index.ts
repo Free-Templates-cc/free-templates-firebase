@@ -52,7 +52,10 @@ export interface Download {
   userId: string
   templateId: string
   templateName: string
-  downloadedAt: Timestamp
+  templateSlug: string
+  templateCategory: string
+  downloadedAt: string
+  priceTier?: PriceTier
 }
 
 export interface TemplateFilters {
