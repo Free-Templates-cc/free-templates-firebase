@@ -30,7 +30,7 @@ export function LazyImage({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setInView(true)
           observer.disconnect()
         }
@@ -43,7 +43,7 @@ export function LazyImage({
   }, [])
 
   const paddingBottom = aspectRatio
-    ? `${(100 * parseFloat(aspectRatio.split('/')[1])) / parseFloat(aspectRatio.split('/')[0])}%`
+    ? `${(100 * parseFloat(aspectRatio.split('/')[1]!)) / parseFloat(aspectRatio.split('/')[0]!)}%`
     : undefined
 
   return (
