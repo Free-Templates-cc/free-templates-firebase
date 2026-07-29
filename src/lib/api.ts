@@ -831,4 +831,3 @@ export async function fetchDownloads(userId: string): Promise<Download[]> {
 // ---------------------------------------------------------------------------
 // Subscription / Billing Cloud Function helpers
 // ---------------------------------------------------------------------------
-

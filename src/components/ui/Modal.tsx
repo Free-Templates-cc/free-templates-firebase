@@ -1,4 +1,4 @@
-import { useEffect, useCallback, type ReactNode } from 'react'
+import { useEffect, useCallback, useRef, type ReactNode } from 'react'
 import { X } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { Button } from './Button'
@@ -20,6 +20,56 @@ const sizeClasses = {
   lg: 'max-w-2xl',
 }
 
+const TITLE_ID = 'modal-title'
+
+/**
+ * Trap focus within the modal when open.
+ */
+function useFocusTrap(containerRef: React.RefObject<HTMLDivElement | null>, open: boolean) {
+  useEffect(() => {
+    if (!open || !containerRef.current) return
+
+    const container = containerRef.current
+    const previouslyFocused = document.activeElement as HTMLElement | null
+
+    // Find all focusable elements inside the modal
+    const focusableSelector =
+      'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    const focusableElements = container.querySelectorAll<HTMLElement>(focusableSelector)
+    const firstFocusable = focusableElements[0]
+    const lastFocusable = focusableElements[focusableElements.length - 1]
+
+    // Focus the first focusable element
+    firstFocusable?.focus()
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          // Shift+Tab: if focus is on first element, wrap to last
+          if (document.activeElement === firstFocusable) {
+            e.preventDefault()
+            lastFocusable?.focus()
+          }
+        } else {
+          // Tab: if focus is on last element, wrap to first
+          if (document.activeElement === lastFocusable) {
+            e.preventDefault()
+            firstFocusable?.focus()
+          }
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      // Restore focus to the previously focused element
+      previouslyFocused?.focus()
+    }
+  }, [open, containerRef])
+}
+
 export function Modal({
   open,
   onClose,
@@ -30,6 +80,8 @@ export function Modal({
   size = 'md',
   showClose = true,
 }: ModalProps) {
+  const panelRef = useRef<HTMLDivElement>(null)
+
   // Close on Escape
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -49,6 +101,8 @@ export function Modal({
     }
   }, [open, handleKeyDown])
 
+  useFocusTrap(panelRef, open)
+
   if (!open) return null
 
   return (
@@ -62,9 +116,10 @@ export function Modal({
 
       {/* Panel */}
       <div
+        ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-label={title}
+        aria-labelledby={title ? TITLE_ID : undefined}
         className={cn(
           'relative w-full rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-900',
           sizeClasses[size],
@@ -75,7 +130,9 @@ export function Modal({
           <div className="flex items-start justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-800">
             <div>
               {title && (
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
+                <h2 id={TITLE_ID} className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {title}
+                </h2>
               )}
               {description && (
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{description}</p>

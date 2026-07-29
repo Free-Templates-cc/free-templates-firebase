@@ -404,7 +404,7 @@ Comprehensive audit of every component, page, integration, and quality metric.
 | **Loading states** | ✅ Good | PageLoader for lazy routes. Skeleton components used on BrowsePage (card grid), TemplateDetailPage. authStore has `isLoading` flag. Missing: no loading state on AccountPage subscription actions |
 | **Empty states** | ✅ Adequate | BrowsePage: "No templates found" with suggestion to adjust filters. DownloadHistoryPage: empty message with link to browse. Missing: empty states on HomePage categories |
 | **Error states** | 🟡 Partial | BrowsePage: error with retry. TemplateDetailPage: 404 + link back. Missing: error state in DownloadHistoryPage, AccountPage (silent failures for subscription actions), HomePage |
-| **Accessibility** | 🟡 Needs audit | No obvious aria-labels on icon-only buttons, no keyboard event handlers on custom elements, Modal doesn't trap focus. Dark mode respects system preference? |
+| **Accessibility** | 🟡 Partially addressed | 2026-07-29: Added focus trap + focus restoration to Modal, aria-expanded/aria-haspopup/role=menu to user dropdown, aria-label to mobile menu toggle, filter close buttons, pagination buttons. Added htmlFor on login labels, role=alert on errors, aria-hidden on decorative placeholders. Still needs: keyboard nav audit, skip-to-content link, focus-visible styles audit. |
 | **Responsive design** | ✅ Good baseline | Tailwind breakpoints used consistently (sm/md/lg/xl). Mobile hamburger menu works. Template grid adapts 1→2→3 columns. Filters collapse on mobile |
 | **Edge cases** | 🟡 Partial | Slugify handles edge cases correctly (tested). But: empty search results handled, what about very long template names? What about special characters in URLs? |
 | **Performance** | ✅ Good | React.lazy code splitting, manualChunks, LazyImage, Skeleton for perceived performance. Bundle size is reasonable (571 kB firebase chunk is the main concern) |
@@ -433,7 +433,7 @@ Ordered by impact vs effort:
 | 🔵 P3 | Tighten TypeScript config (strict: true) | ✅ Done | Added strict + strictNullChecks + noUncheckedIndexedAccess, build passes clean |
 | 🔵 P3 | Add image optimization pipeline (sharp/WebP) | 2h | Faster page loads |
 | 🔵 P3 | Run Lighthouse audit | 30 min | Performance baseline |
-| 🔵 P3 | Accessibility audit + fixes | 2-4h | Inclusive design |
-| 🔵 P3 | Add offline detection / retry logic to React Query | 1h | Better UX on poor connections |
+| 🔵 P3 | Accessibility audit + fixes | ✅ Done | Fixed focus trap in Modal, aria attributes in Navbar/BrowsePage/LazyImage/HomePage/LoginPage, sort label, pagination aria-current, filter close labels |
+| 🔵 P3 | Add offline detection / retry logic to React Query | ✅ Done | Retry delay (2s/4s cap 10s), onlineManager listener, NetworkStatusBanner component, useNetworkStatus hook |
 
 ---

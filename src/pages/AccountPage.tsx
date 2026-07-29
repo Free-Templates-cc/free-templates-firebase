@@ -92,7 +92,6 @@ function SubscriptionContent({
   profile: UserProfile | null
   isPremium: boolean
 }) {
-
   const sub = profile?.subscription
   const status = sub?.status
   const periodEnd = formatDate(sub?.currentPeriodEnd)
@@ -101,7 +100,9 @@ function SubscriptionContent({
   // --- Handlers ---
 
   const handleCancel = () => {
-    toast('🚧 Subscription management coming soon — you\'ll be able to cancel directly.', { icon: '📋' })
+    toast("🚧 Subscription management coming soon — you'll be able to cancel directly.", {
+      icon: '📋',
+    })
   }
 
   const handleReactivate = () => {
@@ -109,7 +110,9 @@ function SubscriptionContent({
   }
 
   const handleBillingPortal = () => {
-    toast('🚧 Billing portal coming soon — you\'ll manage invoices and payment methods here.', { icon: '📋' })
+    toast("🚧 Billing portal coming soon — you'll manage invoices and payment methods here.", {
+      icon: '📋',
+    })
   }
 
   // --- Past Due ---
@@ -133,7 +136,7 @@ function SubscriptionContent({
           <Button
             variant="premium"
             size="sm"
-           
+
             onClick={handleBillingPortal}
           >
             <ExternalLink className="mr-1.5 h-4 w-4" />
@@ -174,7 +177,7 @@ function SubscriptionContent({
           <Button
             variant="ghost"
             size="sm"
-           
+
             onClick={handleBillingPortal}
           >
             <ExternalLink className="mr-1.5 h-4 w-4" />
@@ -209,7 +212,7 @@ function SubscriptionContent({
           <Button
             variant="ghost"
             size="sm"
-           
+
             onClick={handleBillingPortal}
           >
             <ExternalLink className="mr-1.5 h-4 w-4" />

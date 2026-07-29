@@ -113,7 +113,10 @@ export function BrowsePage() {
           {filters.search && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-3 py-1 text-sm text-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
               Search: {filters.search}
-              <button onClick={() => updateFilter('search', '')}>
+              <button
+                onClick={() => updateFilter('search', '')}
+                aria-label={`Remove search filter: ${filters.search}`}
+              >
                 <X className="h-3 w-3" />
               </button>
             </span>
@@ -121,7 +124,10 @@ export function BrowsePage() {
           {filters.category && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-3 py-1 text-sm text-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
               {filters.category}
-              <button onClick={() => updateFilter('category', '')}>
+              <button
+                onClick={() => updateFilter('category', '')}
+                aria-label={`Remove category filter: ${filters.category}`}
+              >
                 <X className="h-3 w-3" />
               </button>
             </span>
@@ -129,7 +135,10 @@ export function BrowsePage() {
           {filters.framework && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-3 py-1 text-sm text-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
               {filters.framework}
-              <button onClick={() => updateFilter('framework', '')}>
+              <button
+                onClick={() => updateFilter('framework', '')}
+                aria-label={`Remove framework filter: ${filters.framework}`}
+              >
                 <X className="h-3 w-3" />
               </button>
             </span>
@@ -137,7 +146,10 @@ export function BrowsePage() {
           {filters.priceTier !== 'all' && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-3 py-1 text-sm text-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
               {filters.priceTier === 'free' ? 'Free' : 'Premium'}
-              <button onClick={() => updateFilter('priceTier', 'all')}>
+              <button
+                onClick={() => updateFilter('priceTier', 'all')}
+                aria-label={`Remove price filter: ${filters.priceTier === 'free' ? 'Free' : 'Premium'}`}
+              >
                 <X className="h-3 w-3" />
               </button>
             </span>
@@ -219,8 +231,11 @@ export function BrowsePage() {
 
             {/* Sort */}
             <div className="mt-6">
-              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Sort by</h4>
+              <label htmlFor="sort-select" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Sort by
+              </label>
               <select
+                id="sort-select"
                 value={filters.sort}
                 onChange={(e) => updateFilter('sort', e.target.value)}
                 className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
@@ -346,6 +361,8 @@ export function BrowsePage() {
                               ? 'bg-primary-600 text-white'
                               : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800'
                           }`}
+                          aria-current={p === page ? 'page' : undefined}
+                          aria-label={`Page ${p}`}
                         >
                           {p}
                         </button>

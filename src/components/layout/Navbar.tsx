@@ -74,7 +74,7 @@ export function Navbar() {
           <button
             onClick={toggleDarkMode}
             className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
-            aria-label="Toggle dark mode"
+            aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
           >
             {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
@@ -85,6 +85,8 @@ export function Navbar() {
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                aria-expanded={showUserMenu}
+                aria-haspopup="menu"
               >
                 <span className="hidden sm:inline">
                   {profile?.displayName || user.email?.split('@')[0]}
@@ -93,12 +95,20 @@ export function Navbar() {
               </button>
               {showUserMenu && (
                 <>
-                  <div className="fixed inset-0 z-10" onClick={() => setShowUserMenu(false)} />
-                  <div className="absolute right-0 z-20 mt-2 w-48 rounded-xl border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900">
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setShowUserMenu(false)}
+                    aria-hidden="true"
+                  />
+                  <div
+                    className="absolute right-0 z-20 mt-2 w-48 rounded-xl border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900"
+                    role="menu"
+                  >
                     <Link
                       to="/account"
                       onClick={() => setShowUserMenu(false)}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                      role="menuitem"
                     >
                       My Account
                     </Link>
@@ -106,15 +116,17 @@ export function Navbar() {
                       to="/account/downloads"
                       onClick={() => setShowUserMenu(false)}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                      role="menuitem"
                     >
                       <Download className="mr-2 inline h-4 w-4" />
                       My Downloads
                     </Link>
 
-                    <hr className="my-1 border-gray-200 dark:border-gray-700" />
+                    <hr className="my-1 border-gray-200 dark:border-gray-700" role="separator" />
                     <button
                       onClick={handleSignOut}
                       className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+                      role="menuitem"
                     >
                       Sign Out
                     </button>
@@ -139,6 +151,8 @@ export function Navbar() {
           <button
             onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
             className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 md:hidden dark:text-gray-400 dark:hover:bg-gray-800"
+            aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={isMobileMenuOpen}
           >
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>

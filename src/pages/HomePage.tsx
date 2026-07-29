@@ -123,8 +123,12 @@ export function HomePage() {
             {/* Search */}
             <div className="mx-auto mt-12 max-w-xl">
               <div className="relative">
+                <label htmlFor="hero-search" className="sr-only">
+                  Search templates
+                </label>
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
                 <input
+                  id="hero-search"
                   type="text"
                   placeholder="Search templates..."
                   className="w-full rounded-xl border border-gray-300 bg-white py-3.5 pl-12 pr-4 text-base shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white"

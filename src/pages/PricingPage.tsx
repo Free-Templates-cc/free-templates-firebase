@@ -137,7 +137,10 @@ export function PricingPage() {
                     size="lg"
                     className="w-full"
                     onClick={() => {
-                      toast('🚧 Premium subscription coming soon — you\'ll be able to subscribe via Stripe.', { icon: '📋' })
+                      toast(
+                        "🚧 Premium subscription coming soon — you'll be able to subscribe via Stripe.",
+                        { icon: '📋' },
+                      )
                     }}
                   >
                     {profile?.subscription?.tier === 'premium'
@@ -151,7 +154,11 @@ export function PricingPage() {
                 )
               ) : (
                 <Link
-                  to={plan.name === 'Premium' ? `/login?redirect=${encodeURIComponent('/pricing')}` : '/templates'}
+                  to={
+                    plan.name === 'Premium'
+                      ? `/login?redirect=${encodeURIComponent('/pricing')}`
+                      : '/templates'
+                  }
                 >
                   <Button
                     variant={plan.popular ? 'premium' : 'outline'}

@@ -5,11 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '../../components/ui/Button'
 import { SEOHead } from '../../components/seo/SEOHead'
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-} from 'firebase/auth'
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
 import { Mail, Lock } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -79,19 +75,26 @@ export function LoginPage() {
         <p className="mt-2 text-gray-600 dark:text-gray-400">Sign in to your account</p>
 
         {error && (
-          <div className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">
+          <div
+            className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400"
+            role="alert"
+          >
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit(onEmailLogin)} className="mt-8 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label
+              htmlFor="login-email"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
               Email
             </label>
             <div className="relative mt-1">
               <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
+                id="login-email"
                 type="email"
                 {...register('email')}
                 className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 dark:bg-gray-900 dark:text-white ${
@@ -106,12 +109,16 @@ export function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label
+              htmlFor="login-password"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
               Password
             </label>
             <div className="relative mt-1">
               <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
+                id="login-password"
                 type="password"
                 {...register('password')}
                 className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 dark:bg-gray-900 dark:text-white ${

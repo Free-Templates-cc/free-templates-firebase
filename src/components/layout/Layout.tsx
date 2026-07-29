@@ -1,10 +1,12 @@
 import { Outlet } from 'react-router-dom'
 import { Navbar } from './Navbar'
 import { Footer } from './Footer'
+import { NetworkStatusBanner } from '../ui/NetworkStatusBanner'
 
 export function Layout() {
   return (
     <div className="flex min-h-screen flex-col">
+      <NetworkStatusBanner />
       <Navbar />
       <main className="flex-1">
         <Outlet />

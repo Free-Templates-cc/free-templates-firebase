@@ -52,8 +52,8 @@ export function LazyImage({
       className={cn('relative overflow-hidden', wrapperClassName)}
       style={paddingBottom ? { paddingBottom } : undefined}
     >
-      {/* Placeholder */}
-      {!loaded && <div className={cn('absolute inset-0', placeholder)} />}
+      {/* Placeholder — decorative only */}
+      {!loaded && <div className={cn('absolute inset-0', placeholder)} aria-hidden="true" />}
 
       {/* Actual image — loaded only when in view */}
       {inView && (
