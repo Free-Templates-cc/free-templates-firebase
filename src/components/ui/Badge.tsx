@@ -2,6 +2,7 @@ import type { HTMLAttributes } from 'react'
 import { cn } from '../../lib/utils'
 
 const badgeVariants = {
+  default: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
   free: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
   premium: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
   nextjs: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',

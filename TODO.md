@@ -205,9 +205,9 @@
 - [ ] Analytics (Firebase Analytics or Google Analytics)
 
 ### 6.4 Testing & CI
-- [ ] Set up unit tests (Vitest)
+- [x] Set up unit tests (Vitest) — installed, configured, 22 tests passing
 - [ ] Set up E2E tests (Playwright)
-- [ ] CI/CD — GitHub Actions (lint, test, build, deploy)
+- [x] CI/CD — GitHub Actions (lint, test, build)
 - [ ] Domain config (free-templates.cc → Firebase Hosting custom domain)
 
 ---
@@ -345,7 +345,7 @@ downloads/{downloadId}
 7. ✅ Phase 5 — Cloud Functions & security rules (code written, deploy pending Firebase project)
 8. ✅ Phase 4.5–4.8 — Remaining pages (pricing, account, static)
 9. ✅ Phase 6.1 — Performance & SEO (lazy loading, sitemap, robots.txt)
-10. ⬜ Phase 6.3–6.4 — Responsive design, testing, CI/CD
+10. 🔄 Phase 6.3–6.4 — Responsive design, testing, CI/CD (Vitest + CI done, E2E & responsive remaining)
 
 ---
 
