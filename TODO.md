@@ -340,7 +340,7 @@ Comprehensive audit of every component, page, integration, and quality metric.
 | Category | Status | Details |
 |----------|--------|--------|
 | **Build** | ✅ Clean | Vite + TypeScript + Tailwind — zero errors, zero warnings |
-| **Tests (unit)** | ✅ 22/22 | Vitest — cn, formatNumber, formatDate, slugify, Button variants/states/ref |
+| **Tests (unit)** | ✅ 27/27 | Vitest — cn, formatNumber, formatDate, slugify, templateImageUrl, templateGalleryUrls, Button variants/states/ref |
 | **Tests (E2E)** | ✅ 19/19 | Playwright — home, browse filters, pricing, static pages, navigation |
 | **Lint** | ✅ 0 warnings | Oxlint — zero warnings across 58 source files |
 | **All 14 pages** | ✅ Built | Home, Browse, TemplateDetail, Pricing, Login, Register, ForgotPassword, Account, DownloadHistory, NotFound, Terms, Privacy, Contact, FAQ |
@@ -383,14 +383,14 @@ Comprehensive audit of every component, page, integration, and quality metric.
 | Gap | Impact | What's Needed |
 |-----|--------|---------------|
 | **Firebase credentials in .env** | 🔴 App connects to test Firebase | Placeholder values in `.env` (test-project, test.firebaseapp.com). Need real API key, project ID, auth domain, storage bucket, etc. from Firebase Console |
-| **Live template images** | 🔴 No visuals | mock data has `mainImage: ''` and `previewImages: []` — no images anywhere. The existing free-templates.cc has 1,000+ template screenshots. Need to migrate or generate |
+| **Live template images** | 🟡 Placeholders added | All 24 mock templates now have deterministic placeholder URLs via picsum.photos (seeded by slug). LazyImage wired into BrowsePage cards, HomePage featured section, TemplateDetailPage gallery + related templates. Swap picsum URLs for real uploaded images when available. |
 | **Email verification** | ✅ Implemented | `sendEmailVerification()` called after account creation. User navigated to /login with toast to verify before signing in |
 | **Terms acceptance on register** | ✅ Implemented | RegisterPage has terms acceptance checkbox with zod validation (`z.literal(true)`). Links to /terms and /privacy |
 | **Analytics** | 🔴 No tracking | Firebase Analytics or Google Analytics not integrated. Can't measure page views, downloads, conversions |
 | **Domain configuration** | 🔴 custom domain not connected | free-templates.cc → Firebase Hosting custom domain not configured. Site only accessible at firebase- generated URL |
 | **Rate limiting on Cloud Functions** | ✅ Implemented | Token-bucket rate limiter (`functions/src/rateLimiter.ts`) applied to createCheckoutSession (10/min/IP), getDownloadUrl (30/min/IP), cancel/reactivate (5/min/uid), billing portal (10/min/uid) |
 | **CSP / security headers** | ✅ Configured | HSTS, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, and Content-Security-Policy added to firebase.json hosting headers |
-| **Image optimization** | 🔴 Missing | No build-time image optimization, no responsive image srcsets, no WebP/AVIF conversion. LazyImage exists but has nothing to lazy-load |
+| **Image placeholders** | ✅ Done | Deterministic picsum.photos URLs seeded by template slug. LazyImage components now show actual images across BrowsePage, HomePage, and TemplateDetailPage. Ready to swap for real assets. |
 | **Lighthouse audit** | 🔴 Needs deployment | Can't run Lighthouse until site is deployed to a real URL |
 
 ---
@@ -420,7 +420,7 @@ Ordered by impact vs effort:
 | 🔴 P0 | Fill in real Firebase credentials → test dev builds | 15 min | Unblocks all Firebase features |
 | 🔴 P0 | Connect BrowsePage → Firestore for live template data | 2-3h | Site becomes real instead of mock |
 | 🔴 P0 | Deploy Cloud Functions with real Stripe keys + Price IDs | 1h | Enables subscription payments |
-| 🔴 P0 | Migrate 1,000+ template images from free-templates.cc | 4-8h | Makes the site visually functional |
+| 🟡 P1 | Add template placeholder images | ✅ Done | picsum.photos seeded URLs + LazyImage wired into BrowsePage, HomePage, TemplateDetailPage |
 | 🟡 P1 | Wire up getDownloadUrl → download buttons | 2h | Enables actual template downloads |
 | 🟡 P1 | Add email verification flow | ✅ Done | `sendEmailVerification()` on register, redirect to /login with toast |
 | 🟡 P1 | Set up Firebase Hosting + connect custom domain | 1h | Site goes live at free-templates.cc |
@@ -431,9 +431,21 @@ Ordered by impact vs effort:
 | 🟢 P2 | Configure CSP + security headers in firebase.json | ✅ Done | HSTS, CSP, X-Content-Type-Options, Referrer-Policy, Permissions-Policy |
 | 🟢 P2 | Integrate Firebase Analytics | 1h | User behavior insights |
 | 🔵 P3 | Tighten TypeScript config (strict: true) | ✅ Done | Added strict + strictNullChecks + noUncheckedIndexedAccess, build passes clean |
-| 🔵 P3 | Add image optimization pipeline (sharp/WebP) | 2h | Faster page loads |
+| 🔵 P3 | Swap picsum placeholders for real uploaded images | when ready | Production-ready visual polish |
 | 🔵 P3 | Run Lighthouse audit | 30 min | Performance baseline |
 | 🔵 P3 | Accessibility audit + fixes | ✅ Done | Fixed focus trap in Modal, aria attributes in Navbar/BrowsePage/LazyImage/HomePage/LoginPage, sort label, pagination aria-current, filter close labels |
 | 🔵 P3 | Add offline detection / retry logic to React Query | ✅ Done | Retry delay (2s/4s cap 10s), onlineManager listener, NetworkStatusBanner component, useNetworkStatus hook |
 
 ---
+
+## Changelog
+
+### 2026-07-29 — Template placeholder images
+
+- Added `templateImageUrl()` and `templateGalleryUrls()` utility functions in `src/lib/utils.ts`
+- Added `injectImages()` to `src/lib/api.ts` — all fetch functions now attach deterministic picsum.photos placeholder URLs to template results
+- **BrowsePage** — template cards now render `LazyImage` with `mainImage` (16:9 aspect ratio) instead of gradient placeholders
+- **HomePage** — featured templates section renders `LazyImage` placeholders with seeded picsum URLs
+- **TemplateDetailPage** — main gallery image + 4 thumbnail previews + related template cards all show images
+- 5 new unit tests for image URL utilities (27 total, +5)
+- Build clean, all 27 tests passing

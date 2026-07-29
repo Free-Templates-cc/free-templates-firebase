@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { Skeleton } from '../components/ui/Skeleton'
+import { LazyImage } from '../components/ui/LazyImage'
 import { SEOHead } from '../components/seo/SEOHead'
 import { useTemplates, filtersFromParams } from '../hooks/useTemplates'
 import { Search, SlidersHorizontal, X, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -314,7 +315,13 @@ export function BrowsePage() {
                     to={`/templates/${tmpl.slug}`}
                     className="group rounded-xl border border-gray-200 bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900"
                   >
-                    <div className="mb-3 aspect-video rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700" />
+                    <LazyImage
+                      src={tmpl.mainImage}
+                      alt={tmpl.name}
+                      aspectRatio="16/9"
+                      className="rounded-lg"
+                      wrapperClassName="mb-3 rounded-lg"
+                    />
                     <div className="flex items-center justify-between">
                       <Badge variant={tmpl.priceTier === 'premium' ? 'premium' : 'free'}>
                         {tmpl.priceTier === 'premium' ? 'Premium' : 'Free'}

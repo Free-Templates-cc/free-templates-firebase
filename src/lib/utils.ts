@@ -25,3 +25,22 @@ export function slugify(text: string): string {
     .replace(/-+/g, '-')
     .replace(/^-+|-+$/g, '')
 }
+
+/**
+ * Generate a deterministic placeholder image URL for a given template slug.
+ *
+ * Uses picsum.photos with a seed so the same slug always gets the same image.
+ * Swap these for real uploaded images when available.
+ */
+export function templateImageUrl(slug: string, variant = 'main', width = 640, height = 360): string {
+  return `https://picsum.photos/seed/${slug}${variant === 'main' ? '' : `-${variant}`}/${width}/${height}`
+}
+
+/**
+ * Generate an array of preview gallery URLs for a template.
+ */
+export function templateGalleryUrls(slug: string, count = 5): string[] {
+  return Array.from({ length: count }, (_, i) =>
+    templateImageUrl(slug, `preview-${i + 1}`),
+  )
+}

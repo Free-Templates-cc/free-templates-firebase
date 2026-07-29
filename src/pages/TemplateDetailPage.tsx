@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { Skeleton } from '../components/ui/Skeleton'
+import { LazyImage } from '../components/ui/LazyImage'
 import { SEOHead } from '../components/seo/SEOHead'
 import { useAuthStore } from '../stores/authStore'
 import { useTemplate, useRelatedTemplates } from '../hooks/useTemplate'
@@ -102,15 +103,27 @@ export function TemplateDetailPage() {
       <div className="mt-6 grid gap-8 lg:grid-cols-5">
         {/* Gallery */}
         <div className="lg:col-span-3">
-          <div className="aspect-video rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700" />
-          <div className="mt-4 grid grid-cols-4 gap-3">
-            {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="aspect-video rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700"
-              />
-            ))}
-          </div>
+          <LazyImage
+            src={template.mainImage}
+            alt={template.name}
+            aspectRatio="16/9"
+            className="rounded-xl"
+            wrapperClassName="rounded-xl"
+          />
+          {template.previewImages.length > 1 && (
+            <div className="mt-4 grid grid-cols-4 gap-3">
+              {template.previewImages.slice(0, 4).map((img, i) => (
+                <LazyImage
+                  key={i}
+                  src={img}
+                  alt={`${template.name} preview ${i + 1}`}
+                  aspectRatio="16/9"
+                  className="rounded-lg"
+                  wrapperClassName="rounded-lg"
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Info */}
@@ -237,7 +250,13 @@ export function TemplateDetailPage() {
                 to={`/templates/${rt.slug}`}
                 className="group rounded-xl border border-gray-200 bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900"
               >
-                <div className="mb-3 aspect-video rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700" />
+                <LazyImage
+                  src={rt.mainImage}
+                  alt={rt.name}
+                  aspectRatio="16/9"
+                  className="rounded-lg"
+                  wrapperClassName="mb-3 rounded-lg"
+                />
                 <div className="flex items-center justify-between">
                   <Badge variant={rt.priceTier}>
                     {rt.priceTier === 'premium' ? 'Premium' : 'Free'}

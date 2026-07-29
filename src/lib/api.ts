@@ -678,6 +678,23 @@ export interface PageData<T> {
 }
 
 /**
+ * Inject placeholder image URLs into a template.
+ * Uses deterministic picsum.photos seeds so the same slug always gets the same image.
+ */
+function injectImages(t: Template): Template {
+  return {
+    ...t,
+    mainImage: t.mainImage || `https://picsum.photos/seed/${t.slug}/640/360`,
+    previewImages:
+      t.previewImages.length > 0
+        ? t.previewImages
+        : Array.from({ length: 5 }, (_, i) =>
+            `https://picsum.photos/seed/${t.slug}-${i + 1}/640/360`,
+          ),
+  }
+}
+
+/**
  * Simulate network latency so loading states are visible during development.
  */
 function delay(ms = 400): Promise<void> {
@@ -739,7 +756,7 @@ export async function fetchTemplates(
   const total = filtered.length
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
   const start = (page - 1) * pageSize
-  const items = filtered.slice(start, start + pageSize)
+  const items = filtered.slice(start, start + pageSize).map(injectImages)
 
   return { items, total, page, pageSize, totalPages }
 }
@@ -749,7 +766,8 @@ export async function fetchTemplates(
  */
 export async function fetchTemplateBySlug(slug: string): Promise<Template | null> {
   await delay(300)
-  return allTemplates.find((t) => t.slug === slug) ?? null
+  const found = allTemplates.find((t) => t.slug === slug)
+  return found ? injectImages(found) : null
 }
 
 /**
@@ -764,6 +782,7 @@ export async function fetchRelatedTemplates(
   return allTemplates
     .filter((t) => t.slug !== currentSlug && t.category === category)
     .slice(0, limit)
+    .map(injectImages)
 }
 
 // ---------------------------------------------------------------------------

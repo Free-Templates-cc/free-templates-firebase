@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { Badge } from '../components/ui/Badge'
+import { LazyImage } from '../components/ui/LazyImage'
 import { SEOHead } from '../components/seo/SEOHead'
 import { Search, ArrowRight, Star, Download, Grid3X3, Layers } from 'lucide-react'
 
@@ -214,8 +215,13 @@ export function HomePage() {
                 key={tmpl.name}
                 className="group rounded-xl border border-gray-200 bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900"
               >
-                {/* Preview placeholder */}
-                <div className="mb-4 aspect-video rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700" />
+                <LazyImage
+                  src={`https://picsum.photos/seed/${tmpl.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}/640/360`}
+                  alt={tmpl.name}
+                  aspectRatio="16/9"
+                  className="rounded-lg"
+                  wrapperClassName="mb-4 rounded-lg"
+                />
                 <div className="flex items-center justify-between">
                   <Badge variant={tmpl.tier === 'premium' ? 'premium' : 'free'}>
                     {tmpl.tier === 'premium' ? 'Premium' : 'Free'}
