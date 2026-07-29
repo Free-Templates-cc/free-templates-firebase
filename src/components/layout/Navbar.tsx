@@ -54,10 +54,16 @@ export function Navbar() {
 
         {/* Nav links — desktop */}
         <nav className="hidden md:flex items-center gap-1">
-          <Link to="/templates" className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+          <Link
+            to="/templates"
+            className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
+          >
             Templates
           </Link>
-          <Link to="/pricing" className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+          <Link
+            to="/pricing"
+            className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
+          >
             Pricing
           </Link>
         </nav>
@@ -80,23 +86,36 @@ export function Navbar() {
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
               >
-                <span className="hidden sm:inline">{profile?.displayName || user.email?.split('@')[0]}</span>
+                <span className="hidden sm:inline">
+                  {profile?.displayName || user.email?.split('@')[0]}
+                </span>
                 <ChevronDown className="h-4 w-4" />
               </button>
               {showUserMenu && (
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setShowUserMenu(false)} />
                   <div className="absolute right-0 z-20 mt-2 w-48 rounded-xl border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900">
-                    <Link to="/account" onClick={() => setShowUserMenu(false)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
+                    <Link
+                      to="/account"
+                      onClick={() => setShowUserMenu(false)}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                    >
                       My Account
                     </Link>
-                    <Link to="/account/downloads" onClick={() => setShowUserMenu(false)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
+                    <Link
+                      to="/account/downloads"
+                      onClick={() => setShowUserMenu(false)}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                    >
                       <Download className="mr-2 inline h-4 w-4" />
                       My Downloads
                     </Link>
 
                     <hr className="my-1 border-gray-200 dark:border-gray-700" />
-                    <button onClick={handleSignOut} className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <button
+                      onClick={handleSignOut}
+                      className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    >
                       Sign Out
                     </button>
                   </div>
@@ -106,7 +125,9 @@ export function Navbar() {
           ) : (
             <div className="flex items-center gap-2">
               <Link to="/login">
-                <Button variant="ghost" size="sm">Sign In</Button>
+                <Button variant="ghost" size="sm">
+                  Sign In
+                </Button>
               </Link>
               <Link to="/register">
                 <Button size="sm">Get Started</Button>
@@ -140,10 +161,18 @@ export function Navbar() {
             </div>
           </form>
           <nav className="flex flex-col gap-2">
-            <Link to="/templates" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
+            <Link
+              to="/templates"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+            >
               Templates
             </Link>
-            <Link to="/pricing" onClick={() => setMobileMenuOpen(false)} className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
+            <Link
+              to="/pricing"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+            >
               Pricing
             </Link>
           </nav>

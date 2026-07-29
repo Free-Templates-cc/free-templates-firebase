@@ -22,7 +22,7 @@ export function Badge({ className, variant = 'free', children, ...props }: Badge
       className={cn(
         'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
         badgeVariants[variant],
-        className
+        className,
       )}
       {...props}
     >

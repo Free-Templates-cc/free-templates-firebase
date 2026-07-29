@@ -46,10 +46,11 @@ export function PricingPage() {
         description="Choose the perfect plan for your needs. Free access to hundreds of templates or go Premium for unlimited downloads of all premium templates."
       />
 
-
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Simple, Transparent Pricing</h1>
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+          Simple, Transparent Pricing
+        </h1>
         <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
           Start with free templates. Upgrade when you need more.
         </p>
@@ -57,16 +58,22 @@ export function PricingPage() {
 
       {/* Toggle */}
       <div className="mt-8 flex items-center justify-center gap-3">
-        <span className={`text-sm font-medium ${!annual ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>
+        <span
+          className={`text-sm font-medium ${!annual ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}
+        >
           Monthly
         </span>
         <button
           onClick={() => setAnnual(!annual)}
           className={`relative h-6 w-11 rounded-full transition-colors ${annual ? 'bg-primary-600' : 'bg-gray-300 dark:bg-gray-600'}`}
         >
-          <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${annual ? 'translate-x-5' : ''}`} />
+          <span
+            className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${annual ? 'translate-x-5' : ''}`}
+          />
         </button>
-        <span className={`text-sm font-medium ${annual ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>
+        <span
+          className={`text-sm font-medium ${annual ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}
+        >
           Yearly <span className="text-green-500">(Save 31%)</span>
         </span>
       </div>
@@ -94,7 +101,9 @@ export function PricingPage() {
                 {annual ? plan.price.yearly : plan.price.monthly}
               </span>
               {plan.name === 'Premium' && (
-                <span className="ml-1 text-sm text-gray-500 dark:text-gray-400">/{annual ? 'year' : 'month'}</span>
+                <span className="ml-1 text-sm text-gray-500 dark:text-gray-400">
+                  /{annual ? 'year' : 'month'}
+                </span>
               )}
             </div>
 
@@ -106,7 +115,13 @@ export function PricingPage() {
                   ) : (
                     <X className="h-4 w-4 shrink-0 text-gray-300 dark:text-gray-600" />
                   )}
-                  <span className={feature.included ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500'}>
+                  <span
+                    className={
+                      feature.included
+                        ? 'text-gray-700 dark:text-gray-300'
+                        : 'text-gray-400 dark:text-gray-500'
+                    }
+                  >
                     {feature.name}
                   </span>
                 </li>
@@ -126,7 +141,11 @@ export function PricingPage() {
                 )
               ) : (
                 <Link to={plan.name === 'Premium' ? '/register' : '/templates'}>
-                  <Button variant={plan.popular ? 'premium' : 'outline'} size="lg" className="w-full">
+                  <Button
+                    variant={plan.popular ? 'premium' : 'outline'}
+                    size="lg"
+                    className="w-full"
+                  >
                     {plan.name === 'Premium' ? 'Get Started' : 'Browse Free Templates'}
                   </Button>
                 </Link>

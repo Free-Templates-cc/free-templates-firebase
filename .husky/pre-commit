@@ -1,1 +1,5 @@
-oxlint --fix && prettier --write
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+export PATH="node_modules/.bin:$PATH"
+npx --yes oxlint --fix && npx prettier --write src/

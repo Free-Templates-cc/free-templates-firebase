@@ -67,7 +67,17 @@ export function LazyImage({
             loaded ? 'opacity-100' : 'opacity-0',
             className,
           )}
-          style={aspectRatio ? { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' } : undefined}
+          style={
+            aspectRatio
+              ? {
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }
+              : undefined
+          }
         />
       )}
     </div>

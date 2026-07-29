@@ -32,17 +32,26 @@ export function ForgotPasswordPage() {
         <SEOHead title="Password Reset Sent — Free Templates" noIndex />
         <div className="w-full text-center">
           <CheckCircle className="mx-auto h-12 w-12 text-green-500" />
-          <h1 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">Check your email</h1>
+          <h1 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">
+            Check your email
+          </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            We sent a password reset link to <strong className="text-gray-900 dark:text-white">{email}</strong>
+            We sent a password reset link to{' '}
+            <strong className="text-gray-900 dark:text-white">{email}</strong>
           </p>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
             Didn't get it?{' '}
-            <button onClick={() => setSent(false)} className="text-primary-600 hover:text-primary-500">
+            <button
+              onClick={() => setSent(false)}
+              className="text-primary-600 hover:text-primary-500"
+            >
               Try again
             </button>
           </p>
-          <Link to="/login" className="mt-6 inline-flex items-center gap-1 text-sm text-primary-600 hover:text-primary-500">
+          <Link
+            to="/login"
+            className="mt-6 inline-flex items-center gap-1 text-sm text-primary-600 hover:text-primary-500"
+          >
             <ArrowLeft className="h-4 w-4" />
             Back to sign in
           </Link>
@@ -53,7 +62,11 @@ export function ForgotPasswordPage() {
 
   return (
     <div className="mx-auto flex min-h-[60vh] max-w-md items-center px-4 py-16">
-      <SEOHead title="Forgot Password — Free Templates" description="Reset your Free Templates account password." noIndex />
+      <SEOHead
+        title="Forgot Password — Free Templates"
+        description="Reset your Free Templates account password."
+        noIndex
+      />
       <div className="w-full">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Reset your password</h1>
         <p className="mt-2 text-gray-600 dark:text-gray-400">
@@ -68,7 +81,9 @@ export function ForgotPasswordPage() {
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Email
+            </label>
             <div className="relative mt-1">
               <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input

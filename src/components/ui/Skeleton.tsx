@@ -15,7 +15,7 @@ export function Skeleton({ className, variant = 'text' }: SkeletonProps) {
         variant === 'text' && 'h-4 w-full rounded',
         variant === 'rectangular' && 'rounded-lg',
         variant === 'card' && 'h-64 rounded-xl',
-        className
+        className,
       )}
     />
   )

@@ -41,7 +41,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-gray-700',
               icon && 'pl-10',
               props.disabled && 'cursor-not-allowed opacity-50',
-              className
+              className,
             )}
             aria-invalid={error ? 'true' : undefined}
             aria-describedby={error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined}
@@ -50,7 +50,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         </div>
 
         {error && (
-          <p id={`${inputId}-error`} className="text-sm text-red-600 dark:text-red-400" role="alert">
+          <p
+            id={`${inputId}-error`}
+            className="text-sm text-red-600 dark:text-red-400"
+            role="alert"
+          >
             {error}
           </p>
         )}
@@ -62,7 +66,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
       </div>
     )
-  }
+  },
 )
 
 Input.displayName = 'Input'

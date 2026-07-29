@@ -59,12 +59,15 @@
   - **Free:** browse all, download free templates only
   - **Premium:** unlimited downloads of premium templates
   - Stripe integration pending Firebase project setup
-- [ ] Stripe checkout integration (via Firebase Extension or Cloud Function)
-- [ ] Stripe checkout integration (via Firebase Extension or Cloud Function)
-- [ ] Webhook to update Firestore subscription status
-- [ ] UI for current plan, upgrade/downgrade/cancel
-- [ ] Grace period / subscription expiry handling
-- [ ] Restrict premium downloads to active subscribers
+- [x] Stripe checkout creation (Cloud Function: `createCheckoutSession`)
+- [x] Stripe webhook (handles checkout.session.completed, invoice.paid, payment_failed, subscription.updated/deleted)
+- [x] Cancel subscription Cloud Function (`cancelSubscription`)
+- [x] Reactivate subscription Cloud Function (`reactivateSubscription`)
+- [x] Stripe Customer Portal Cloud Function (`createBillingPortalSession`)
+- [x] Frontend API helpers for subscription Cloud Functions
+- [x] UI for current plan, upgrade/downgrade/cancel (AccountPage)
+- [x] Grace period / subscription expiry handling
+- [x] Restrict premium downloads to active subscribers
 
 ---
 
@@ -350,7 +353,7 @@ downloads/{downloadId}
 7. ✅ Phase 5 — Cloud Functions & security rules (code written, deploy pending Firebase project)
 8. ✅ Phase 4.5–4.8 — Remaining pages (pricing, account, static)
 9. ✅ Phase 6.1 — Performance & SEO (lazy loading, sitemap, robots.txt)
-10. 🔄 Phase 6.3–6.4 — Responsive design, testing, CI/CD (Vitest + CI done, E2E & responsive remaining)
+10. ✅ Phase 6.3–6.4 — Responsive design, testing, CI/CD (Vitest + CI done, E2E done, responsive complete)
 
 ---
 

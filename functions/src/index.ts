@@ -13,7 +13,6 @@ import * as logger from 'firebase-functions/logger'
 import { onDocumentCreated } from 'firebase-functions/v2/firestore'
 import { onSchedule } from 'firebase-functions/v2/scheduler'
 import { onRequest } from 'firebase-functions/v2/https'
-import { defineSecret } from 'firebase-functions/params'
 import { initializeApp } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { getStorage } from 'firebase-admin/storage'
@@ -75,7 +74,7 @@ export const createCheckoutSession = onRequest(
 
       // Look up existing customer or create a new one
       const stripe = new Stripe(STRIPE_SECRET_KEY.value(), {
-        apiVersion: '2024-11-20.acacia',
+        apiVersion: '2024-06-20',
       })
 
       let stripeCustomerId: string
@@ -153,7 +152,7 @@ export const stripeWebhook = onRequest(
     }
 
     const stripe = new Stripe(STRIPE_SECRET_KEY.value(), {
-      apiVersion: '2024-11-20.acacia',
+      apiVersion: '2024-06-20',
     })
 
     // Verify webhook signature
@@ -451,7 +450,220 @@ export const getDownloadUrl = onRequest(
 )
 
 // ---------------------------------------------------------------------------
-// 4. incrementDownloadCount
+// 4. cancelSubscription
+// ---------------------------------------------------------------------------
+/**
+ * Cancels an active subscription at period end.
+ *
+ * Request body (JSON):
+ *   { "uid": "<firebase-uid>" }
+ *
+ * Response:
+ *   { "canceledAt": "ISO-date", "currentPeriodEnd": "ISO-date" }
+ */
+export const cancelSubscription = onRequest(
+  { cors: true, secrets: [STRIPE_SECRET_KEY] },
+  async (req, res) => {
+    if (req.method !== 'POST') {
+      res.status(405).json({ error: 'Method not allowed' })
+      return
+    }
+
+    try {
+      const { uid } = req.body as { uid: string }
+
+      if (!uid || typeof uid !== 'string') {
+        res.status(400).json({ error: 'Missing or invalid uid.' })
+        return
+      }
+
+      // Fetch user
+      const userDoc = await db.collection('users').doc(uid).get()
+      if (!userDoc.exists) {
+        res.status(404).json({ error: 'User not found.' })
+        return
+      }
+
+      const userData = userDoc.data()!
+      const subscriptionId = userData.subscription?.stripeSubscriptionId
+
+      if (!subscriptionId) {
+        res.status(400).json({ error: 'No active subscription found.' })
+        return
+      }
+
+      const stripe = new Stripe(STRIPE_SECRET_KEY.value(), {
+        apiVersion: '2024-06-20',
+      })
+
+      // Cancel at period end
+      const canceled = await stripe.subscriptions.update(subscriptionId, {
+        cancel_at_period_end: true,
+      })
+
+      const currentPeriodEnd = new Date(canceled.current_period_end * 1000)
+      const canceledAt = new Date()
+
+      // Update Firestore
+      await db.collection('users').doc(uid).update({
+        'subscription.canceledAt': canceledAt,
+        'subscription.currentPeriodEnd': currentPeriodEnd,
+        'subscription.cancel_at_period_end': true,
+        updatedAt: canceledAt,
+      })
+
+      logger.info(`Subscription canceled for ${uid} — ends ${currentPeriodEnd.toISOString()}`)
+
+      res.json({
+        canceledAt: canceledAt.toISOString(),
+        currentPeriodEnd: currentPeriodEnd.toISOString(),
+        status: 'canceled',
+      })
+    } catch (err) {
+      logger.error('cancelSubscription failed', err)
+      res.status(500).json({ error: 'Failed to cancel subscription.' })
+    }
+  },
+)
+
+// ---------------------------------------------------------------------------
+// 5. reactivateSubscription
+// ---------------------------------------------------------------------------
+/**
+ * Reactivates a subscription that was set to cancel at period end.
+ * Only works if the subscription hasn't expired yet.
+ *
+ * Request body (JSON):
+ *   { "uid": "<firebase-uid>" }
+ *
+ * Response:
+ *   { "status": "active", "currentPeriodEnd": "ISO-date" }
+ */
+export const reactivateSubscription = onRequest(
+  { cors: true, secrets: [STRIPE_SECRET_KEY] },
+  async (req, res) => {
+    if (req.method !== 'POST') {
+      res.status(405).json({ error: 'Method not allowed' })
+      return
+    }
+
+    try {
+      const { uid } = req.body as { uid: string }
+
+      if (!uid || typeof uid !== 'string') {
+        res.status(400).json({ error: 'Missing or invalid uid.' })
+        return
+      }
+
+      // Fetch user
+      const userDoc = await db.collection('users').doc(uid).get()
+      if (!userDoc.exists) {
+        res.status(404).json({ error: 'User not found.' })
+        return
+      }
+
+      const userData = userDoc.data()!
+      const subscriptionId = userData.subscription?.stripeSubscriptionId
+
+      if (!subscriptionId) {
+        res.status(400).json({ error: 'No subscription found to reactivate.' })
+        return
+      }
+
+      const stripe = new Stripe(STRIPE_SECRET_KEY.value(), {
+        apiVersion: '2024-06-20',
+      })
+
+      // Remove cancel_at_period_end
+      const reactivated = await stripe.subscriptions.update(subscriptionId, {
+        cancel_at_period_end: false,
+      })
+
+      const currentPeriodEnd = new Date(reactivated.current_period_end * 1000)
+
+      // Update Firestore
+      await db.collection('users').doc(uid).update({
+        'subscription.canceledAt': null,
+        'subscription.currentPeriodEnd': currentPeriodEnd,
+        'subscription.cancel_at_period_end': false,
+        updatedAt: new Date(),
+      })
+
+      logger.info(`Subscription reactivated for ${uid}`)
+
+      res.json({
+        status: 'active',
+        currentPeriodEnd: currentPeriodEnd.toISOString(),
+      })
+    } catch (err) {
+      logger.error('reactivateSubscription failed', err)
+      res.status(500).json({ error: 'Failed to reactivate subscription.' })
+    }
+  },
+)
+
+// ---------------------------------------------------------------------------
+// 6. createBillingPortalSession
+// ---------------------------------------------------------------------------
+/**
+ * Creates a Stripe Customer Portal session for self-service billing management.
+ *
+ * Request body (JSON):
+ *   { "uid": "<firebase-uid>" }
+ *
+ * Response:
+ *   { "url": "https://billing.stripe.com/..." }
+ */
+export const createBillingPortalSession = onRequest(
+  { cors: true, secrets: [STRIPE_SECRET_KEY] },
+  async (req, res) => {
+    if (req.method !== 'POST') {
+      res.status(405).json({ error: 'Method not allowed' })
+      return
+    }
+
+    try {
+      const { uid } = req.body as { uid: string }
+
+      if (!uid || typeof uid !== 'string') {
+        res.status(400).json({ error: 'Missing or invalid uid.' })
+        return
+      }
+
+      // Fetch user to get Stripe customer ID
+      const userDoc = await db.collection('users').doc(uid).get()
+      if (!userDoc.exists) {
+        res.status(404).json({ error: 'User not found.' })
+        return
+      }
+
+      const userData = userDoc.data()!
+      const stripeCustomerId = userData.subscription?.stripeCustomerId
+
+      if (!stripeCustomerId) {
+        res.status(400).json({ error: 'No Stripe customer found.' })
+        return
+      }
+
+      const stripe = new Stripe(STRIPE_SECRET_KEY.value(), {
+        apiVersion: '2024-06-20',
+      })
+
+      const session = await stripe.billingPortal.sessions.create({
+        customer: stripeCustomerId,
+        return_url: 'https://free-templates.cc/account',
+      })
+
+      res.json({ url: session.url })
+    } catch (err) {
+      logger.error('createBillingPortalSession failed', err)
+      res.status(500).json({ error: 'Failed to create billing portal session.' })
+    }
+  },
+)
+
+// ---------------------------------------------------------------------------
+// 7. incrementDownloadCount
 // ---------------------------------------------------------------------------
 /**
  * Triggered when a user downloads a template.
@@ -492,7 +704,7 @@ export const onTemplateDownloaded = onDocumentCreated(
 // but we use the initialized app's Firestore instance.
 
 // ---------------------------------------------------------------------------
-// 5. Scheduled — Cleanup expired subscriptions
+// 8. Scheduled — Cleanup expired subscriptions
 // ---------------------------------------------------------------------------
 /**
  * Runs daily at 03:00 to clean up expired subscriptions.

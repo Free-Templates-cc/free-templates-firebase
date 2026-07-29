@@ -35,7 +35,7 @@ export function Modal({
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     },
-    [onClose]
+    [onClose],
   )
 
   useEffect(() => {
@@ -67,7 +67,7 @@ export function Modal({
         aria-label={title}
         className={cn(
           'relative w-full rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-900',
-          sizeClasses[size]
+          sizeClasses[size],
         )}
       >
         {/* Header */}
@@ -75,14 +75,10 @@ export function Modal({
           <div className="flex items-start justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-800">
             <div>
               {title && (
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {title}
-                </h2>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
               )}
               {description && (
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                  {description}
-                </p>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{description}</p>
               )}
             </div>
             {showClose && (
@@ -98,11 +94,7 @@ export function Modal({
         )}
 
         {/* Body */}
-        {children && (
-          <div className="px-6 py-4">
-            {children}
-          </div>
-        )}
+        {children && <div className="px-6 py-4">{children}</div>}
 
         {/* Footer */}
         {footer && (

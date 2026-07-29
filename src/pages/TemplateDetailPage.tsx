@@ -9,23 +9,22 @@ import { useTemplateDownloadCount } from '../hooks/useTemplateDownloadCount'
 
 function LiveDownloadCount({ slug, staticCount }: { slug: string; staticCount: number }) {
   const { data: liveCount } = useTemplateDownloadCount(slug)
-  const display = liveCount !== undefined ? liveCount.toLocaleString() : staticCount.toLocaleString()
+  const display =
+    liveCount !== undefined ? liveCount.toLocaleString() : staticCount.toLocaleString()
   return <>{display}</>
 }
 import { ArrowLeft, Download, ExternalLink, GitFork, Check } from 'lucide-react'
 
 /** Normalize framework name for Badge variant (e.g. 'Next.js' → 'nextjs'). */
-const fwVariant = (fw: string) => fw.toLowerCase().replace(/[.\\s]/g, '') as 'nextjs' | 'gatsby' | 'nuxt' | 'vue' | 'react'
+const fwVariant = (fw: string) =>
+  fw.toLowerCase().replace(/[.\\s]/g, '') as 'nextjs' | 'gatsby' | 'nuxt' | 'vue' | 'react'
 
 export function TemplateDetailPage() {
   const { slug } = useParams<{ slug: string }>()
   const { user, isPremium, isLoading: authLoading } = useAuthStore()
 
   const { data: template, isLoading, isError } = useTemplate(slug ?? '')
-  const { data: relatedTemplates } = useRelatedTemplates(
-    slug ?? '',
-    template?.category ?? '',
-  )
+  const { data: relatedTemplates } = useRelatedTemplates(slug ?? '', template?.category ?? '')
 
   // Loading state
   if (isLoading || authLoading) {
@@ -61,7 +60,10 @@ export function TemplateDetailPage() {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <SEOHead title="Template Not Found — Free Templates" noIndex />
-        <Link to="/templates" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+        <Link
+          to="/templates"
+          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+        >
           <ArrowLeft className="h-4 w-4" />
           Back to templates
         </Link>
@@ -71,7 +73,9 @@ export function TemplateDetailPage() {
             The template you're looking for doesn't exist or has been removed.
           </p>
           <Link to="/templates" className="mt-4">
-            <Button variant="outline" size="sm">Browse templates</Button>
+            <Button variant="outline" size="sm">
+              Browse templates
+            </Button>
           </Link>
         </div>
       </div>
@@ -87,7 +91,10 @@ export function TemplateDetailPage() {
         canonicalUrl={`https://free-templates.cc/templates/${template.slug}`}
       />
       {/* Back */}
-      <Link to="/templates" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+      <Link
+        to="/templates"
+        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+      >
         <ArrowLeft className="h-4 w-4" />
         Back to templates
       </Link>
@@ -98,7 +105,10 @@ export function TemplateDetailPage() {
           <div className="aspect-video rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700" />
           <div className="mt-4 grid grid-cols-4 gap-3">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="aspect-video rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700" />
+              <div
+                key={i}
+                className="aspect-video rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700"
+              />
             ))}
           </div>
         </div>
@@ -116,7 +126,10 @@ export function TemplateDetailPage() {
 
           {/* Meta */}
           <div className="mt-6 flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
-            <span>Category: <strong className="text-gray-900 dark:text-white">{template.category}</strong></span>
+            <span>
+              Category:{' '}
+              <strong className="text-gray-900 dark:text-white">{template.category}</strong>
+            </span>
             <span>
               Downloads:{' '}
               <strong className="text-gray-900 dark:text-white">
@@ -165,13 +178,23 @@ export function TemplateDetailPage() {
           {/* Links */}
           <div className="mt-4 flex gap-3">
             {template.demoUrl && (
-              <a href={template.demoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+              <a
+                href={template.demoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+              >
                 <ExternalLink className="h-4 w-4" />
                 Live Demo
               </a>
             )}
             {template.githubUrl && (
-              <a href={template.githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+              <a
+                href={template.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+              >
                 <GitFork className="h-4 w-4" />
                 GitHub
               </a>
@@ -184,7 +207,10 @@ export function TemplateDetailPage() {
               <h2 className="font-semibold text-gray-900 dark:text-white">Features</h2>
               <ul className="mt-3 grid grid-cols-2 gap-2">
                 {template.features.map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <li
+                    key={f}
+                    className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
+                  >
                     <Check className="h-4 w-4 text-green-500 shrink-0" />
                     {f}
                   </li>

@@ -8,10 +8,20 @@ import { useTemplates, filtersFromParams } from '../hooks/useTemplates'
 import { Search, SlidersHorizontal, X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const frameworks = ['Next.js', 'Gatsby.js', 'Nuxt.js', 'Vue.js', 'React']
-const categories = ['Business', 'Portfolio', 'Landing', 'E-Commerce', 'Blog', 'SaaS', 'Agency', 'Education']
+const categories = [
+  'Business',
+  'Portfolio',
+  'Landing',
+  'E-Commerce',
+  'Blog',
+  'SaaS',
+  'Agency',
+  'Education',
+]
 
 /** Normalize framework name for Badge variant (e.g. 'Next.js' → 'nextjs'). */
-const fwVariant = (fw: string) => fw.toLowerCase().replace(/[.\s]/g, '') as 'nextjs' | 'gatsby' | 'nuxt' | 'vue' | 'react'
+const fwVariant = (fw: string) =>
+  fw.toLowerCase().replace(/[.\s]/g, '') as 'nextjs' | 'gatsby' | 'nuxt' | 'vue' | 'react'
 
 export function BrowsePage() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -53,7 +63,8 @@ export function BrowsePage() {
     setSearchParams({})
   }
 
-  const hasFilters = filters.search || filters.category || filters.framework || filters.priceTier !== 'all'
+  const hasFilters =
+    filters.search || filters.category || filters.framework || filters.priceTier !== 'all'
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -102,28 +113,39 @@ export function BrowsePage() {
           {filters.search && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-3 py-1 text-sm text-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
               Search: {filters.search}
-              <button onClick={() => updateFilter('search', '')}><X className="h-3 w-3" /></button>
+              <button onClick={() => updateFilter('search', '')}>
+                <X className="h-3 w-3" />
+              </button>
             </span>
           )}
           {filters.category && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-3 py-1 text-sm text-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
               {filters.category}
-              <button onClick={() => updateFilter('category', '')}><X className="h-3 w-3" /></button>
+              <button onClick={() => updateFilter('category', '')}>
+                <X className="h-3 w-3" />
+              </button>
             </span>
           )}
           {filters.framework && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-3 py-1 text-sm text-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
               {filters.framework}
-              <button onClick={() => updateFilter('framework', '')}><X className="h-3 w-3" /></button>
+              <button onClick={() => updateFilter('framework', '')}>
+                <X className="h-3 w-3" />
+              </button>
             </span>
           )}
           {filters.priceTier !== 'all' && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-3 py-1 text-sm text-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
               {filters.priceTier === 'free' ? 'Free' : 'Premium'}
-              <button onClick={() => updateFilter('priceTier', 'all')}><X className="h-3 w-3" /></button>
+              <button onClick={() => updateFilter('priceTier', 'all')}>
+                <X className="h-3 w-3" />
+              </button>
             </span>
           )}
-          <button onClick={clearFilters} className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+          <button
+            onClick={clearFilters}
+            className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          >
             Clear all
           </button>
         </div>
@@ -231,7 +253,9 @@ export function BrowsePage() {
           ) : isError ? (
             /* Error state */
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <p className="text-lg font-medium text-gray-900 dark:text-white">Something went wrong</p>
+              <p className="text-lg font-medium text-gray-900 dark:text-white">
+                Something went wrong
+              </p>
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                 Couldn't load templates. Please try again later.
               </p>
@@ -239,13 +263,17 @@ export function BrowsePage() {
           ) : data && data.items.length === 0 ? (
             /* Empty state */
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <p className="text-lg font-medium text-gray-900 dark:text-white">No templates found</p>
+              <p className="text-lg font-medium text-gray-900 dark:text-white">
+                No templates found
+              </p>
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                 Try adjusting your search or filters to find what you're looking for.
               </p>
               {hasFilters && (
                 <button onClick={clearFilters} className="mt-4">
-                  <Button variant="outline" size="sm">Clear all filters</Button>
+                  <Button variant="outline" size="sm">
+                    Clear all filters
+                  </Button>
                 </button>
               )}
             </div>
@@ -287,7 +315,10 @@ export function BrowsePage() {
 
               {/* Pagination */}
               {data!.totalPages > 1 && (
-                <nav className="mt-10 flex items-center justify-center gap-2" aria-label="Pagination">
+                <nav
+                  className="mt-10 flex items-center justify-center gap-2"
+                  aria-label="Pagination"
+                >
                   <button
                     onClick={() => goToPage(page - 1)}
                     disabled={page <= 1}
@@ -300,7 +331,10 @@ export function BrowsePage() {
                   <div className="hidden items-center gap-1 sm:flex">
                     {generatePageNumbers(page, data!.totalPages).map((p, i) =>
                       p === '...' ? (
-                        <span key={`ellipsis-${i}`} className="px-2 text-sm text-gray-400 dark:text-gray-500">
+                        <span
+                          key={`ellipsis-${i}`}
+                          className="px-2 text-sm text-gray-400 dark:text-gray-500"
+                        >
                           …
                         </span>
                       ) : (

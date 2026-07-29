@@ -40,7 +40,8 @@ export function initAuthListener() {
           const profile = snapshot.data() as UserProfile
           useAuthStore.setState({
             profile,
-            isPremium: profile.subscription?.tier === 'premium' && profile.subscription?.status === 'active',
+            isPremium:
+              profile.subscription?.tier === 'premium' && profile.subscription?.status === 'active',
             isAdmin: profile.role === 'admin',
             isLoading: false,
             initialized: true,

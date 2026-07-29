@@ -14,9 +14,7 @@ interface BreadcrumbsProps {
 }
 
 export function Breadcrumbs({ items, className, includeHome = true }: BreadcrumbsProps) {
-  const allItems = includeHome
-    ? [{ label: 'Home', href: '/' }, ...items]
-    : items
+  const allItems = includeHome ? [{ label: 'Home', href: '/' }, ...items] : items
 
   return (
     <nav aria-label="Breadcrumb" className={cn('flex items-center gap-1 text-sm', className)}>
@@ -26,15 +24,10 @@ export function Breadcrumbs({ items, className, includeHome = true }: Breadcrumb
 
           return (
             <li key={`${item.label}-${i}`} className="flex items-center gap-1">
-              {i > 0 && (
-                <ChevronRight className="h-3.5 w-3.5 text-gray-400" aria-hidden="true" />
-              )}
+              {i > 0 && <ChevronRight className="h-3.5 w-3.5 text-gray-400" aria-hidden="true" />}
 
               {isLast ? (
-                <span
-                  className="font-medium text-gray-900 dark:text-white"
-                  aria-current="page"
-                >
+                <span className="font-medium text-gray-900 dark:text-white" aria-current="page">
                   {item.href ? (
                     <Link to={item.href} className="hover:text-primary-600">
                       {item.label}

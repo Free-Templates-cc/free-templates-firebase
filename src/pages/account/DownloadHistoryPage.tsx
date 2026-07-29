@@ -22,7 +22,10 @@ function DownloadHistorySkeleton() {
   return (
     <div className="animate-pulse space-y-4">
       {[1, 2, 3].map((i) => (
-        <div key={i} className="flex items-center gap-4 rounded-xl border border-gray-200 p-4 dark:border-gray-800">
+        <div
+          key={i}
+          className="flex items-center gap-4 rounded-xl border border-gray-200 p-4 dark:border-gray-800"
+        >
           <Skeleton className="h-12 w-12 rounded-lg" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-4 w-48" />
@@ -90,7 +93,9 @@ export function DownloadHistoryPage() {
                   Something went wrong. Please try again later.
                 </p>
                 <Link to="/account" className="mt-4">
-                  <Button variant="outline" size="sm">Go to Account</Button>
+                  <Button variant="outline" size="sm">
+                    Go to Account
+                  </Button>
                 </Link>
               </div>
             </CardContent>
@@ -147,7 +152,9 @@ export function DownloadHistoryPage() {
                       {formatDate(dl.downloadedAt)}
                     </span>
                     {dl.templateCategory && (
-                      <Badge variant="default" className="text-[10px]">{dl.templateCategory}</Badge>
+                      <Badge variant="default" className="text-[10px]">
+                        {dl.templateCategory}
+                      </Badge>
                     )}
                     {dl.priceTier && (
                       <Badge variant={dl.priceTier} className="text-[10px]">

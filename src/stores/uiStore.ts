@@ -35,6 +35,6 @@ export const useUIStore = create<UIState>()(
           document.documentElement.classList.remove('dark')
         }
       },
-    }
-  )
+    },
+  ),
 )

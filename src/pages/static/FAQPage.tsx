@@ -41,8 +41,15 @@ const faqs: FAQ[] = [
     q: 'I found a bug. How do I report it?',
     a: (
       <>
-        Please visit our <Link to="/contact" className="text-primary-600 hover:underline">Contact page</Link> or email us at{' '}
-        <a href="mailto:support@free-templates.cc" className="text-primary-600 hover:underline">support@free-templates.cc</a>.
+        Please visit our{' '}
+        <Link to="/contact" className="text-primary-600 hover:underline">
+          Contact page
+        </Link>{' '}
+        or email us at{' '}
+        <a href="mailto:support@free-templates.cc" className="text-primary-600 hover:underline">
+          support@free-templates.cc
+        </a>
+        .
       </>
     ),
   },
@@ -53,9 +60,15 @@ export function FAQPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-      <Helmet><title>FAQ — Free Templates</title></Helmet>
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Frequently Asked Questions</h1>
-      <p className="mt-2 text-gray-600 dark:text-gray-400">Everything you need to know about Free Templates.</p>
+      <Helmet>
+        <title>FAQ — Free Templates</title>
+      </Helmet>
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+        Frequently Asked Questions
+      </h1>
+      <p className="mt-2 text-gray-600 dark:text-gray-400">
+        Everything you need to know about Free Templates.
+      </p>
 
       <div className="mt-8 divide-y divide-gray-200 dark:divide-gray-800">
         {faqs.map((faq, i) => (
