@@ -1,0 +1,11 @@
+# Free-Templates.cc
+# https://free-templates.cc
+
+User-agent: *
+Allow: /
+Disallow: /account/
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+
+Sitemap: https://free-templates.cc/sitemap.xml

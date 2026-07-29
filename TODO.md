@@ -13,7 +13,7 @@
 - [x] Install dependencies: `react-router-dom`, `@tanstack/react-query`, `zustand`, `firebase`, `react-hook-form`, `zod`, `react-hot-toast`, `clsx`, `tailwind-merge`, `lucide-react`, `react-helmet-async`
 - [x] Set up folder structure
 - [x] Configure ESLint (oxlint)
-- [ ] Configure Prettier (optional)
+- [x] Configure Prettier (optional)
 - [ ] Configure husky + lint-staged (pre-commit hooks) (optional)
 - [x] Initialize Git with good `.gitignore`
 
@@ -185,10 +185,10 @@
 ## Phase 6: Polish & Launch
 
 ### 6.1 Performance & SEO
-- [ ] Lazy loading for images / components
+- [x] Lazy loading for images / components (LazyImage component + route-level code splitting)
 - [x] React.lazy + Suspense for route splitting
 - [x] Meta tags per page (react-helmet-async)
-- [ ] Sitemap generation
+- [x] Sitemap generation (vite-plugin-sitemap + robots.txt)
 - [ ] Lighthouse audit (target 90+ across the board)
 
 ### 6.2 Error Handling & UX
@@ -344,8 +344,9 @@ downloads/{downloadId}
 6. 🔲 Phase 3 — Admin template management (separate CMS)
 7. ✅ Phase 5 — Cloud Functions & security rules (code written, deploy pending Firebase project)
 8. ✅ Phase 4.5–4.8 — Remaining pages (pricing, account, static)
-9. ⬜ Phase 6 — Polish, SEO, analytics, launch (next up)
+9. ✅ Phase 6.1 — Performance & SEO (lazy loading, sitemap, robots.txt)
+10. ⬜ Phase 6.3–6.4 — Responsive design, testing, CI/CD
 
 ---
 
-*Last updated: 2026-07-29*
+*Last updated: 2026-07-29 (13:35 CET)*

@@ -1,39 +1,50 @@
+import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown } from 'lucide-react'
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 
-const faqs = [
+interface FAQ {
+  q: string
+  a: ReactNode
+}
+
+const faqs: FAQ[] = [
   {
-    q: "What is Free Templates?",
-    a: "Free Templates is a marketplace for high-quality website templates built with Next.js, Gatsby, Nuxt, and other modern frameworks. We offer both free and premium templates.",
+    q: 'What is Free Templates?',
+    a: 'Free Templates is a marketplace for high-quality website templates built with Next.js, Gatsby, Nuxt, and other modern frameworks. We offer both free and premium templates.',
   },
   {
-    q: "Are the templates really free?",
-    a: "Yes! We offer a selection of free templates that you can download without any account or payment. Premium templates require an active subscription.",
+    q: 'Are the templates really free?',
+    a: 'Yes! We offer a selection of free templates that you can download without any account or payment. Premium templates require an active subscription.',
   },
   {
-    q: "What does the Premium subscription include?",
-    a: "Premium members get unlimited access to all premium templates, priority support, and early access to new template releases. Plans start at $12/month or $99/year.",
+    q: 'What does the Premium subscription include?',
+    a: 'Premium members get unlimited access to all premium templates, priority support, and early access to new template releases. Plans start at $12/month or $99/year.',
   },
   {
-    q: "Can I use templates for commercial projects?",
-    a: "Yes. Both free and premium templates can be used for personal and commercial projects. You may not redistribute or resell the templates themselves.",
+    q: 'Can I use templates for commercial projects?',
+    a: 'Yes. Both free and premium templates can be used for personal and commercial projects. You may not redistribute or resell the templates themselves.',
   },
   {
-    q: "How do I sign up?",
+    q: 'How do I sign up?',
     a: 'Click the "Sign Up" button in the top right corner. You can register with your email address or sign in with Google.',
   },
   {
-    q: "Can I cancel my subscription?",
-    a: "Yes, you can cancel anytime from your account settings. Your access continues until the end of the current billing period.",
+    q: 'Can I cancel my subscription?',
+    a: 'Yes, you can cancel anytime from your account settings. Your access continues until the end of the current billing period.',
   },
   {
-    q: "How are payments processed?",
-    a: "All payments are processed securely through Stripe. We do not store your payment information on our servers.",
+    q: 'How are payments processed?',
+    a: 'All payments are processed securely through Stripe. We do not store your payment information on our servers.',
   },
   {
-    q: "I found a bug. How do I report it?",
-    a: 'Please visit our <Link to="/contact">Contact page</Link> or email us at support@free-templates.cc.',
+    q: 'I found a bug. How do I report it?',
+    a: (
+      <>
+        Please visit our <Link to="/contact" className="text-primary-600 hover:underline">Contact page</Link> or email us at{' '}
+        <a href="mailto:support@free-templates.cc" className="text-primary-600 hover:underline">support@free-templates.cc</a>.
+      </>
+    ),
   },
 ]
 
@@ -51,13 +62,19 @@ export function FAQPage() {
           <div key={i} className="py-4">
             <button
               onClick={() => setOpenIndex(openIndex === i ? null : i)}
-              className="flex w-full items-center justify-between text-left"
+              className="flex w-full items-center justify-between gap-4 text-left"
             >
               <span className="text-sm font-medium text-gray-900 dark:text-white">{faq.q}</span>
-              <ChevronDown className={`h-4 w-4 shrink-0 text-gray-400 transition-transform ${openIndex === i ? 'rotate-180' : ''}`} />
+              <ChevronDown
+                className={`h-4 w-4 shrink-0 text-gray-400 transition-transform ${
+                  openIndex === i ? 'rotate-180' : ''
+                }`}
+              />
             </button>
             {openIndex === i && (
-              <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400" dangerouslySetInnerHTML={{ __html: faq.a }} />
+              <div className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                {faq.a}
+              </div>
             )}
           </div>
         ))}
