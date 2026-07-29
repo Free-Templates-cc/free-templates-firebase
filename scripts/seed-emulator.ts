@@ -11,10 +11,9 @@
  * and creates the templates collection with 24 sample templates.
  */
 
-import { initializeApp, getApps, cert } from 'firebase-admin/app'
+import { initializeApp, getApps } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
-import { readFileSync, existsSync } from 'fs'
-import { resolve, dirname } from 'path'
+import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -432,7 +431,7 @@ async function seed() {
     await db.collection('_health').doc('_check').set({ ok: true }, { merge: true })
     await db.collection('_health').doc('_check').delete()
     console.log('   ✅ Emulator reachable')
-  } catch (err) {
+  } catch {
     console.error('   ❌ Cannot reach Firestore emulator. Is it running?')
     console.error('      Start it:  firebase emulators:start')
     process.exit(1)
