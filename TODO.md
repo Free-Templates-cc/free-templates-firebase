@@ -1,0 +1,337 @@
+# Free-Templates.cc — Rewrite TODO
+
+> **Stack:** Vite + React + **TypeScript** + Tailwind CSS + Firebase + React Query + Zustand
+> **Goal:** A modern template marketplace with membership subscriptions for premium downloads.
+
+---
+
+## Phase 1: Foundation
+
+### 1.1 Project Setup
+- [ ] Scaffold Vite + React + TypeScript project (`npm create vite@latest . -- --template react-ts`)
+- [ ] Install & configure Tailwind CSS
+- [ ] Install dependencies: `react-router-dom`, `@tanstack/react-query`, `zustand`, `firebase`, `react-hook-form`, `zod`, `react-hot-toast`
+- [ ] Set up folder structure (see Architecture below)
+- [ ] Configure ESLint / Prettier
+- [ ] Initialize Git with good `.gitignore`
+
+### 1.2 Firebase Setup
+- [ ] Create Firebase project
+- [ ] Enable **Firestore** (with proper indexes)
+- [ ] Enable **Firebase Auth** (email/password + Google OAuth)
+- [ ] Enable **Firebase Storage** (template files/previews)
+- [ ] Enable **Stripe Extension** or set up **Cloud Functions** for payments
+- [ ] Set up **Firebase Hosting** config
+- [ ] Add Firebase config to `.env`
+
+### 1.3 Core Configuration
+- [ ] Set up React Router (routes layout)
+- [ ] Initialize **React Query** client
+- [ ] Initialize **Zustand** stores (auth, UI, subscription)
+- [ ] Set up **Firebase** SDK initialization
+
+---
+
+## Phase 2: Auth & User System
+
+### 2.1 Authentication
+- [ ] Sign up / Login pages (email/password)
+- [ ] Google OAuth integration
+- [ ] Password reset flow
+- [ ] Persistent auth (onAuthStateChanged → Zustand)
+- [ ] Protected routes (redirect to login if not authed)
+- [ ] Auth middleware for premium-only routes
+
+### 2.2 User Profiles
+- [ ] Firestore user document (`users/{uid}`)
+- [ ] Profile page (name, email, avatar, subscription status)
+- [ ] Download history tracking
+
+### 2.3 Subscription / Membership
+- [ ] Define subscription tiers:
+  - **Free:** browse all, download free templates only
+  - **Premium ($??/mo or $??/yr):** unlimited downloads of premium templates
+- [ ] Stripe checkout integration (via Firebase Extension or Cloud Function)
+- [ ] Webhook to update Firestore subscription status
+- [ ] UI for current plan, upgrade/downgrade/cancel
+- [ ] Grace period / subscription expiry handling
+- [ ] Restrict premium downloads to active subscribers
+
+---
+
+## Phase 3: Template Management (Admin)
+
+### 3.1 Firestore Data Model
+- [ ] `templates/{templateId}` — fields:
+  - `name` (string)
+  - `slug` (string, unique)
+  - `description` (string)
+  - `category` (string — business, portfolio, ecommerce, landing, etc.)
+  - `framework` (string — Next.js, Gatsby, Nuxt, etc.)
+  - `priceTier` ('free' | 'premium')
+  - `demoUrl` (string, optional)
+  - `githubUrl` (string)
+  - `previewImages` (array of Storage URLs)
+  - `mainImage` (string URL)
+  - `tags` (array of strings)
+  - `features` (array of strings)
+  - `downloads` (number)
+  - `createdAt` / `updatedAt` (timestamps)
+- [ ] `templateFiles/{templateId}` — secure Storage path for premium files
+
+### 3.2 Admin Panel (Basic)
+- [ ] Admin dashboard (simple role-based: `role: 'admin'`)
+- [ ] Add / Edit / Delete templates
+- [ ] Bulk upload preview images
+- [ ] Manage template files (upload new version)
+- [ ] View download stats
+
+---
+
+## Phase 4: Public Site — UI & Pages
+
+### 4.1 Design System
+- [ ] Color palette & typography (Tailwind config)
+- [ ] Shared components: Button, Card, Badge, Input, Modal, Navbar, Footer, Breadcrumbs, Skeleton loaders
+- [ ] Dark/light mode toggle (Zustand + Tailwind dark mode)
+
+### 4.2 Homepage (`/`)
+- [ ] Hero section with search bar
+- [ ] Featured templates grid (carousel or masonry)
+- [ ] Categories section (business, portfolio, landing, etc.)
+- [ ] Stats / trust signals (X templates, Y downloads, Z users)
+- [ ] CTA for premium membership
+
+### 4.3 Browse / Search Page (`/templates`)
+- [ ] Search bar with debounced input
+- [ ] Filters sidebar:
+  - Category (multi-select)
+  - Framework (Next.js, Gatsby, Nuxt, etc.)
+  - Price tier (Free / Premium)
+  - Sort by (newest, most popular, name)
+- [ ] Template grid with pagination / infinite scroll
+- [ ] Each card shows: thumbnail, name, category, framework badge, price tier, download count
+- [ ] React Query for data fetching with URL-to-query sync
+
+### 4.4 Template Detail Page (`/templates/:slug`)
+- [ ] Gallery of preview images
+- [ ] Template info: description, features, tags, framework, category
+- [ ] Demo link (opens new tab)
+- [ ] GitHub link
+- [ ] Download button:
+  - Free template → direct download (guest can download too, or require signup?)
+  - Premium template + subscriber → download
+  - Premium template + not subscriber → "Upgrade to Premium" CTA
+- [ ] Related templates section
+- [ ] Download counter
+
+### 4.5 Pricing Page (`/pricing`)
+- [ ] Compare free vs premium tiers
+- [ ] Monthly / yearly toggle
+- [ ] Features table
+- [ ] CTA → Stripe checkout
+
+### 4.6 Auth Pages
+- [ ] Login (`/login`)
+- [ ] Register (`/register`)
+- [ ] Reset password (`/reset-password`)
+- [ ] Clean form design with validation
+
+### 4.7 Account Page (`/account`)
+- [ ] Profile details (name, email)
+- [ ] Subscription status & management
+- [ ] Download history / My downloads
+- [ ] Change password
+
+### 4.8 Static Pages
+- [ ] Terms of Service
+- [ ] Privacy Policy
+- [ ] Contact / Support
+- [ ] FAQ about membership
+
+---
+
+## Phase 5: Backend / Cloud Functions
+
+### 5.1 Firebase Cloud Functions
+- [ ] `createCheckoutSession` — creates Stripe checkout
+- [ ] `stripeWebhook` — handles checkout.session.completed, invoice.paid, subscription updates
+- [ ] `getDownloadUrl` — generates signed URL for premium files (checks subscription)
+- [ ] `incrementDownloadCount` — triggered on successful download
+- [ ] Cleanup / scheduled functions
+
+### 5.2 Firestore Security Rules
+- [ ] Templates collection: read all, write admin only
+- [ ] Users collection: read/write own doc only
+- [ ] Template files: read only with valid subscription for premium
+- [ ] Subscriptions: read own only, write by system only
+
+### 5.3 Storage Security Rules
+- [ ] Free templates: public read
+- [ ] Premium templates: only accessible via signed URLs (checked against subscription)
+
+---
+
+## Phase 6: Polish & Launch
+
+### 6.1 Performance & SEO
+- [ ] Lazy loading for images / components
+- [ ] React.lazy + Suspense for route splitting
+- [ ] Meta tags per page (react-helmet-async)
+- [ ] Sitemap generation
+- [ ] Lighthouse audit (target 90+ across the board)
+
+### 6.2 Error Handling & UX
+- [ ] Global error boundary
+- [ ] Toast notifications for actions (download, auth, subscribe)
+- [ ] Loading states (skeleton screens)
+- [ ] Empty states for search / no results
+- [ ] 404 page
+
+### 6.3 Final Touches
+- [ ] Responsive design (mobile-first)
+- [ ] Cross-browser testing
+- [ ] Analytics (Firebase Analytics or Google Analytics)
+- [ ] Domain config (free-templates.cc → Firebase Hosting custom domain)
+
+---
+
+## 📐 UI Design Brainstorm
+
+### Color Palette (suggested)
+- **Primary:** Indigo / Blue (`#4F46E5` / `#2563EB`) — tech-forward, trustworthy
+- **Accent:** Amber / Orange for premium CTAs
+- **Background:** White/gray-50 for light, gray-900 for dark
+- **Tier badges:** Green for Free, Gold/Amber for Premium
+
+### Typography
+- **Headings:** Inter or Plus Jakarta Sans (modern, clean)
+- **Body:** Inter (highly readable at all sizes)
+
+### Layout
+- **Navbar:** Logo (left) → Search (center) → Navigation links + Auth buttons (right)
+- **Homepage:** Hero with big search → Featured section → Categories grid → Premium CTA
+- **Template Grid:** Card-based, each with thumbnail, title, meta badges, download button
+- **Detail Page:** Two-column — gallery left, info + download right
+
+### Key UX Patterns
+1. **Search-driven discovery** — prominent search bar, instant results with debounce
+2. **Visual browsing** — preview images are the main thing, not just text
+3. **Frictionless free downloads** — no account required for free templates (optional)
+4. **Clear premium upsells** — premium templates show blurry previews or watermarked images with "Upgrade" overlay
+5. **Mobile-first** — all filters collapse into drawers on mobile
+
+### Pages Map
+```
+/                   → Homepage
+/templates          → Browse / Search
+/templates/:slug    → Template Detail
+/pricing            → Membership Plans
+/login              → Sign In
+/register           → Sign Up
+/forgot-password    → Reset Password
+/account            → Dashboard / Profile
+/account/downloads  → Download History
+/admin              → Admin Dashboard (admin role)
+/admin/templates    → Manage Templates
+```
+
+### Component Hierarchy
+```
+App
+├── Layout
+│   ├── Navbar (search, navigation, auth status)
+│   ├── Main Content (Router outlet)
+│   └── Footer
+├── Pages
+│   ├── HomePage
+│   │   ├── HeroSection
+│   │   ├── FeaturedTemplates (horizontal scroll / grid)
+│   │   ├── CategoryGrid
+│   │   └── PremiumCTA
+│   ├── BrowsePage
+│   │   ├── SearchFilters (sidebar / drawer)
+│   │   └── TemplateGrid
+│   │       └── TemplateCard (×N)
+│   ├── TemplateDetailPage
+│   │   ├── ImageGallery
+│   │   ├── TemplateInfo
+│   │   ├── DownloadSection
+│   │   └── RelatedTemplates
+│   ├── PricingPage
+│   │   └── PricingCard × 2 (Free / Premium)
+│   ├── AuthPage (Login / Register / ForgotPassword)
+│   ├── AccountPage
+│   └── AdminPage
+│       └── TemplateForm (add / edit)
+└── Shared Components
+    ├── Button, Card, Badge, Input, Modal
+    ├── PriceTierBadge, FrameworkBadge
+    ├── DownloadButton
+    ├── ProtectedRoute, PremiumRoute
+    └── Skeleton, Toast, ErrorBoundary
+```
+
+### Firestore Data Model
+
+```
+users/{uid}
+├── displayName: string
+├── email: string
+├── photoURL: string?
+├── role: 'user' | 'admin'
+├── subscription: {
+│     status: 'active' | 'past_due' | 'canceled' | 'incomplete',
+│     stripeCustomerId: string?,
+│     stripeSubscriptionId: string?,
+│     tier: 'free' | 'premium',
+│     currentPeriodEnd: Timestamp?,
+│     canceledAt: Timestamp?
+│   }
+├── downloadCount: number
+├── createdAt: Timestamp
+└── updatedAt: Timestamp
+
+templates/{templateId}
+├── name: string
+├── slug: string
+├── description: string
+├── category: string
+├── framework: string
+├── priceTier: 'free' | 'premium'
+├── demoUrl: string?
+├── githubUrl: string?
+├── features: string[]
+├── tags: string[]
+├── mainImage: string
+├── previewImages: string[]
+├── downloadUrl: string (free) or Storage path (premium)
+├── downloads: number
+├── published: boolean
+├── createdAt: Timestamp
+└── updatedAt: Timestamp
+
+downloads/{downloadId}
+├── userId: string (ref)
+├── templateId: string (ref)
+├── downloadedAt: Timestamp
+└── ip: string? (for anonymous)
+```
+
+---
+
+## Priorities (Suggested Order)
+
+1. ✅ Phase 1 — Project scaffold & Firebase setup
+2. ✅ Phase 4.1 — Design system & shared components
+3. ✅ Phase 2.1 — Auth pages & flow
+4. ✅ Phase 4.2–4.4 — Homepage, Browse, Detail pages
+5. ✅ Phase 2.2–2.3 — User profiles & subscriptions
+6. ✅ Phase 3 — Admin template management
+7. ✅ Phase 5 — Cloud Functions & security rules
+8. ✅ Phase 4.5–4.8 — Remaining pages (pricing, account, static)
+9. ✅ Phase 6 — Polish, SEO, analytics, launch
+
+---
+
+*Last updated: 2026-07-29*
