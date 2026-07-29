@@ -207,7 +207,7 @@
 ### 6.4 Testing & CI
 - [x] Set up unit tests (Vitest) — installed, configured, 22 tests passing
 - [ ] Set up E2E tests (Playwright)
-- [x] CI/CD — GitHub Actions (lint, test, build)
+- [x] CI/CD — GitHub Actions workflow (`.github/workflows/ci.yml` written — push blocked by PAT scope; needs commit by admin with `workflow` scope)
 - [ ] Domain config (free-templates.cc → Firebase Hosting custom domain)
 
 ---
