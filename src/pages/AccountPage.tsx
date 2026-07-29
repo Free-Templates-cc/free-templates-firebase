@@ -1,11 +1,22 @@
+import { useState } from 'react'
 import { useAuthStore } from '../stores/authStore'
 import { Button } from '../components/ui/Button'
 import { Card, CardContent, CardHeader } from '../components/ui/Card'
+import { Input } from '../components/ui/Input'
 import { Navigate } from 'react-router-dom'
-import { User, Crown, Download } from 'lucide-react'
+import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
+import toast from 'react-hot-toast'
+import { User, Crown, Download, Lock } from 'lucide-react'
 
 export function AccountPage() {
   const { user, profile, isLoading, isPremium } = useAuthStore()
+
+  // Change password state
+  const [showPasswordForm, setShowPasswordForm] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false)
 
   if (isLoading) {
     return (
@@ -21,6 +32,43 @@ export function AccountPage() {
   if (!user) {
     return <Navigate to="/login" replace />
   }
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (newPassword !== confirmPassword) {
+      toast.error('New passwords do not match')
+      return
+    }
+
+    if (newPassword.length < 6) {
+      toast.error('New password must be at least 6 characters')
+      return
+    }
+
+    setIsUpdatingPassword(true)
+    try {
+      // Re-authenticate first
+      const credential = EmailAuthProvider.credential(user.email!, currentPassword)
+      await reauthenticateWithCredential(user, credential)
+      await updatePassword(user, newPassword)
+
+      toast.success('Password updated successfully')
+      setShowPasswordForm(false)
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmPassword('')
+    } catch (err: any) {
+      const msg = err.code
+        ? err.code.replace('auth/', '').replace(/-/g, ' ')
+        : err.message
+      toast.error(msg.charAt(0).toUpperCase() + msg.slice(1))
+    } finally {
+      setIsUpdatingPassword(false)
+    }
+  }
+
+  const isGoogleUser = user.providerData.some((p) => p?.providerId === 'google.com')
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
@@ -75,6 +123,74 @@ export function AccountPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Change Password card — only for email/password users */}
+        {!isGoogleUser && (
+          <Card>
+            <CardHeader>
+              <h2 className="font-semibold text-gray-900 dark:text-white">Password</h2>
+            </CardHeader>
+            <CardContent>
+              {showPasswordForm ? (
+                <form onSubmit={handleChangePassword} className="space-y-4">
+                  <Input
+                    label="Current password"
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    required
+                    placeholder="Enter your current password"
+                  />
+                  <Input
+                    label="New password"
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    placeholder="At least 6 characters"
+                  />
+                  <Input
+                    label="Confirm new password"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    placeholder="Re-enter new password"
+                  />
+                  <div className="flex items-center gap-3">
+                    <Button type="submit" isLoading={isUpdatingPassword} size="sm">
+                      Update Password
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setShowPasswordForm(false)
+                        setCurrentPassword('')
+                        setNewPassword('')
+                        setConfirmPassword('')
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+                    <Lock className="h-5 w-5" />
+                    <span>Manage your password</span>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => setShowPasswordForm(true)}>
+                    Change Password
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Download history card */}
         <Card>

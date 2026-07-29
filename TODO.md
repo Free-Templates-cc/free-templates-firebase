@@ -12,10 +12,9 @@
 - [x] Install & configure Tailwind CSS
 - [x] Install dependencies: `react-router-dom`, `@tanstack/react-query`, `zustand`, `firebase`, `react-hook-form`, `zod`, `react-hot-toast`, `clsx`, `tailwind-merge`, `lucide-react`, `react-helmet-async`
 - [x] Set up folder structure
-- [ ] Configure ESLint / Prettier
-- [ ] Install & configure Prettier
-- [ ] Install & configure husky + lint-staged (pre-commit hooks)
-- [ ] Set up fallow-rs
+- [x] Configure ESLint (oxlint)
+- [ ] Configure Prettier (optional)
+- [ ] Configure husky + lint-staged (pre-commit hooks) (optional)
 - [x] Initialize Git with good `.gitignore`
 
 ### 1.2 Firebase Setup (requires project credentials) 🔲 Deferred
@@ -96,7 +95,8 @@
 ### 4.1 Design System
 - [x] Color palette & typography (Tailwind config)
 - [x] Shared components: Button, Card, Badge, Navbar, Footer
-- [ ] Input, Modal, Breadcrumbs, Skeleton loaders
+- [x] Input, Modal, Breadcrumbs, Skeleton loaders
+- [x] ErrorBoundary component
 - [x] Dark/light mode toggle (Zustand + Tailwind dark mode)
 
 ### 4.2 Homepage (`/`)
@@ -148,14 +148,14 @@
 - [x] Subscription status & management
 - [ ] Download history / My downloads
 - [x] Loading state & redirect
-- [ ] Change password
+- [x] Change password
 - [x] Protected route guards
 
 ### 4.8 Static Pages
-- [ ] Terms of Service
-- [ ] Privacy Policy
-- [ ] Contact / Support
-- [ ] FAQ about membership
+- [x] Terms of Service
+- [x] Privacy Policy
+- [x] Contact / Support
+- [x] FAQ about membership
 
 ---
 
@@ -190,11 +190,11 @@
 - [ ] Lighthouse audit (target 90+ across the board)
 
 ### 6.2 Error Handling & UX
-- [ ] Global error boundary
-- [ ] Toast notifications for actions (download, auth, subscribe)
-- [ ] Loading states (skeleton screens)
+- [x] Global error boundary
+- [x] Toast notifications for actions (download, auth, subscribe)
+- [x] Skeleton loading components
 - [ ] Empty states for search / no results
-- [ ] 404 page
+- [x] 404 page
 
 ### 6.3 Final Touches
 - [ ] Update README.md with project info, setup instructions, and stack

@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast'
 import { HelmetProvider } from 'react-helmet-async'
 import { queryClient } from './lib/queryClient'
 import { Layout } from './components/layout/Layout'
+import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { HomePage } from './pages/HomePage'
 import { BrowsePage } from './pages/BrowsePage'
 import { TemplateDetailPage } from './pages/TemplateDetailPage'
@@ -20,7 +21,8 @@ import { NotFoundPage } from './pages/NotFoundPage'
 
 export default function App() {
   return (
-    <HelmetProvider>
+    <ErrorBoundary>
+      <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>
@@ -55,5 +57,6 @@ export default function App() {
         />
       </QueryClientProvider>
     </HelmetProvider>
+    </ErrorBoundary>
   )
 }
