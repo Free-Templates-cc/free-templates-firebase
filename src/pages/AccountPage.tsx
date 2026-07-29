@@ -50,13 +50,7 @@ function isInGracePeriod(profile: UserProfile | null): boolean {
 // SubscriptionBadge
 // ---------------------------------------------------------------------------
 
-function SubscriptionBadge({
-  status,
-  isPremium,
-}: {
-  status?: string
-  isPremium: boolean
-}) {
+function SubscriptionBadge({ status, isPremium }: { status?: string; isPremium: boolean }) {
   const label =
     status === 'past_due'
       ? 'Past Due'
@@ -388,10 +382,7 @@ export function AccountPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <h2 className="font-semibold text-gray-900 dark:text-white">Subscription</h2>
-              <SubscriptionBadge
-                status={profile?.subscription?.status}
-                isPremium={isPremium}
-              />
+              <SubscriptionBadge status={profile?.subscription?.status} isPremium={isPremium} />
             </div>
           </CardHeader>
           <CardContent>

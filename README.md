@@ -141,6 +141,51 @@ firebase functions:config:set app.url="http://localhost:5173"
 | `npm run deploy`              | Deploy functions to Firebase     |
 | `npm run shell`               | Interactive functions shell      |
 
+### Testing (Vitest + Playwright)
+
+| Script              | Description                     |
+| ------------------- | ------------------------------- |
+| `npm test`          | Run unit tests (Vitest)         |
+| `npm run test:e2e`  | Run E2E tests (Playwright)      |
+| `npm run test:ui`   | Vitest in UI mode               |
+| `npm run coverage`  | Run tests with coverage report  |
+
+---
+
+## CI/CD — GitHub Actions
+
+The project includes two workflow files in `.github/workflows/`:
+
+### 1. CI (`.github/workflows/ci.yml`)
+Runs on every push and pull request to `main`:
+- **lint:** Oxlint on all source files
+- **test:** Vitest unit tests (22+ tests)
+- **build:** Production build with Firebase env vars
+
+### 2. Deploy to Firebase Hosting (`.github/workflows/deploy.yml`)
+Automatically deploys to Firebase Hosting:
+- **Push to main:** deploys to the live/production channel
+- **Pull request:** creates a preview deployment with a unique URL
+
+### Required GitHub Secrets
+
+Before the deployment workflow will run, add these secrets in your repository:
+
+| Secret | Description |
+| ------ | ----------- |
+| `VITE_FIREBASE_API_KEY` | Firebase Web API key |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Auth domain (project.firebaseapp.com) |
+| `VITE_FIREBASE_PROJECT_ID` | Firebase project ID |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Storage bucket URL |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Sender ID number |
+| `VITE_FIREBASE_APP_ID` | Firebase Web app ID |
+| `VITE_STRIPE_PUBLISHABLE_KEY` | Stripe publishable key |
+| `FIREBASE_SERVICE_ACCOUNT` | Firebase Admin SDK service account JSON |
+
+> **To create the service account:** Firebase Console → Project Settings → Service Accounts → "Generate new private key" → paste the entire JSON as the `FIREBASE_SERVICE_ACCOUNT` secret.
+
+> **Note:** The workflow files live in `.github/workflows/` and need to be pushed by a token with **`workflow`** scope. If your Personal Access Token lacks this scope, commit the files via GitHub's web editor instead.
+
 ## Project Structure
 
 ```
