@@ -399,7 +399,7 @@ Comprehensive audit of every component, page, integration, and quality metric.
 
 | Area | Rating | Notes |
 |------|--------|-------|
-| **TypeScript strictness** | ✅ Tightened | Added `strict: true`, `strictNullChecks: true`, `noUncheckedIndexedAccess: true` to `tsconfig.app.json`. Build passes with zero errors
+| **TypeScript strictness** | ✅ Clean | Added `strict: true`, `strictNullChecks: true`, `noUncheckedIndexedAccess: true` to `tsconfig.app.json`. Build passes with zero errors — 3 pre-existing TS errors in LazyImage resolved (IntersectionObserver optional chaining + aspectRatio non-null assertions).
 | **Error handling** | ✅ Good | ErrorBoundary wraps the entire app. Try/catch in Cloud Functions. BrowsePage has error state with retry button. Missing: no offline detection, no React Query retry config |
 | **Loading states** | ✅ Good | PageLoader for lazy routes. Skeleton components used on BrowsePage (card grid), TemplateDetailPage. authStore has `isLoading` flag. Missing: no loading state on AccountPage subscription actions |
 | **Empty states** | ✅ Adequate | BrowsePage: "No templates found" with suggestion to adjust filters. DownloadHistoryPage: empty message with link to browse. Missing: empty states on HomePage categories |
