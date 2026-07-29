@@ -46,8 +46,21 @@ export default defineConfig({
           if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/') || id.includes('node_modules/react-router')) {
             return 'vendor'
           }
+          // Split Firebase SDK into sub-chunks per service to stay under 500 kB
+          if (id.includes('node_modules/firebase/auth')) {
+            return 'firebase-auth'
+          }
+          if (id.includes('node_modules/firebase/firestore')) {
+            return 'firebase-firestore'
+          }
+          if (id.includes('node_modules/firebase/storage')) {
+            return 'firebase-storage'
+          }
+          if (id.includes('node_modules/firebase/app')) {
+            return 'firebase-app'
+          }
           if (id.includes('node_modules/firebase')) {
-            return 'firebase'
+            return 'firebase-other'
           }
           if (id.includes('node_modules/lucide-react') || id.includes('node_modules/clsx') || id.includes('node_modules/tailwind-merge')) {
             return 'ui'

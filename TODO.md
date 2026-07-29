@@ -372,8 +372,8 @@ Comprehensive audit of every component, page, integration, and quality metric.
 | **Download button** | 🟡 UI only | TemplateDetailPage download buttons don't trigger actual downloads — no call to getDownloadUrl Cloud Function, no Storage file serving |
 | **Auth store onSnapshot** | 🟡 No error handling | `onSnapshot` listener for user profile has no error callback. If Firestore read fails (permissions, network), `isLoading` never resolves |
 | **Cloud Functions config** | 🟡 Placeholder IDs | config.ts uses placeholder Stripe Price IDs (`price_premium_monthly`, `price_premium_yearly`). Need real Price IDs from Stripe Dashboard before deploying |
-| **Build chunk warning** | 🟡 571 kB chunk | Firebase vendor chunk is 571 kB / 169 kB gzip — exceeds Vite's 500 kB default warning threshold. Needs dynamic import or further splitting |
-| **Hook index re-exports** | 🟡 Minimal | `src/hooks/index.ts` exists but only exports a subset of hooks. Some pages import directly from files |
+| **Build chunk warning** | ✅ Fixed | Split Firebase into sub-chunks (app 28 kB, auth 88 kB, firestore 442 kB, storage 11 kB) — no chunk exceeds 500 kB |
+| **Hook index re-exports** | ✅ Complete | All hooks exported: `useScrollToTop`, `useDocumentTitle`, `useTemplates`, `useTemplate`, `useRelatedTemplates`, `useDownloads`, `useNetworkStatus`, `useTemplateDownloadCount` — pages import through index only |
 | **11 architect components** | 🟡 Inlined — intentional | HeroSection, FeaturedTemplates, CategoryGrid, PremiumCTA, SearchFilters, TemplateGrid, TemplateCard, ImageGallery, TemplateInfo, DownloadSection, PricingCard are inlined into pages. The architecture doc lists them but they don't exist as separate files — intentional for v1 simplicity |
 
 ---

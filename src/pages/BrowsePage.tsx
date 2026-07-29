@@ -231,7 +231,10 @@ export function BrowsePage() {
 
             {/* Sort */}
             <div className="mt-6">
-              <label htmlFor="sort-select" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="sort-select"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 Sort by
               </label>
               <select
