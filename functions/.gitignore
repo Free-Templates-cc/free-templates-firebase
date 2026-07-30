@@ -1,0 +1,12 @@
+# Built output
+lib/
+
+# Environment
+.env
+
+# Dependencies
+node_modules/
+
+# IDE
+.vscode/
+.idea/

@@ -808,42 +808,17 @@ Comprehensive test coverage expansion targeting **100% statement, branch, functi
 - **Tests:** 312/312 passing, build clean, lint clean
 - **Status:** All non-blocked tasks complete. Remaining: Lighthouse audit, Analytics, Domain config (all need Firebase project). OpenSpec CI integration deferred (requires interactive mode).
 
-### 2026-07-30 — 10:15 CEST
-- **Health check:** Build clean (1.81s, zero errors/warnings), 312/312 tests pass, lint clean (0 warnings/0 errors across 91 files)
-- **Blocked:** All remaining tasks require external action from Alchie (Lighthouse audit, Analytics, Domain config, OpenSpec CI integration)
-- **No changes this run.** Project remains stable and feature-complete.
-
-### 2026-07-30 — 10:00 CEST
-- **Health check:** Build clean (882ms, zero errors/warnings), 312/312 tests pass, lint clean (0 warnings/0 errors across 91 files)
-- **Blocked:** All 4 remaining tasks require external action from Alchie:
+### 2026-07-30 — 10:00–12:00 CEST (consolidated)
+- **Status (4 runs):** All remaining tasks still blocked on Firebase project credentials. No code changes across any of these runs.
+- **Health checks (4x):** Build clean (sub-second to ~1.8s), 312/312 tests passing (28 files), lint 0 errors/0 warnings (91 files). Project fully stable.
+- **Blocked items:**
   1. Lighthouse audit — needs deployment to a real URL
-  2. Analytics — needs Firebase project credentials
-  3. Domain config — needs DNS + Firebase project
-  4. OpenSpec CI integration — requires interactive CLI
-- **No changes this run.** Project is fully stable and complete for all non-blocked work.
-
-### 2026-07-30 — 10:30 CEST
-- **Health check:** Build clean (1.23s, zero errors/warnings), 312/312 tests pass, lint clean (0 warnings/0 errors across 91 files)
-- **Still blocked:** All remaining items require Firebase project + deployment.
-  - Uncovered lines are V8 instrumentation artifacts in JSX (Navbar inline arrow functions, api.ts emulator branch). No real test gaps remain.
-- **No changes this run.** Project stable and complete for all non-blocked work.
-
-### 2026-07-30 — 10:45 CEST
-- **Status:** All three remaining tasks still blocked on Firebase project credentials.
-  - Lighthouse audit — needs deployment
-  - Analytics — needs real Firebase project
-  - Domain config — needs Firebase project + DNS
-- **Build:** Clean, zero errors
-- **Tests:** 312/312 passing across 28 files
+  2. Analytics — needs real Firebase project credentials
+  3. Domain config — needs Firebase project + DNS setup
+- **Uncovered lines:** All are V8 instrumentation artifacts or environment-dependent code (Navbar JSX, LazyImage null-ref, Modal focus-trap guards, useNetworkStatus SSR guard, api.ts emulator branch). No real test gaps remain.
 - **Next:** Awaiting Alchie to populate `.env` with real Firebase credentials and deploy.
 
-### 2026-07-30 — 11:00 CEST
-- **Health check:** Build clean (1.31s, zero errors/warnings), 312/312 tests pass (28 test files), lint clean (0 warnings/0 errors)
-- **Status:** All remaining tasks still blocked on Firebase project credentials. Nothing changed this run.
-- **Next:** Waiting for Alchie to fill in `.env` with real Firebase credentials so we can deploy, run Lighthouse audit, add Analytics, and configure the custom domain.
-
-### 2026-07-30 — 11:30 CEST
-- **Health check:** Build clean (1.57s, zero errors/warnings), 312/312 tests pass (28 test files), lint clean (0 warnings/0 errors across 91 files)
-- **Status:** All remaining tasks are still blocked on Firebase project credentials + deployment. No code changes this run.
-- **Blocked items:** Lighthouse audit, Analytics, Domain config. All three require Alchie to populate `.env` with real Firebase credentials and deploy.
-- **Next:** Same as before — waiting on Alchie.
+### 2026-07-30 — 12:00 CEST
+- **Health check:** Build clean (1.05s), 312/312 tests pass (28 files), lint 0 errors/0 warnings (91 files)
+- **Done:** Consolidated repetitive 10:00–11:30 hourly entries into single summary. Added `functions/.gitignore` for defense-in-depth.
+- **Status:** All non-blocked work complete. 3 tasks await Alchie's Firebase credentials: Lighthouse audit, Analytics, Domain config.
