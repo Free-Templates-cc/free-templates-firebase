@@ -342,7 +342,7 @@ Comprehensive audit of every component, page, integration, and quality metric.
 | Category | Status | Details |
 |----------|--------|--------|
 | **Build** | ✅ Clean | Vite + TypeScript + Tailwind — zero errors, zero warnings |
-| **Tests (unit)** | ✅ 104/104 | Vitest — cn, formatNumber, formatDate, slugify, templateImageUrl, templateGalleryUrls, Button, Badge, Card, Input, Modal, Skeleton, LazyImage, NetworkStatusBanner |
+| **Tests (unit)** | ✅ 145/145 | Vitest — cn, formatNumber, formatDate, slugify, templateImageUrl, templateGalleryUrls, Button, Badge, Card, Input, Modal, Skeleton, LazyImage, NetworkStatusBanner, Breadcrumbs, ErrorBoundary, Footer, SEOHead |
 | **Tests (E2E)** | ✅ 19/19 | Playwright — home, browse filters, pricing, static pages, navigation |
 | **Lint** | ✅ 0 warnings | Oxlint — zero warnings across 58 source files |
 | **All 14 pages** | ✅ Built | Home, Browse, TemplateDetail, Pricing, Login, Register, ForgotPassword, Account, DownloadHistory, NotFound, Terms, Privacy, Contact, FAQ |
@@ -492,11 +492,11 @@ Ordered by impact vs effort:
 #### 04:45 CEST
 - **Status:** All code complete, all non-Firebase items done. Remaining unchecked items (1.2 Firebase Setup, 6.1 Lighthouse audit, 6.3 Analytics, 6.4 Domain config) genuinely blocked on Firebase project credentials.
 - **Build:** Clean, 1.00s, zero errors
-- **Unit tests:** 104/104 passing across 9 files
+- **Unit tests:** 145/145 passing across 13 files
 - **E2E tests:** 19/19 listed (5 spec files)
-- **Lint:** 0 errors, 0 warnings (69 files)
+- **Lint:** 0 errors, 0 warnings (73 files)
 - **Cloud Functions:** TypeScript compiles cleanly
-- **Git:** Latest commit 722a37f — pushed, remote clean
+- **Git:** Latest commit — pushed, remote clean
 - **Next:** Waiting on Alchie to create a Firebase project and provide credentials.
 
 #### 05:00 CEST
@@ -537,7 +537,17 @@ Ordered by impact vs effort:
 - **Build:** Clean, zero errors
 - **Lint:** 0 errors, 0 warnings (70 files)
 - **Git:** commit `750e9a1` pushed — `test: add Breadcrumbs component tests (12 tests) — 116 total`
-- **Next:** Still waiting on Alchie for Firebase project credentials. Iterating on non-Firebase improvements: remaining components without tests include Footer, Navbar, Layout, ProtectedRoute, PremiumRoute, ErrorBoundary, SEOHead — any of these could get tests in future runs.
+- **Next:** Still waiting on Alchie for Firebase project credentials. Components still untested: Navbar, Layout, ProtectedRoute, PremiumRoute. (ErrorBoundary, Footer, SEOHead added in 06:30 run.)
+
+#### 06:30 CEST
+- **New:** Added ErrorBoundary tests (7 tests) — rendering, error state, custom fallback, componentDidCatch, retry button, error icon, error details.
+- **New:** Added Footer tests (8 tests) — brand name, tagline, link groups, link hrefs, copyright year, footer element, brand link.
+- **New:** Added SEOHead tests (14 tests) — title, description, og/twitter meta tags, canonical URL, noIndex, custom og:type, default og image.
+- **Test count:** 116 → 145 tests across 13 files (ErrorBoundary.test.tsx, Footer.test.tsx, SEOHead.test.tsx)
+- **Build:** Clean, zero errors
+- **Lint:** 0 errors, 0 warnings (73 files)
+- **Git:** commit pending
+- **Next:** Still waiting on Alchie for Firebase project credentials. Remaining untested components: Navbar, Layout, ProtectedRoute, PremiumRoute.
 
 ### 2026-07-29 — Template placeholder images
 
