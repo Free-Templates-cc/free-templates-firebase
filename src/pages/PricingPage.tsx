@@ -133,11 +133,7 @@ function PricingCard({
                 : '/templates'
             }
           >
-            <Button
-              variant={plan.popular ? 'premium' : 'outline'}
-              size="lg"
-              className="w-full"
-            >
+            <Button variant={plan.popular ? 'premium' : 'outline'} size="lg" className="w-full">
               {plan.name === 'Premium' ? 'Sign In to Upgrade' : 'Browse Free Templates'}
             </Button>
           </Link>

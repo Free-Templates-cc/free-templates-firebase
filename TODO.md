@@ -369,9 +369,9 @@ Comprehensive audit of every component, page, integration, and quality metric.
 | Issue | Status | What's Missing |
 |-------|--------|----------------|
 | **Mock data instead of Firestore** | 🔶 All data is mock | BrowsePage, TemplateDetailPage, HomePage (categories), DownloadHistoryPage all use mock data. No Firestore reads exist in the frontend. Swap `fetchTemplates()` → Firestore queries. |
-| **Account page subscription UI** | 🟡 Functionally built | Cancel/reactivate/portal buttons call Cloud Function APIs, but functions aren't deployed, so they'll fail in production |
-| **PricingPage subscriptions** | 🟡 Register is dead-end | "Upgrade" buttons link to /register instead of calling createCheckoutSession Cloud Function. No Stripe checkout flow wired up on the frontend. |
-| **Download button** | 🟡 UI only | TemplateDetailPage download buttons don't trigger actual downloads — no call to getDownloadUrl Cloud Function, no Storage file serving |
+| **Account page subscription UI** | ✅ Real API calls | Cancel/reactivate/portal buttons now call Cloud Function APIs with loading states and toasts. Requires deployed functions. |
+| **PricingPage subscriptions** | ✅ Real checkout | "Upgrade" buttons now call `createCheckoutSession` Cloud Function and redirect to Stripe Checkout. Requires deployed functions. |
+| **Download button** | ✅ Real download flow | TemplateDetailPage download buttons trigger `getDownloadUrl` Cloud Function, open signed URL in new tab. Loading state wired. Requires deployed functions. |
 | **Auth store onSnapshot** | 🟡 No error handling | `onSnapshot` listener for user profile has no error callback. If Firestore read fails (permissions, network), `isLoading` never resolves |
 | **Cloud Functions config** | 🟡 Placeholder IDs | config.ts uses placeholder Stripe Price IDs (`price_premium_monthly`, `price_premium_yearly`). Need real Price IDs from Stripe Dashboard before deploying |
 | **Build chunk warning** | ✅ Fixed | Split Firebase into sub-chunks (app 28 kB, auth 88 kB, firestore 442 kB, storage 11 kB) — no chunk exceeds 500 kB |
@@ -424,12 +424,13 @@ Ordered by impact vs effort:
 | 🔴 P0 | Connect BrowsePage → Firestore for live template data | 2-3h | Site becomes real instead of mock |
 | 🔴 P0 | Deploy Cloud Functions with real Stripe keys + Price IDs | 1h | Enables subscription payments |
 | 🟡 P1 | Add template placeholder images | ✅ Done | picsum.photos seeded URLs + LazyImage wired into BrowsePage, HomePage, TemplateDetailPage |
-| 🟡 P1 | Wire up getDownloadUrl → download buttons | ✅ Done | Enables actual template downloads |
+| 🟡 P1 | Wire up getDownloadUrl → download buttons | ✅ Done | Download buttons trigger getDownloadUrl CF, open signed URL, loading spinner |
 | 🟡 P1 | Add email verification flow | ✅ Done | `sendEmailVerification()` on register, redirect to /login with toast |
 | 🟡 P1 | Set up Firebase Hosting + connect custom domain | 1h | Site goes live at free-templates.cc |
 | 🟡 P1 | Add terms acceptance checkbox to RegisterPage | ✅ Done | zod-validated checkbox, links to /terms and /privacy |
 | 🟡 P1 | Auth store onSnapshot error callback | ✅ Done | Error callback prevents infinite loading on Firestore read failure |
-| 🟢 P2 | Replace PricingPage "Register" links with createCheckoutSession | ✅ Done | PricingPage calls createCheckoutSession CF; login page handles ?redirect param |
+| 🟢 P2 | Replace PricingPage "Register" links with createCheckoutSession | ✅ Done | PricingPage calls createCheckoutSession CF with loading state; refactored to fix oxlint parse error |
+| 🟢 P2 | Wire up AccountPage subscription actions | ✅ Done | Cancel/reactivate/portal buttons call real CF APIs with loading states |
 | 🟢 P2 | Add rate limiting to critical Cloud Functions | ✅ Done | Token-bucket rate limiter on all payment/download endpoints |
 | 🟢 P2 | Configure CSP + security headers in firebase.json | ✅ Done | HSTS, CSP, X-Content-Type-Options, Referrer-Policy, Permissions-Policy |
 | 🟢 P2 | Integrate Firebase Analytics | 1h | User behavior insights |
