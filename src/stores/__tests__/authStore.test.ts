@@ -62,10 +62,12 @@ describe('authStore', () => {
   // --- initAuthListener ---
 
   it('registers onAuthStateChanged on init', () => {
-    mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: unknown) => void) => {
-      callback(null) // no user
-      return vi.fn()
-    })
+    mockOnAuthStateChanged.mockImplementation(
+      (_auth: unknown, callback: (user: unknown) => void) => {
+        callback(null) // no user
+        return vi.fn()
+      },
+    )
 
     initAuthListener()
 
@@ -78,10 +80,12 @@ describe('authStore', () => {
   })
 
   it('does not register auth listener twice', () => {
-    mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: unknown) => void) => {
-      callback(null)
-      return vi.fn()
-    })
+    mockOnAuthStateChanged.mockImplementation(
+      (_auth: unknown, callback: (user: unknown) => void) => {
+        callback(null)
+        return vi.fn()
+      },
+    )
 
     initAuthListener()
     initAuthListener() // second call should be no-op
@@ -94,10 +98,12 @@ describe('authStore', () => {
   it('sets user and starts profile listener when user signs in', () => {
     const mockUser = { uid: 'test-uid', email: 'test@example.com' }
 
-    mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: unknown) => void) => {
-      callback(mockUser)
-      return vi.fn()
-    })
+    mockOnAuthStateChanged.mockImplementation(
+      (_auth: unknown, callback: (user: unknown) => void) => {
+        callback(mockUser)
+        return vi.fn()
+      },
+    )
 
     initAuthListener()
 
@@ -109,10 +115,12 @@ describe('authStore', () => {
   it('handles non-existing user document (just signed up)', () => {
     const mockUser = { uid: 'new-uid', email: 'new@example.com' }
 
-    mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: unknown) => void) => {
-      callback(mockUser)
-      return vi.fn()
-    })
+    mockOnAuthStateChanged.mockImplementation(
+      (_auth: unknown, callback: (user: unknown) => void) => {
+        callback(mockUser)
+        return vi.fn()
+      },
+    )
 
     mockOnSnapshot.mockImplementation((_docRef: unknown, onNext: (snapshot: unknown) => void) => {
       onNext({
@@ -133,10 +141,12 @@ describe('authStore', () => {
   it('detects premium user with active subscription', () => {
     const mockUser = { uid: 'premium-uid', email: 'premium@example.com' }
 
-    mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: unknown) => void) => {
-      callback(mockUser)
-      return vi.fn()
-    })
+    mockOnAuthStateChanged.mockImplementation(
+      (_auth: unknown, callback: (user: unknown) => void) => {
+        callback(mockUser)
+        return vi.fn()
+      },
+    )
 
     mockOnSnapshot.mockImplementation((_docRef: unknown, onNext: (snapshot: unknown) => void) => {
       onNext({
@@ -161,10 +171,12 @@ describe('authStore', () => {
   it('detects admin role', () => {
     const mockUser = { uid: 'admin-uid', email: 'admin@example.com' }
 
-    mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: unknown) => void) => {
-      callback(mockUser)
-      return vi.fn()
-    })
+    mockOnAuthStateChanged.mockImplementation(
+      (_auth: unknown, callback: (user: unknown) => void) => {
+        callback(mockUser)
+        return vi.fn()
+      },
+    )
 
     mockOnSnapshot.mockImplementation((_docRef: unknown, onNext: (snapshot: unknown) => void) => {
       onNext({
@@ -190,17 +202,21 @@ describe('authStore', () => {
     const mockUser = { uid: 'err-uid', email: 'err@example.com' }
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: unknown) => void) => {
-      callback(mockUser)
-      return vi.fn()
-    })
+    mockOnAuthStateChanged.mockImplementation(
+      (_auth: unknown, callback: (user: unknown) => void) => {
+        callback(mockUser)
+        return vi.fn()
+      },
+    )
 
-    mockOnSnapshot.mockImplementation((_docRef: unknown, _onNext: unknown, onError?: (error: Error) => void) => {
-      if (onError) {
-        onError(new Error('Permission denied'))
-      }
-      return mockUnsubscribe
-    })
+    mockOnSnapshot.mockImplementation(
+      (_docRef: unknown, _onNext: unknown, onError?: (error: Error) => void) => {
+        if (onError) {
+          onError(new Error('Permission denied'))
+        }
+        return mockUnsubscribe
+      },
+    )
 
     initAuthListener()
 
@@ -221,12 +237,14 @@ describe('authStore', () => {
     // Track callbacks
     let authCallback: ((user: unknown) => void) | null = null
 
-    mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: unknown) => void) => {
-      authCallback = callback
-      // Call with user first
-      callback({ uid: 'test-uid', email: 'test@example.com' })
-      return vi.fn()
-    })
+    mockOnAuthStateChanged.mockImplementation(
+      (_auth: unknown, callback: (user: unknown) => void) => {
+        authCallback = callback
+        // Call with user first
+        callback({ uid: 'test-uid', email: 'test@example.com' })
+        return vi.fn()
+      },
+    )
 
     initAuthListener()
 
@@ -247,11 +265,13 @@ describe('authStore', () => {
   // --- cleanupAuthListener ---
 
   it('cleans up profile and auth listeners', () => {
-    mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: unknown) => void) => {
-      const mockUser = { uid: 'test-uid', email: 'test@example.com' }
-      callback(mockUser)
-      return vi.fn()
-    })
+    mockOnAuthStateChanged.mockImplementation(
+      (_auth: unknown, callback: (user: unknown) => void) => {
+        const mockUser = { uid: 'test-uid', email: 'test@example.com' }
+        callback(mockUser)
+        return vi.fn()
+      },
+    )
 
     mockOnSnapshot.mockImplementation((_docRef: unknown, onNext: (snapshot: unknown) => void) => {
       onNext({

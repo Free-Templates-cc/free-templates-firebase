@@ -30,7 +30,13 @@ describe('api', () => {
 
   describe('fetchTemplates', () => {
     it('returns paginated results with default filters', async () => {
-      const result = await fetchTemplates({ search: '', category: '', framework: '', priceTier: 'all', sort: 'newest' })
+      const result = await fetchTemplates({
+        search: '',
+        category: '',
+        framework: '',
+        priceTier: 'all',
+        sort: 'newest',
+      })
       expect(result.items.length).toBeGreaterThan(0)
       expect(result.total).toBeGreaterThan(0)
       expect(result.page).toBe(1)
@@ -39,57 +45,112 @@ describe('api', () => {
     })
 
     it('filters by search query', async () => {
-      const result = await fetchTemplates({ search: 'portfolio', category: '', framework: '', priceTier: 'all', sort: 'newest' })
-      expect(result.items.every((t) =>
-        t.name.toLowerCase().includes('portfolio') ||
-        t.description.toLowerCase().includes('portfolio') ||
-        t.tags.some((tag) => tag.includes('portfolio')),
-      )).toBe(true)
+      const result = await fetchTemplates({
+        search: 'portfolio',
+        category: '',
+        framework: '',
+        priceTier: 'all',
+        sort: 'newest',
+      })
+      expect(
+        result.items.every(
+          (t) =>
+            t.name.toLowerCase().includes('portfolio') ||
+            t.description.toLowerCase().includes('portfolio') ||
+            t.tags.some((tag) => tag.includes('portfolio')),
+        ),
+      ).toBe(true)
     })
 
     it('filters by category', async () => {
-      const result = await fetchTemplates({ search: '', category: 'Portfolio', framework: '', priceTier: 'all', sort: 'newest' })
+      const result = await fetchTemplates({
+        search: '',
+        category: 'Portfolio',
+        framework: '',
+        priceTier: 'all',
+        sort: 'newest',
+      })
       expect(result.items.every((t) => t.category === 'Portfolio')).toBe(true)
     })
 
     it('filters by framework', async () => {
-      const result = await fetchTemplates({ search: '', category: '', framework: 'Next.js', priceTier: 'all', sort: 'newest' })
+      const result = await fetchTemplates({
+        search: '',
+        category: '',
+        framework: 'Next.js',
+        priceTier: 'all',
+        sort: 'newest',
+      })
       expect(result.items.every((t) => t.framework === 'Next.js')).toBe(true)
     })
 
     it('filters by premium price tier', async () => {
-      const result = await fetchTemplates({ search: '', category: '', framework: '', priceTier: 'premium', sort: 'newest' })
+      const result = await fetchTemplates({
+        search: '',
+        category: '',
+        framework: '',
+        priceTier: 'premium',
+        sort: 'newest',
+      })
       expect(result.items.every((t) => t.priceTier === 'premium')).toBe(true)
     })
 
     it('filters by free price tier', async () => {
-      const result = await fetchTemplates({ search: '', category: '', framework: '', priceTier: 'free', sort: 'newest' })
+      const result = await fetchTemplates({
+        search: '',
+        category: '',
+        framework: '',
+        priceTier: 'free',
+        sort: 'newest',
+      })
       expect(result.items.every((t) => t.priceTier === 'free')).toBe(true)
     })
 
     it('sorts by popularity', async () => {
-      const result = await fetchTemplates({ search: '', category: '', framework: '', priceTier: 'all', sort: 'popular' })
+      const result = await fetchTemplates({
+        search: '',
+        category: '',
+        framework: '',
+        priceTier: 'all',
+        sort: 'popular',
+      })
       for (let i = 1; i < result.items.length; i++) {
         expect(result.items[i]!.downloads).toBeLessThanOrEqual(result.items[i - 1]!.downloads)
       }
     })
 
     it('sorts by name', async () => {
-      const result = await fetchTemplates({ search: '', category: '', framework: '', priceTier: 'all', sort: 'name' })
+      const result = await fetchTemplates({
+        search: '',
+        category: '',
+        framework: '',
+        priceTier: 'all',
+        sort: 'name',
+      })
       for (let i = 1; i < result.items.length; i++) {
-        expect(result.items[i]!.name.localeCompare(result.items[i - 1]!.name)).toBeGreaterThanOrEqual(0)
+        expect(
+          result.items[i]!.name.localeCompare(result.items[i - 1]!.name),
+        ).toBeGreaterThanOrEqual(0)
       }
     })
 
     it('paginates correctly', async () => {
       // Page 1
-      const page1 = await fetchTemplates({ search: '', category: '', framework: '', priceTier: 'all', sort: 'newest' }, 1, 5)
+      const page1 = await fetchTemplates(
+        { search: '', category: '', framework: '', priceTier: 'all', sort: 'newest' },
+        1,
+        5,
+      )
       expect(page1.items.length).toBeLessThanOrEqual(5)
       expect(page1.page).toBe(1)
       expect(page1.pageSize).toBe(5)
 
       // Page 2
-      const page2 = await fetchTemplates({ search: '', category: '', framework: '', priceTier: 'all', sort: 'newest' }, 2, 5)
+      const page2 = await fetchTemplates(
+        { search: '', category: '', framework: '', priceTier: 'all', sort: 'newest' },
+        2,
+        5,
+      )
       expect(page2.page).toBe(2)
 
       // Ensure different items on different pages
@@ -99,21 +160,39 @@ describe('api', () => {
     })
 
     it('injects placeholder images into results', async () => {
-      const result = await fetchTemplates({ search: '', category: '', framework: '', priceTier: 'all', sort: 'newest' })
+      const result = await fetchTemplates({
+        search: '',
+        category: '',
+        framework: '',
+        priceTier: 'all',
+        sort: 'newest',
+      })
       expect(result.items[0]!.mainImage).toContain('picsum.photos')
       expect(result.items[0]!.previewImages.length).toBe(5)
       expect(result.items[0]!.previewImages[0]).toContain('picsum.photos')
     })
 
     it('returns empty results for non-matching category', async () => {
-      const result = await fetchTemplates({ search: '', category: 'NonExistentCategory', framework: '', priceTier: 'all', sort: 'newest' })
+      const result = await fetchTemplates({
+        search: '',
+        category: 'NonExistentCategory',
+        framework: '',
+        priceTier: 'all',
+        sort: 'newest',
+      })
       expect(result.items).toHaveLength(0)
       expect(result.total).toBe(0)
       expect(result.totalPages).toBe(1)
     })
 
     it('handles case-insensitive search', async () => {
-      const result = await fetchTemplates({ search: 'PORTFOLIO', category: '', framework: '', priceTier: 'all', sort: 'newest' })
+      const result = await fetchTemplates({
+        search: 'PORTFOLIO',
+        category: '',
+        framework: '',
+        priceTier: 'all',
+        sort: 'newest',
+      })
       expect(result.items.length).toBeGreaterThan(0)
     })
   })
@@ -247,7 +326,12 @@ describe('api', () => {
 
       it('passes custom success/cancel URLs', async () => {
         mockFunctionSuccess({ url: 'https://checkout.stripe.com/test' })
-        await createCheckoutSession('uid123', 'monthly', 'https://example.com/success', 'https://example.com/cancel')
+        await createCheckoutSession(
+          'uid123',
+          'monthly',
+          'https://example.com/success',
+          'https://example.com/cancel',
+        )
         const callBody = JSON.parse(mockFetch.mock.calls[0]![1]!.body as string)
         expect(callBody.successUrl).toBe('https://example.com/success')
         expect(callBody.cancelUrl).toBe('https://example.com/cancel')

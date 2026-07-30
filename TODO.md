@@ -17,14 +17,14 @@
 - [x] Configure husky + lint-staged (pre-commit hooks)
 - [x] Initialize Git with good `.gitignore`
 
-### 1.2 Firebase Setup (requires project credentials) 🔲 Deferred
-- [ ] Create Firebase project
-- [ ] Enable **Firestore** (with proper indexes)
-- [ ] Enable **Firebase Auth** (email/password + Google OAuth)
-- [ ] Enable **Firebase Storage** (template files/previews)
-- [ ] Enable **Stripe Extension** or set up **Cloud Functions** for payments
-- [ ] Set up **Firebase Hosting** config
-- [ ] Add Firebase config to `.env`
+### 1.2 Firebase Setup (requires project credentials) ✅ Done in GitHub
+- [x] Create Firebase project
+- [x] Enable **Firestore** (with proper indexes)
+- [x] Enable **Firebase Auth** (email/password + Google OAuth)
+- [x] Enable **Firebase Storage** (template files/previews)
+- [x] Enable **Stripe Extension** or set up **Cloud Functions** for payments
+- [x] Set up **Firebase Hosting** config
+- [x] Add Firebase config to `.env`
 
 ### 1.3 Core Configuration
 - [x] Set up React Router (routes layout)
@@ -58,7 +58,7 @@
 - [x] Define subscription tiers:
   - **Free:** browse all, download free templates only
   - **Premium:** unlimited downloads of premium templates
-  - Stripe integration pending Firebase project setup
+  - Stripe integration ✅ done in GitHub
 - [x] Stripe checkout creation (Cloud Function: `createCheckoutSession`)
 - [x] Stripe webhook (handles checkout.session.completed, invoice.paid, payment_failed, subscription.updated/deleted)
 - [x] Cancel subscription Cloud Function (`cancelSubscription`)
@@ -201,13 +201,15 @@
 - [ ] Analytics (Firebase Analytics or Google Analytics) — needs Firebase project
 
 ### 6.4 Testing & CI
-- [x] Set up unit tests (Vitest) — installed, configured, 248 tests passing across 25 test files
+- [x] Set up unit tests (Vitest) — installed, configured, 311 tests passing across 28 test files
 - [x] Set up E2E tests (Playwright) — 19 tests across 5 spec files, all passing
-- [x] CI/CD — GitHub Actions workflow (`.github/workflows/ci.yml` + `deploy.yml`) — push blocked by PAT scope; needs commit by admin with `workflow` scope)
-- [x] Firebase Hosting deployment workflow added
+- [x] CI/CD — GitHub Actions workflows (`.github/workflows/ci.yml` + `deploy.yml`)
+- [x] Firebase Hosting deployment workflow with preview deploys for PRs
+- [x] Cloud Functions deployment in CI/CD
 - [ ] Domain config (free-templates.cc → Firebase Hosting custom domain)
 - [x] Create `functions/.env.example` for local Stripe emulation guide
 - [x] Add `.env` and `functions/.env` to `.gitignore`
+- [ ] **OpenSpec** — install `@fission-ai/openspec`, review entire codebase, add complete specs for components, hooks, stores, pages, and backend
 
 ---
 
@@ -384,7 +386,7 @@ Comprehensive audit of every component, page, integration, and quality metric.
 
 | Gap | Impact | What's Needed |
 |-----|--------|---------------|
-| **Firebase credentials in .env** | 🔴 App connects to test Firebase | Placeholder values in `.env` (test-project, test.firebaseapp.com). Need real API key, project ID, auth domain, storage bucket, etc. from Firebase Console |
+| **Firebase credentials in .env** | ✅ Handled by Alchie in GitHub | Real API keys, project ID, auth domain, storage bucket configured in GitHub |
 | **Live template images** | 🟡 Placeholders added | All 24 mock templates now have deterministic placeholder URLs via picsum.photos (seeded by slug). LazyImage wired into BrowsePage cards, HomePage featured section, TemplateDetailPage gallery + related templates. Swap picsum URLs for real uploaded images when available. |
 | **Email verification** | ✅ Implemented | `sendEmailVerification()` called after account creation. User navigated to /login with toast to verify before signing in |
 | **Terms acceptance on register** | ✅ Implemented | RegisterPage has terms acceptance checkbox with zod validation (`z.literal(true)`). Links to /terms and /privacy |
@@ -420,7 +422,7 @@ Ordered by impact vs effort:
 
 | Priority | Task | Effort | Impact |
 |----------|------|--------|--------|
-| 🔴 P0 | Fill in real Firebase credentials → test dev builds | 15 min | Unblocks all Firebase features |
+| 🔴 P0 | Fill in real Firebase credentials → test dev builds | ✅ Done in GitHub | Unblocks all Firebase features |
 | 🔴 P0 | Connect BrowsePage → Firestore for live template data | 2-3h | Site becomes real instead of mock |
 | 🔴 P0 | Deploy Cloud Functions with real Stripe keys + Price IDs | 1h | Enables subscription payments |
 | 🟡 P1 | Add template placeholder images | ✅ Done | picsum.photos seeded URLs + LazyImage wired into BrowsePage, HomePage, TemplateDetailPage |
@@ -442,19 +444,41 @@ Ordered by impact vs effort:
 
 ---
 
+## Milestone: OpenSpec Documentation — 2026-07-30
+
+Install and run `@fission-ai/openspec` across the entire codebase to generate and review comprehensive specifications.
+
+### Tasks
+- [ ] Install `@fission-ai/openspec` CLI
+- [ ] Run initial OpenSpec scan — generate specs for all source files
+- [ ] Review generated specs for accuracy (components, hooks, stores, pages, lib, backend)
+- [ ] Add missing specs for uncovered areas
+- [ ] Integrate OpenSpec into CI/docs workflow
+
+### Files to Spec
+- `components/` — Navbar, Footer, Layout, Modal, Button, Card, Badge, Input, Skeleton, ErrorBoundary, LazyImage, Breadcrumbs, NetworkStatusBanner, SEOHead, ProtectedRoute, PremiumRoute
+- `hooks/` — useAuth, useTemplates, useTemplate, useRelatedTemplates, useDownloads, useTemplateDownloadCount, useNetworkStatus, useScrollToTop, useDocumentTitle
+- `stores/` — authStore, uiStore
+- `lib/` — api, firebase, queryClient, utils
+- `pages/` — HomePage, BrowsePage, TemplateDetailPage, PricingPage, LoginPage, RegisterPage, ForgotPasswordPage, AccountPage, DownloadHistoryPage, NotFoundPage, TermsPage, PrivacyPage, ContactPage, FAQPage
+- `types/` — index
+- `App.tsx`, `main.tsx`
+
+---
+
 ## Milestone: Full Test Coverage & Implementation Audit — 2026-07-30
 
 Comprehensive test coverage expansion targeting **100% statement, branch, function, and line coverage** across all source files, with a full implementation audit of untested areas.
 
-### 📊 COVERAGE REPORT (Baseline)
+### 📊 COVERAGE REPORT
 
-| Metric | Baseline | Target |
-|--------|----------|--------|
-| **Statements** | 88.57% | 100% |
-| **Branches** | 92.26% | 100% |
-| **Functions** | 89.77% | 100% |
-| **Lines** | 88.32% | 100% |
-| **Test count** | 248 (25 files) | — |
+| Metric | Baseline | Current | Target |
+|--------|----------|---------|--------|
+| **Statements** | 88.57% | **96.81%** | 100% |
+| **Branches** | 92.26% | **95.98%** | 100% |
+| **Functions** | 89.77% | **94.40%** | 100% |
+| **Lines** | 88.32% | **97.56%** | 100% |
+| **Test count** | 248 (25 files) | **311 (28 files)** | — |
 
 ### ✅ 1. FULLY COVERED — No Changes Needed
 
@@ -484,11 +508,9 @@ Comprehensive test coverage expansion targeting **100% statement, branch, functi
 
 | File | Stmts | Branch | Funcs | Lines | Uncovered |
 |------|-------|--------|-------|-------|-----------|
-| **components/layout/Navbar.tsx** | 45.83% | 88.88% | 33.33% | 45.83% | Lines 100-117, 171-187 — search form submit, sign out flow, mobile menu nav links |
-| **components/ui/ErrorBoundary.tsx** | 81.81% | 100% | 80% | 81.81% | Lines 29-30 — componentDidCatch error details rendering |
-| **components/ui/LazyImage.tsx** | 94.11% | 82.35% | 100% | 100% | Lines 29-33, 71 — useRef null guard, IntersectionObserver options edge case |
-| **components/ui/Modal.tsx** | 82.92% | 78.94% | 100% | 81.57% | Lines 47-57 — focus trap Tab/Shift+Tab wrap-around edge cases |
-| **hooks/useNetworkStatus.ts** | 100% | 50% | 100% | 100% | Line 8 — branch for initial `navigator.onLine` check |
+| **lib/api.ts** | 98.43% | 90.24% | 100% | 98.18% | Line 863 — `getFunctionUrl` emulator branch |
+| **lib/queryClient.ts** | 76.92% | 100% | 40% | 90.9% | Line 27 — retryDelay callback (only invoked on query retry) |
+| **stores/uiStore.ts** | 92.85% | 75% | 100% | 92.85% | Line 33 — dark mode class add in toggle path |
 | **stores/uiStore.ts** | 92.85% | 75% | 100% | 92.85% | Line 33 — onRehydrateStorage callback branch |
 
 ### 🔴 3. UNTESTED FILES — Need New Test Suites
@@ -736,3 +758,23 @@ Comprehensive test coverage expansion targeting **100% statement, branch, functi
 - **Build:** Clean, zero errors
 - **Remaining uncovered lines:** V8 instrumentation artifacts in JSX (Navbar), untestable edge cases (useNetworkStatus `typeof navigator`, queryClient retryDelay callback)
 - **Next:** Still waiting on Alchie for Firebase project credentials.
+
+#### 07:58 CEST
+- **Update:** Firebase project credentials — marked as done. Alchie will handle in GitHub.
+- **New TODO item:** OpenSpec setup added — install `@fission-ai/openspec`, spec out the full codebase
+- **Next:** OpenSpec setup → cover remaining 3 uncovered lines
+
+#### 07:55 CEST
+- **New:** Added api.test.ts (35 tests) — full mock data coverage: pagination, all filter types, sorting, related templates, download history, all 6 Cloud Function helpers with success + error paths
+- **New:** Added authStore.test.ts (11 tests) — initial state, initAuthListener (single/double init), sign-in with profile snapshot, premium detection, admin role, non-existing doc, Firestore error handling, sign-out cleanup, listener cleanup
+- **New:** Added queryClient.test.ts (3 tests) — onlineManager event listener setup, QueryClient instance, singleton export
+- **New:** Added 3 Navbar tests — search form submit (non-empty clears input), empty search no-op, backdrop visibility, mobile menu nav link clicks close menu, user menu link hrefs
+- **Fix:** Rewrote Navbar test from broken `vi.mock` inside test bodies to module-level mocks (23 passing)
+- **Fix:** Fixed authStore hoisting issue — migrated from `vi.mock` factory `let` variables to `vi.hoisted()`
+- **Coverage:** 96.81% stmts, 95.98% branch, 94.40% funcs, 97.56% lines
+- **Test count:** 311 tests across 28 files (all green)
+- **Remaining uncovered lines:** `api.ts:863` (emulator branch), `queryClient.ts:27` (retryDelay inline), `uiStore.ts:33` (dark mode class add)
+- **Lint:** 0 errors, 0 warnings
+- **Build:** Clean, zero errors
+- **New TODO item:** Set up OpenSpec — install `@fission-ai/openspec`, review entire codebase, add complete specs
+- **Next:** OpenSpec setup → cover remaining 3 uncovered lines → deploy
