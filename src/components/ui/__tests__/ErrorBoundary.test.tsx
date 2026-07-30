@@ -10,8 +10,6 @@ function ThrowOnRender({ shouldThrow = true }: { shouldThrow?: boolean }) {
   return <p>Rendered successfully</p>
 }
 
-
-
 // Mock console.error to keep test output clean
 beforeEach(() => {
   vi.spyOn(console, 'error').mockImplementation(() => {})
@@ -71,8 +69,6 @@ describe('ErrorBoundary', () => {
     expect(screen.getByText('Custom error message')).toBeInTheDocument()
     expect(screen.queryByText('Something went wrong')).not.toBeInTheDocument()
   })
-
-
 
   it('calls componentDidCatch when error occurs', () => {
     // Spy on the prototype's componentDidCatch

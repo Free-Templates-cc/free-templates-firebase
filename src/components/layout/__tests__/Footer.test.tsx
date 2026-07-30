@@ -61,9 +61,7 @@ describe('Footer', () => {
   it('renders current year in copyright', () => {
     renderWithRouter(<Footer />)
     const currentYear = new Date().getFullYear()
-    expect(
-      screen.getByText(new RegExp(`© ${currentYear} Free-Templates.cc`)),
-    ).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(`© ${currentYear} Free-Templates.cc`))).toBeInTheDocument()
   })
 
   it('has correct footer element', () => {

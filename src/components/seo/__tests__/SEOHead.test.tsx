@@ -41,7 +41,9 @@ describe('SEOHead', () => {
   })
 
   it('sets og meta tags', () => {
-    renderWithHelmet(<SEOHead title="Pricing" description="See our plans" ogImage="/custom-og.png" />)
+    renderWithHelmet(
+      <SEOHead title="Pricing" description="See our plans" ogImage="/custom-og.png" />,
+    )
 
     const ogTitle = document.querySelector('meta[property="og:title"]')
     const ogDescription = document.querySelector('meta[property="og:description"]')
