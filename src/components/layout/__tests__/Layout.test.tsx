@@ -17,11 +17,7 @@ vi.mock('../../ui/NetworkStatusBanner', () => ({
 }))
 
 function renderWithRouter(ui: React.ReactElement, { initialEntries = ['/'] } = {}) {
-  return render(
-    <MemoryRouter initialEntries={initialEntries}>
-      {ui}
-    </MemoryRouter>,
-  )
+  return render(<MemoryRouter initialEntries={initialEntries}>{ui}</MemoryRouter>)
 }
 
 describe('Layout', () => {

@@ -342,7 +342,7 @@ Comprehensive audit of every component, page, integration, and quality metric.
 | Category | Status | Details |
 |----------|--------|--------|
 | **Build** | ✅ Clean | Vite + TypeScript + Tailwind — zero errors, zero warnings |
-| **Tests (unit)** | ✅ 145/145 | Vitest — cn, formatNumber, formatDate, slugify, templateImageUrl, templateGalleryUrls, Button, Badge, Card, Input, Modal, Skeleton, LazyImage, NetworkStatusBanner, Breadcrumbs, ErrorBoundary, Footer, SEOHead |
+| **Tests (unit)** | ✅ 231/231 | Vitest — cn, formatNumber, formatDate, slugify, templateImageUrl, templateGalleryUrls, Button, Badge, Card, Input, Modal, Skeleton, LazyImage, NetworkStatusBanner, Breadcrumbs, ErrorBoundary, Footer, SEOHead, ProtectedRoute, PremiumRoute, Navbar, Layout, useScrollToTop, useDocumentTitle, useNetworkStatus, useTemplates, filtersFromParams, useTemplate, useRelatedTemplates, useTemplateDownloadCount, useDownloads |
 | **Tests (E2E)** | ✅ 19/19 | Playwright — home, browse filters, pricing, static pages, navigation |
 | **Lint** | ✅ 0 warnings | Oxlint — zero warnings across 58 source files |
 | **All 14 pages** | ✅ Built | Home, Browse, TemplateDetail, Pricing, Login, Register, ForgotPassword, Account, DownloadHistory, NotFound, Terms, Privacy, Contact, FAQ |
@@ -546,6 +546,21 @@ Ordered by impact vs effort:
 - **Test count:** 116 → 145 tests across 13 files (ErrorBoundary.test.tsx, Footer.test.tsx, SEOHead.test.tsx)
 - **Build:** Clean, zero errors
 - **Lint:** 0 errors, 0 warnings (73 files)
+- **Git:** commit pending
+- **Next:** Still waiting on Alchie for Firebase project credentials.
+
+#### 07:00 CEST
+- **New:** Added hook tests (56 tests across 7 files):
+  - `useScrollToTop` (4 tests) — scroll behavior, various paths
+  - `useDocumentTitle` (6 tests) — title set/update/restore/nesting
+  - `useNetworkStatus` (6 tests) — online/offline tracking, event listeners
+  - `useTemplates` + `filtersFromParams` (18 tests) — filtering, pagination, error states, placeholder data, URL param parsing
+  - `useTemplate` + `useRelatedTemplates` (12 tests) — fetch by slug, null handling, enabled gating, slug change refetch, category filtering
+  - `useTemplateDownloadCount` (5 tests) — download counting with random delta, polling config
+  - `useDownloads` (6 tests) — userId gating, empty state, error state, refetch on userId change
+- **Test count:** 175 → 231 tests across 24 files
+- **Build:** Clean, zero errors
+- **Lint:** 0 errors, 0 warnings (84 files)
 - **Git:** commit pending
 - **Next:** Still waiting on Alchie for Firebase project credentials.
 
