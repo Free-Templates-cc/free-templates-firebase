@@ -60,10 +60,15 @@ describe('useTemplateDownloadCount', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.5)
     ;(api.fetchTemplates as Mock).mockResolvedValue({
       items: [mockTemplate],
-      total: 1, page: 1, pageSize: 100, totalPages: 1,
+      total: 1,
+      page: 1,
+      pageSize: 100,
+      totalPages: 1,
     })
 
-    const { result } = renderHook(() => useTemplateDownloadCount('portfolio-pro'), { wrapper: Wrapper })
+    const { result } = renderHook(() => useTemplateDownloadCount('portfolio-pro'), {
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
@@ -71,7 +76,8 @@ describe('useTemplateDownloadCount', () => {
     expect(result.current.data).toBe(3421)
     expect(api.fetchTemplates).toHaveBeenCalledWith(
       { search: '', category: '', framework: '', priceTier: 'all', sort: 'popular' },
-      1, 100,
+      1,
+      100,
     )
   })
 
@@ -79,10 +85,15 @@ describe('useTemplateDownloadCount', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.95)
     ;(api.fetchTemplates as Mock).mockResolvedValue({
       items: [mockTemplate],
-      total: 1, page: 1, pageSize: 100, totalPages: 1,
+      total: 1,
+      page: 1,
+      pageSize: 100,
+      totalPages: 1,
     })
 
-    const { result } = renderHook(() => useTemplateDownloadCount('portfolio-pro'), { wrapper: Wrapper })
+    const { result } = renderHook(() => useTemplateDownloadCount('portfolio-pro'), {
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
@@ -94,10 +105,15 @@ describe('useTemplateDownloadCount', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     ;(api.fetchTemplates as Mock).mockResolvedValue({
       items: [mockTemplate],
-      total: 1, page: 1, pageSize: 100, totalPages: 1,
+      total: 1,
+      page: 1,
+      pageSize: 100,
+      totalPages: 1,
     })
 
-    const { result } = renderHook(() => useTemplateDownloadCount('portfolio-pro'), { wrapper: Wrapper })
+    const { result } = renderHook(() => useTemplateDownloadCount('portfolio-pro'), {
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
@@ -107,10 +123,16 @@ describe('useTemplateDownloadCount', () => {
 
   it('throws error when template is not found', async () => {
     ;(api.fetchTemplates as Mock).mockResolvedValue({
-      items: [], total: 0, page: 1, pageSize: 100, totalPages: 0,
+      items: [],
+      total: 0,
+      page: 1,
+      pageSize: 100,
+      totalPages: 0,
     })
 
-    const { result } = renderHook(() => useTemplateDownloadCount('nonexistent'), { wrapper: Wrapper })
+    const { result } = renderHook(() => useTemplateDownloadCount('nonexistent'), {
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => expect(result.current.isError).toBe(true))
     expect(result.current.error).toBeDefined()
@@ -120,10 +142,15 @@ describe('useTemplateDownloadCount', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.5)
     ;(api.fetchTemplates as Mock).mockResolvedValue({
       items: [mockTemplate],
-      total: 1, page: 1, pageSize: 100, totalPages: 1,
+      total: 1,
+      page: 1,
+      pageSize: 100,
+      totalPages: 1,
     })
 
-    const { result } = renderHook(() => useTemplateDownloadCount('portfolio-pro'), { wrapper: Wrapper })
+    const { result } = renderHook(() => useTemplateDownloadCount('portfolio-pro'), {
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data).toBeDefined()

@@ -102,10 +102,10 @@ describe('useTemplate', () => {
       return { ...mockTemplate, id: '2', slug: 'business-plus', name: 'Business Plus' }
     })
 
-    const { result, rerender } = renderHook(
-      ({ slug }) => useTemplate(slug),
-      { initialProps: { slug: 'portfolio-pro' }, wrapper: Wrapper },
-    )
+    const { result, rerender } = renderHook(({ slug }) => useTemplate(slug), {
+      initialProps: { slug: 'portfolio-pro' },
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data?.name).toBe('Portfolio Pro')
@@ -144,7 +144,9 @@ describe('useRelatedTemplates', () => {
   it('fetches related templates by category', async () => {
     ;(api.fetchRelatedTemplates as Mock).mockResolvedValue(relatedTemplates)
 
-    const { result } = renderHook(() => useRelatedTemplates('portfolio-pro', 'Portfolio'), { wrapper: Wrapper })
+    const { result } = renderHook(() => useRelatedTemplates('portfolio-pro', 'Portfolio'), {
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(api.fetchRelatedTemplates).toHaveBeenCalledWith('portfolio-pro', 'Portfolio')
@@ -154,7 +156,9 @@ describe('useRelatedTemplates', () => {
   it('returns empty array when no related templates exist', async () => {
     ;(api.fetchRelatedTemplates as Mock).mockResolvedValue([])
 
-    const { result } = renderHook(() => useRelatedTemplates('portfolio-pro', 'Unknown'), { wrapper: Wrapper })
+    const { result } = renderHook(() => useRelatedTemplates('portfolio-pro', 'Unknown'), {
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data).toEqual([])

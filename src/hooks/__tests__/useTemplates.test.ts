@@ -73,7 +73,9 @@ describe('useTemplates', () => {
     }
     ;(api.fetchTemplates as Mock).mockResolvedValue(mockData)
 
-    const { result } = renderHook(() => useTemplates({ filters: defaultFilters }), { wrapper: Wrapper })
+    const { result } = renderHook(() => useTemplates({ filters: defaultFilters }), {
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(api.fetchTemplates).toHaveBeenCalledWith(defaultFilters, 1, 9)
@@ -90,7 +92,10 @@ describe('useTemplates', () => {
     }
     ;(api.fetchTemplates as Mock).mockResolvedValue(mockData)
 
-    const { result } = renderHook(() => useTemplates({ filters: defaultFilters, page: 3, pageSize: 6 }), { wrapper: Wrapper })
+    const { result } = renderHook(
+      () => useTemplates({ filters: defaultFilters, page: 3, pageSize: 6 }),
+      { wrapper: Wrapper },
+    )
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(api.fetchTemplates).toHaveBeenCalledWith(defaultFilters, 3, 6)
@@ -122,7 +127,9 @@ describe('useTemplates', () => {
   it('returns loading state initially', async () => {
     ;(api.fetchTemplates as Mock).mockReturnValue(new Promise(() => {}))
 
-    const { result } = renderHook(() => useTemplates({ filters: defaultFilters }), { wrapper: Wrapper })
+    const { result } = renderHook(() => useTemplates({ filters: defaultFilters }), {
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => expect(result.current.isLoading).toBe(true))
   })
@@ -130,15 +137,29 @@ describe('useTemplates', () => {
   it('returns error state on failure', async () => {
     ;(api.fetchTemplates as Mock).mockRejectedValue(new Error('Network error'))
 
-    const { result } = renderHook(() => useTemplates({ filters: defaultFilters }), { wrapper: Wrapper })
+    const { result } = renderHook(() => useTemplates({ filters: defaultFilters }), {
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => expect(result.current.isError).toBe(true))
     expect(result.current.error).toBeDefined()
   })
 
   it('updates when filters change', async () => {
-    const filters1: TemplateFilters = { search: '', category: '', framework: '', priceTier: 'all', sort: 'newest' }
-    const filters2: TemplateFilters = { search: 'portfolio', category: '', framework: '', priceTier: 'all', sort: 'newest' }
+    const filters1: TemplateFilters = {
+      search: '',
+      category: '',
+      framework: '',
+      priceTier: 'all',
+      sort: 'newest',
+    }
+    const filters2: TemplateFilters = {
+      search: 'portfolio',
+      category: '',
+      framework: '',
+      priceTier: 'all',
+      sort: 'newest',
+    }
 
     const emptyData = { items: [], total: 0, page: 1, pageSize: 9, totalPages: 0 }
     const filteredData = { items: [mockTemplate], total: 1, page: 1, pageSize: 9, totalPages: 1 }
@@ -148,10 +169,10 @@ describe('useTemplates', () => {
       return Promise.resolve(emptyData)
     })
 
-    const { result, rerender } = renderHook(
-      ({ filters }) => useTemplates({ filters }),
-      { initialProps: { filters: filters1 }, wrapper: Wrapper },
-    )
+    const { result, rerender } = renderHook(({ filters }) => useTemplates({ filters }), {
+      initialProps: { filters: filters1 },
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data?.total).toBe(0)
@@ -166,12 +187,17 @@ describe('useTemplates', () => {
     const page1Data = { items: [mockTemplate], total: 2, page: 1, pageSize: 1, totalPages: 2 }
     const page2Data = {
       items: [{ ...mockTemplate, id: '2', name: 'Business Plus', slug: 'business-plus' }],
-      total: 2, page: 2, pageSize: 1, totalPages: 2,
+      total: 2,
+      page: 2,
+      pageSize: 1,
+      totalPages: 2,
     }
 
     ;(api.fetchTemplates as Mock)
       .mockResolvedValueOnce(page1Data)
-      .mockImplementationOnce(() => new Promise((resolve) => setTimeout(() => resolve(page2Data), 500)))
+      .mockImplementationOnce(
+        () => new Promise((resolve) => setTimeout(() => resolve(page2Data), 500)),
+      )
 
     const { result, rerender } = renderHook(
       ({ page }) => useTemplates({ filters: defaultFilters, page, pageSize: 1 }),
@@ -193,7 +219,13 @@ describe('filtersFromParams', () => {
   it('returns default values for empty params', () => {
     const params = new URLSearchParams('')
     const filters = filtersFromParams(params)
-    expect(filters).toEqual({ search: '', category: '', framework: '', priceTier: 'all', sort: 'newest' })
+    expect(filters).toEqual({
+      search: '',
+      category: '',
+      framework: '',
+      priceTier: 'all',
+      sort: 'newest',
+    })
   })
 
   it('parses search param', () => {
@@ -232,8 +264,18 @@ describe('filtersFromParams', () => {
   })
 
   it('parses multiple params together', () => {
-    const filters = filtersFromParams(new URLSearchParams('search=react&category=Portfolio&framework=Next.js&priceTier=free&sort=name'))
-    expect(filters).toEqual({ search: 'react', category: 'Portfolio', framework: 'Next.js', priceTier: 'free', sort: 'name' })
+    const filters = filtersFromParams(
+      new URLSearchParams(
+        'search=react&category=Portfolio&framework=Next.js&priceTier=free&sort=name',
+      ),
+    )
+    expect(filters).toEqual({
+      search: 'react',
+      category: 'Portfolio',
+      framework: 'Next.js',
+      priceTier: 'free',
+      sort: 'name',
+    })
   })
 
   it('handles URL-encoded values', () => {

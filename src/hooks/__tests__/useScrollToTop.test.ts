@@ -7,11 +7,7 @@ import { useScrollToTop } from '../useScrollToTop'
 describe('useScrollToTop', () => {
   function createWrapper(initialEntries: string[] = ['/']) {
     return function Wrapper({ children }: { children: ReactNode }) {
-      return React.createElement(
-        MemoryRouter,
-        { initialEntries },
-        children,
-      )
+      return React.createElement(MemoryRouter, { initialEntries }, children)
     }
   }
 

@@ -110,10 +110,10 @@ describe('useDownloads', () => {
       return [{ ...mockDownloads[0]!, id: 'dl-3', userId: 'user-2' }]
     })
 
-    const { result, rerender } = renderHook(
-      ({ userId }) => useDownloads(userId),
-      { initialProps: { userId: 'user-1' }, wrapper: Wrapper },
-    )
+    const { result, rerender } = renderHook(({ userId }) => useDownloads(userId), {
+      initialProps: { userId: 'user-1' },
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data).toHaveLength(2)

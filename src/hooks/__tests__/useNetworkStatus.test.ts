@@ -3,8 +3,6 @@ import { renderHook, act } from '@testing-library/react'
 import { useNetworkStatus } from '../useNetworkStatus'
 
 describe('useNetworkStatus', () => {
-  const originalNavigatorOnLine = navigator.onLine
-
   beforeEach(() => {
     // Mock addEventListener/removeEventListener on window
     vi.spyOn(window, 'addEventListener').mockImplementation(() => {})
