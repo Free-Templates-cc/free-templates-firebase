@@ -97,10 +97,10 @@ export function LoginPage() {
                 id="login-email"
                 type="email"
                 {...register('email')}
-                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 dark:bg-gray-900 dark:text-white ${
+                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus-visible:ring-2 dark:bg-gray-900 dark:text-white ${
                   errors.email
-                    ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                    : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-gray-700'
+                    ? 'border-red-300 focus:border-red-500 focus-visible:ring-red-500/20'
+                    : 'border-gray-300 focus:border-primary-500 focus-visible:ring-primary-500/20 dark:border-gray-700'
                 }`}
                 placeholder="you@example.com"
               />
@@ -121,10 +121,10 @@ export function LoginPage() {
                 id="login-password"
                 type="password"
                 {...register('password')}
-                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 dark:bg-gray-900 dark:text-white ${
+                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus-visible:ring-2 dark:bg-gray-900 dark:text-white ${
                   errors.password
-                    ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                    : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-gray-700'
+                    ? 'border-red-300 focus:border-red-500 focus-visible:ring-red-500/20'
+                    : 'border-gray-300 focus:border-primary-500 focus-visible:ring-primary-500/20 dark:border-gray-700'
                 }`}
                 placeholder="••••••••"
               />

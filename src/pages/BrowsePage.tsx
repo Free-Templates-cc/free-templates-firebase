@@ -103,7 +103,7 @@ export function BrowsePage() {
             value={filters.search}
             onChange={(e) => updateFilter('search', e.target.value)}
             placeholder="Search templates..."
-            className="w-full rounded-lg border border-gray-300 bg-gray-50 py-2 pl-10 pr-4 text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+            className="w-full rounded-lg border border-gray-300 bg-gray-50 py-2 pl-10 pr-4 text-sm focus:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
           />
         </div>
       </div>

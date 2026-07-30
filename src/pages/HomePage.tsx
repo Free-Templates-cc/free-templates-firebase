@@ -132,7 +132,7 @@ export function HomePage() {
                   id="hero-search"
                   type="text"
                   placeholder="Search templates..."
-                  className="w-full rounded-xl border border-gray-300 bg-white py-3.5 pl-12 pr-4 text-base shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                  className="w-full rounded-xl border border-gray-300 bg-white py-3.5 pl-12 pr-4 text-base shadow-sm focus:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
                 />
               </div>
               <div className="mt-4 flex flex-wrap justify-center gap-2">

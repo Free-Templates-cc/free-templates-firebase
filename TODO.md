@@ -800,3 +800,10 @@ Comprehensive test coverage expansion targeting **100% statement, branch, functi
 - **Build:** Clean, zero errors
 - **Remaining uncovered lines:** All V8 instrumentation artifacts or environment-dependent code (Navbar JSX, LazyImage null-ref + aspect-ratio edge cases, Modal focus-trap guards, useNetworkStatus SSR guard, api.ts emulator branch). All blocked on Firebase project credentials.
 - **Blocked items:** Lighthouse audit (needs deployment), Analytics + Domain config (needs Firebase project).
+
+### 2026-07-30 — 09:45 CEST
+- **Accessibility fix:** Replaced `focus:ring-*` with `focus-visible:ring-*` across all 10 TSX files (37 instances) — inputs, buttons, search bars, checkboxes now show focus rings only during keyboard navigation instead of on every click focus. Keyboard users see the same rings; mouse users get cleaner interaction without persistent rings.
+  - Files affected: Button.tsx, Input.tsx, Navbar.tsx, BrowsePage.tsx, HomePage.tsx, LoginPage.tsx, RegisterPage.tsx, ForgotPasswordPage.tsx, ContactPage.tsx
+  - `focus:border-*` and `focus:outline-none` kept unchanged (border color feedback on any focus is fine)
+- **Tests:** 312/312 passing, build clean, lint clean
+- **Status:** All non-blocked tasks complete. Remaining: Lighthouse audit, Analytics, Domain config (all need Firebase project). OpenSpec CI integration deferred (requires interactive mode).

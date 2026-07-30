@@ -35,10 +35,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={type}
             className={cn(
-              'block w-full rounded-lg border bg-white px-4 py-2.5 text-sm text-gray-900 transition-colors placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-0 dark:bg-gray-900 dark:text-white dark:placeholder-gray-500',
+              'block w-full rounded-lg border bg-white px-4 py-2.5 text-sm text-gray-900 transition-colors placeholder-gray-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 dark:bg-gray-900 dark:text-white dark:placeholder-gray-500',
               error
-                ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20 dark:border-red-800'
-                : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-gray-700',
+                ? 'border-red-300 focus:border-red-500 focus-visible:ring-red-500/20 dark:border-red-800'
+                : 'border-gray-300 focus:border-primary-500 focus-visible:ring-primary-500/20 dark:border-gray-700',
               icon && 'pl-10',
               props.disabled && 'cursor-not-allowed opacity-50',
               className,

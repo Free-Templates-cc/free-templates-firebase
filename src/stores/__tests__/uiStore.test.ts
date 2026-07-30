@@ -154,10 +154,7 @@ describe('uiStore', () => {
     document.documentElement.classList.remove('dark')
 
     // Set up localStorage to simulate persisted dark mode
-    localStorage.setItem(
-      'ft-ui-preferences',
-      JSON.stringify({ state: { isDarkMode: true } }),
-    )
+    localStorage.setItem('ft-ui-preferences', JSON.stringify({ state: { isDarkMode: true } }))
 
     // Manually trigger rehydration so onRehydrateStorage runs
     await useUIStore.persist.rehydrate()

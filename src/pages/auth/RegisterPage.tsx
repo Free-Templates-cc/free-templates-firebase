@@ -125,10 +125,10 @@ export function RegisterPage() {
               <input
                 type="text"
                 {...register('displayName')}
-                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 dark:bg-gray-900 dark:text-white ${
+                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus-visible:ring-2 dark:bg-gray-900 dark:text-white ${
                   errors.displayName
-                    ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                    : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-gray-700'
+                    ? 'border-red-300 focus:border-red-500 focus-visible:ring-red-500/20'
+                    : 'border-gray-300 focus:border-primary-500 focus-visible:ring-primary-500/20 dark:border-gray-700'
                 }`}
                 placeholder="Your name"
               />
@@ -147,10 +147,10 @@ export function RegisterPage() {
               <input
                 type="email"
                 {...register('email')}
-                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 dark:bg-gray-900 dark:text-white ${
+                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus-visible:ring-2 dark:bg-gray-900 dark:text-white ${
                   errors.email
-                    ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                    : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-gray-700'
+                    ? 'border-red-300 focus:border-red-500 focus-visible:ring-red-500/20'
+                    : 'border-gray-300 focus:border-primary-500 focus-visible:ring-primary-500/20 dark:border-gray-700'
                 }`}
                 placeholder="you@example.com"
               />
@@ -167,10 +167,10 @@ export function RegisterPage() {
               <input
                 type="password"
                 {...register('password')}
-                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 dark:bg-gray-900 dark:text-white ${
+                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus-visible:ring-2 dark:bg-gray-900 dark:text-white ${
                   errors.password
-                    ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                    : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-gray-700'
+                    ? 'border-red-300 focus:border-red-500 focus-visible:ring-red-500/20'
+                    : 'border-gray-300 focus:border-primary-500 focus-visible:ring-primary-500/20 dark:border-gray-700'
                 }`}
                 placeholder="••••••••"
               />
@@ -189,10 +189,10 @@ export function RegisterPage() {
               <input
                 type="password"
                 {...register('confirmPassword')}
-                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 dark:bg-gray-900 dark:text-white ${
+                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus-visible:ring-2 dark:bg-gray-900 dark:text-white ${
                   errors.confirmPassword
-                    ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                    : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500/20 dark:border-gray-700'
+                    ? 'border-red-300 focus:border-red-500 focus-visible:ring-red-500/20'
+                    : 'border-gray-300 focus:border-primary-500 focus-visible:ring-primary-500/20 dark:border-gray-700'
                 }`}
                 placeholder="••••••••"
               />
@@ -208,7 +208,7 @@ export function RegisterPage() {
               type="checkbox"
               id="termsAccepted"
               {...register('termsAccepted')}
-              className="mt-1 h-4 w-4 shrink-0 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-gray-600"
+              className="mt-1 h-4 w-4 shrink-0 rounded border-gray-300 text-primary-600 focus-visible:ring-primary-500 dark:border-gray-600"
             />
             <label htmlFor="termsAccepted" className="text-sm text-gray-600 dark:text-gray-400">
               I accept the{' '}
