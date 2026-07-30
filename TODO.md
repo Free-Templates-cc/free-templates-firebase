@@ -564,7 +564,7 @@ Ordered by impact vs effort:
 - **Git:** commit pending
 - **Next:** Still waiting on Alchie for Firebase project credentials.
 
-#### 06:45 CEST
+#### 07:00 CEST — Corrected (was 06:45)
 - **New:** Added ProtectedRoute tests (3 tests) — loading spinner, redirect unauthenticated, renders children.
 - **New:** Added PremiumRoute tests (4 tests) — loading spinner, redirect unauthenticated, redirect non-premium, renders children.
 - **New:** Added Navbar tests (14 tests) — logo, nav links, search form, dark mode toggle/click, auth states (signed out/signed in), user dropdown menu with ARIA, mobile menu toggle/open/close/labels, search input.
@@ -574,6 +574,14 @@ Ordered by impact vs effort:
 - **Lint:** 0 errors, 0 warnings (77 files)
 - **Git:** commit pending
 - **Next:** All components tested. Still waiting on Alchie for Firebase project credentials.
+
+#### 07:15 CEST
+- **Fix:** TypeScript build error in `useNetworkStatus.test.ts` — non-null assertions on mock listener invocations (`listeners[event]!()`)
+- **Build:** Clean, zero errors (tsc -b + vite build passes)
+- **Tests:** 231/231 passing across 24 files
+- **Lint:** 0 errors, 0 warnings (84 files)
+- **Git:** `7b3ad45` pushed — `fix: TypeScript build errors in useNetworkStatus test (non-null assertions on listener calls)`
+- **Next:** Still waiting on Alchie for Firebase project credentials.
 
 ### 2026-07-29 — Template placeholder images
 
