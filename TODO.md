@@ -209,7 +209,7 @@
 - [ ] Domain config (free-templates.cc → Firebase Hosting custom domain)
 - [x] Create `functions/.env.example` for local Stripe emulation guide
 - [x] Add `.env` and `functions/.env` to `.gitignore`
-- [ ] **OpenSpec** — install `@fission-ai/openspec`, review entire codebase, add complete specs for components, hooks, stores, pages, and backend
+- [x] **OpenSpec** — install `@fission-ai/openspec`, review entire codebase, add complete specs for components, hooks, stores, pages, and backend
 
 ---
 
@@ -449,11 +449,11 @@ Ordered by impact vs effort:
 Install and run `@fission-ai/openspec` across the entire codebase to generate and review comprehensive specifications.
 
 ### Tasks
-- [ ] Install `@fission-ai/openspec` CLI
-- [ ] Run initial OpenSpec scan — generate specs for all source files
-- [ ] Review generated specs for accuracy (components, hooks, stores, pages, lib, backend)
-- [ ] Add missing specs for uncovered areas
-- [ ] Integrate OpenSpec into CI/docs workflow
+- [x] Install `@fission-ai/openspec` CLI
+- [x] Run initial OpenSpec scan — generate specs for all source files
+- [x] Review generated specs for accuracy (components, hooks, stores, pages, lib, backend)
+- [x] Add missing specs for uncovered areas
+- [ ] ~~Integrate OpenSpec into CI/docs workflow~~ *(deferred — openspec validate requires interactive mode)*
 
 ### Files to Spec
 - `components/` — Navbar, Footer, Layout, Modal, Button, Card, Badge, Input, Skeleton, ErrorBoundary, LazyImage, Breadcrumbs, NetworkStatusBanner, SEOHead, ProtectedRoute, PremiumRoute
@@ -778,3 +778,9 @@ Comprehensive test coverage expansion targeting **100% statement, branch, functi
 - **Build:** Clean, zero errors
 - **New TODO item:** Set up OpenSpec — install `@fission-ai/openspec`, review entire codebase, add complete specs
 - **Next:** OpenSpec setup → cover remaining 3 uncovered lines → deploy
+
+### 2026-07-30 — 08:48 CEST
+- **OpenSpec complete:** All 12 spec categories created — frontend (core-lib, hooks, layout, pages, route-guards, stores, types, ui-components) + missing areas (backend/Cloud Functions, security-rules, ci-cd, seed-script, e2e-tests)
+- **Design artifact created:** `openspec/changes/document-existing-codebase/design.md` with architecture decisions, risk assessment, and migration plan
+- **Spec coverage:** 49 requirements with Gherkin scenarios across all source files
+- **Remaining blocked items** (need Firebase project): Lighthouse audit, Analytics, Domain config, OpenSpec CI integration (deferred)

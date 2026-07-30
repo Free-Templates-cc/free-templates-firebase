@@ -5,7 +5,7 @@ const { mockOnAuthStateChanged, mockOnSnapshot, mockDoc, mockUnsubscribe } = vi.
   const mockOnAuthStateChanged = vi.fn()
   const mockUnsubscribe = vi.fn()
   const mockOnSnapshot = vi.fn()
-  const mockDoc = vi.fn(() => ({ id: 'test-uid' }))
+  const mockDoc = vi.fn((_ref: unknown) => ({ id: 'test-uid' }))
   return { mockOnAuthStateChanged, mockOnSnapshot, mockDoc, mockUnsubscribe }
 })
 
@@ -20,7 +20,7 @@ vi.mock('firebase/auth', () => ({
 
 vi.mock('firebase/firestore', () => ({
   getFirestore: vi.fn(() => ({})),
-  doc: (...args: unknown[]) => mockDoc(...args),
+  doc: (...args: unknown[]) => mockDoc(args[0]),
   onSnapshot: (...args: unknown[]) => mockOnSnapshot(...args),
 }))
 
@@ -249,9 +249,7 @@ describe('authStore', () => {
     initAuthListener()
 
     // Now simulate sign out
-    if (authCallback) {
-      authCallback(null)
-    }
+    ;(authCallback as unknown as (user: unknown) => void)(null)
 
     const state = useAuthStore.getState()
     expect(state.user).toBeNull()
