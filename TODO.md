@@ -206,6 +206,8 @@
 - [x] CI/CD — GitHub Actions workflow (`.github/workflows/ci.yml` + `deploy.yml`) — push blocked by PAT scope; needs commit by admin with `workflow` scope)
 - [x] Firebase Hosting deployment workflow added
 - [ ] Domain config (free-templates.cc → Firebase Hosting custom domain)
+- [x] Create `functions/.env.example` for local Stripe emulation guide
+- [x] Add `.env` and `functions/.env` to `.gitignore`
 
 ---
 
@@ -440,6 +442,12 @@ Ordered by impact vs effort:
 ---
 
 ## Changelog
+
+### 2026-07-30 — Documentation & housekeeping
+
+- **Created `functions/.env.example`** — template for local Stripe emulation config (matching instructions already in root `.env.example`)
+- **Added `.env` and `functions/.env` to `.gitignore`** — prevents accidental credential commits (the root `.env.example` claimed these were already gitignored, but they weren't)
+- **Audit status:** Project is feature-complete. All remaining unchecked items (Firebase setup, deployment, domain config, analytics, Lighthouse) require real Firebase project credentials — blocked until Alchie creates a Firebase project.
 
 ### 2026-07-30 — Restore Cloud Functions (accidentally deleted)
 
