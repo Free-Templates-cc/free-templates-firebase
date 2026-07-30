@@ -487,8 +487,9 @@ Ordered by impact vs effort:
 - **Build:** Clean, zero TypeScript errors
 - **Status:** All non-Firebase code work is complete. Remaining items (Firebase project setup, domain config, analytics, Lighthouse audit) require real Firebase credentials.
 
-### 2026-07-30 — Hourly status check (04:45 CEST)
+### 2026-07-30 — Hourly status checks
 
+#### 04:45 CEST
 - **Status:** All code complete, all non-Firebase items done. Remaining unchecked items (1.2 Firebase Setup, 6.1 Lighthouse audit, 6.3 Analytics, 6.4 Domain config) genuinely blocked on Firebase project credentials.
 - **Build:** Clean, 1.00s, zero errors
 - **Unit tests:** 104/104 passing across 9 files
@@ -496,7 +497,15 @@ Ordered by impact vs effort:
 - **Lint:** 0 errors, 0 warnings (69 files)
 - **Cloud Functions:** TypeScript compiles cleanly
 - **Git:** Latest commit 722a37f — pushed, remote clean
-- **Next:** Waiting on Alchie to create a Firebase project and provide credentials. After that: populate `.env`, deploy Cloud Functions (`firebase deploy --only functions`), deploy hosting (`firebase deploy --only hosting`), connect free-templates.cc custom domain, add Analytics, run Lighthouse audit.
+- **Next:** Waiting on Alchie to create a Firebase project and provide credentials.
+
+#### 05:00 CEST
+- No change from 04:45. All clean, still blocked on Firebase project credentials.
+- **Build:** 1.29s, zero errors
+- **Unit tests:** 104/104 passing across 9 files
+- **Lint:** 0 errors, 0 warnings (69 files)
+- **Git:** clean, nothing to push
+- **Next:** Waiting on Alchie for Firebase project credentials. Once available: populate `.env`, deploy Cloud Functions (`firebase deploy --only functions`), deploy hosting (`firebase deploy --only hosting`), connect free-templates.cc custom domain, add Analytics, run Lighthouse audit.
 
 ### 2026-07-29 — Template placeholder images
 
