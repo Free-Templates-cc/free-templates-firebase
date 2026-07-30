@@ -407,7 +407,7 @@ Comprehensive audit of every component, page, integration, and quality metric.
 | **Loading states** | ✅ Good | PageLoader for lazy routes. Skeleton components used on BrowsePage (card grid), TemplateDetailPage. authStore has `isLoading` flag. Missing: no loading state on AccountPage subscription actions |
 | **Empty states** | ✅ Adequate | BrowsePage: "No templates found" with suggestion to adjust filters. DownloadHistoryPage: empty message with link to browse. Missing: empty states on HomePage categories |
 | **Error states** | 🟡 Partial | BrowsePage: error with retry. TemplateDetailPage: 404 + link back. Missing: error state in DownloadHistoryPage, AccountPage (silent failures for subscription actions), HomePage |
-| **Accessibility** | 🟡 Partially addressed | 2026-07-29: Added focus trap + focus restoration to Modal, aria-expanded/aria-haspopup/role=menu to user dropdown, aria-label to mobile menu toggle, filter close buttons, pagination buttons. Added htmlFor on login labels, role=alert on errors, aria-hidden on decorative placeholders. Still needs: keyboard nav audit, skip-to-content link, focus-visible styles audit. |
+| **Accessibility** | 🟡 Partially addressed | 2026-07-29: Added focus trap + focus restoration to Modal, aria-expanded/aria-haspopup/role=menu to user dropdown, aria-label to mobile menu toggle, filter close buttons, pagination buttons. Added htmlFor on login labels, role=alert on errors, aria-hidden on decorative placeholders. 2026-07-30: Added skip-to-content link to Layout. Still needs: keyboard nav audit, focus-visible styles audit. |
 | **Responsive design** | ✅ Good baseline | Tailwind breakpoints used consistently (sm/md/lg/xl). Mobile hamburger menu works. Template grid adapts 1→2→3 columns. Filters collapse on mobile |
 | **Edge cases** | 🟡 Partial | Slugify handles edge cases correctly (tested). But: empty search results handled, what about very long template names? What about special characters in URLs? |
 | **Performance** | ✅ Good | React.lazy code splitting, manualChunks, LazyImage, Skeleton for perceived performance. Bundle size is reasonable (571 kB firebase chunk is the main concern) |
@@ -522,6 +522,14 @@ Ordered by impact vs effort:
 - **Lint:** 0 errors, 0 warnings (69 files)
 - **Git:** clean, nothing to push (last commit 9a68423)
 - **Next:** Waiting on Alchie for Firebase project credentials.
+
+#### 06:00 CEST
+- **New:** Added skip-to-content link (`Layout.tsx`) — keyboard-accessible link at top of page, links to `#main-content` on `<main>`. Focus visible on Tab, hidden otherwise via `sr-only`/`focus:not-sr-only`.
+- **Build:** 0.93s, zero errors
+- **Unit tests:** 104/104 passing across 9 files
+- **Lint:** 0 errors, 0 warnings (69 files)
+- **Git:** commit `702f6af` pushed — `a11y: add skip-to-content link to Layout for keyboard users`
+- **Next:** Still waiting on Alchie for Firebase project credentials.
 
 ### 2026-07-29 — Template placeholder images
 
