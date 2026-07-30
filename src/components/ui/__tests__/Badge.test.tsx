@@ -34,7 +34,11 @@ describe('Badge', () => {
   })
 
   it('renders children correctly', () => {
-    render(<Badge><span data-testid="child">Nested</span></Badge>)
+    render(
+      <Badge>
+        <span data-testid="child">Nested</span>
+      </Badge>,
+    )
     expect(screen.getByTestId('child')).toBeInTheDocument()
   })
 })
