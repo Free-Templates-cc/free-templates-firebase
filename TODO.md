@@ -827,3 +827,12 @@ Comprehensive test coverage expansion targeting **100% statement, branch, functi
 - **Still blocked:** All remaining items require Firebase project + deployment.
   - Uncovered lines are V8 instrumentation artifacts in JSX (Navbar inline arrow functions, api.ts emulator branch). No real test gaps remain.
 - **No changes this run.** Project stable and complete for all non-blocked work.
+
+### 2026-07-30 — 10:45 CEST
+- **Status:** All three remaining tasks still blocked on Firebase project credentials.
+  - Lighthouse audit — needs deployment
+  - Analytics — needs real Firebase project
+  - Domain config — needs Firebase project + DNS
+- **Build:** Clean, zero errors
+- **Tests:** 312/312 passing across 28 files
+- **Next:** Awaiting Alchie to populate `.env` with real Firebase credentials and deploy.
