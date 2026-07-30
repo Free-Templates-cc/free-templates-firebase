@@ -932,3 +932,16 @@ interface BillingPortalResponse {
 export async function createBillingPortalSession(uid: string): Promise<BillingPortalResponse> {
   return callFunction<BillingPortalResponse>('createBillingPortalSession', { uid })
 }
+
+interface GetDownloadUrlResponse {
+  url: string
+  downloads: number
+}
+
+/** Generate a download URL for a template (free or premium) via Cloud Function. */
+export async function getDownloadUrl(
+  templateId: string,
+  uid?: string,
+): Promise<GetDownloadUrlResponse> {
+  return callFunction<GetDownloadUrlResponse>('getDownloadUrl', { templateId, uid })
+}

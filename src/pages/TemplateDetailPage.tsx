@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
@@ -7,6 +8,9 @@ import { SEOHead } from '../components/seo/SEOHead'
 import { useAuthStore } from '../stores/authStore'
 import { useTemplate, useRelatedTemplates } from '../hooks/useTemplate'
 import { useTemplateDownloadCount } from '../hooks/useTemplateDownloadCount'
+import { getDownloadUrl } from '../lib/api'
+import toast from 'react-hot-toast'
+import { ArrowLeft, Download, ExternalLink, GitFork, Check } from 'lucide-react'
 
 function LiveDownloadCount({ slug, staticCount }: { slug: string; staticCount: number }) {
   const { data: liveCount } = useTemplateDownloadCount(slug)
@@ -14,7 +18,6 @@ function LiveDownloadCount({ slug, staticCount }: { slug: string; staticCount: n
     liveCount !== undefined ? liveCount.toLocaleString() : staticCount.toLocaleString()
   return <>{display}</>
 }
-import { ArrowLeft, Download, ExternalLink, GitFork, Check } from 'lucide-react'
 
 /** Normalize framework name for Badge variant (e.g. 'Next.js' → 'nextjs'). */
 const fwVariant = (fw: string) =>
@@ -26,6 +29,21 @@ export function TemplateDetailPage() {
 
   const { data: template, isLoading, isError } = useTemplate(slug ?? '')
   const { data: relatedTemplates } = useRelatedTemplates(slug ?? '', template?.category ?? '')
+  const [isDownloading, setIsDownloading] = useState(false)
+
+  const handleDownload = async () => {
+    if (!template || isDownloading) return
+    setIsDownloading(true)
+    try {
+      const { url } = await getDownloadUrl(template.id, user?.uid)
+      window.open(url, '_blank', 'noopener,noreferrer')
+      toast.success('Download started!')
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to start download. Please try again.')
+    } finally {
+      setIsDownloading(false)
+    }
+  }
 
   // Loading state
   if (isLoading || authLoading) {
@@ -154,13 +172,24 @@ export function TemplateDetailPage() {
           {/* Download section */}
           <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-6 dark:border-gray-800 dark:bg-gray-900">
             {template.priceTier === 'free' ? (
-              <Button size="lg" className="w-full">
-                <Download className="mr-2 h-5 w-5" />
+              <Button
+                size="lg"
+                className="w-full"
+                isLoading={isDownloading}
+                onClick={handleDownload}
+              >
+                {!isDownloading && <Download className="mr-2 h-5 w-5" />}
                 Download Free Template
               </Button>
             ) : isPremium ? (
-              <Button size="lg" variant="premium" className="w-full">
-                <Download className="mr-2 h-5 w-5" />
+              <Button
+                size="lg"
+                variant="premium"
+                className="w-full"
+                isLoading={isDownloading}
+                onClick={handleDownload}
+              >
+                {!isDownloading && <Download className="mr-2 h-5 w-5" />}
                 Download Premium Template
               </Button>
             ) : user ? (

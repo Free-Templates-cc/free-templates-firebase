@@ -6,6 +6,11 @@ import { Input } from '../components/ui/Input'
 import { SEOHead } from '../components/seo/SEOHead'
 import { Navigate, Link } from 'react-router-dom'
 import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
+import {
+  cancelSubscription as apiCancelSubscription,
+  reactivateSubscription as apiReactivateSubscription,
+  createBillingPortalSession,
+} from '../lib/api'
 import toast from 'react-hot-toast'
 import {
   User,
@@ -88,31 +93,61 @@ function SubscriptionBadge({ status, isPremium }: { status?: string; isPremium: 
 function SubscriptionContent({
   profile,
   isPremium,
+  userUid,
 }: {
   profile: UserProfile | null
   isPremium: boolean
+  userUid: string | undefined
 }) {
   const sub = profile?.subscription
   const status = sub?.status
   const periodEnd = formatDate(sub?.currentPeriodEnd)
   const canceledAt = formatDate(sub?.canceledAt)
 
+  // --- Loading states ---
+  const [isCanceling, setIsCanceling] = useState(false)
+  const [isReactivating, setIsReactivating] = useState(false)
+  const [isOpeningPortal, setIsOpeningPortal] = useState(false)
+
   // --- Handlers ---
 
-  const handleCancel = () => {
-    toast("🚧 Subscription management coming soon — you'll be able to cancel directly.", {
-      icon: '📋',
-    })
+  const handleCancel = async () => {
+    if (!userUid) return
+    setIsCanceling(true)
+    try {
+      await apiCancelSubscription(userUid)
+      toast.success('Subscription will be canceled at the end of the billing period.')
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to cancel subscription. Please try again.')
+    } finally {
+      setIsCanceling(false)
+    }
   }
 
-  const handleReactivate = () => {
-    toast('🚧 Subscription reactivation coming soon.', { icon: '📋' })
+  const handleReactivate = async () => {
+    if (!userUid) return
+    setIsReactivating(true)
+    try {
+      await apiReactivateSubscription(userUid)
+      toast.success('Subscription reactivated successfully!')
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to reactivate subscription. Please try again.')
+    } finally {
+      setIsReactivating(false)
+    }
   }
 
-  const handleBillingPortal = () => {
-    toast("🚧 Billing portal coming soon — you'll manage invoices and payment methods here.", {
-      icon: '📋',
-    })
+  const handleBillingPortal = async () => {
+    if (!userUid) return
+    setIsOpeningPortal(true)
+    try {
+      const { url } = await createBillingPortalSession(userUid)
+      window.open(url, '_blank', 'noopener,noreferrer')
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to open billing portal. Please try again.')
+    } finally {
+      setIsOpeningPortal(false)
+    }
   }
 
   // --- Past Due ---
@@ -136,7 +171,7 @@ function SubscriptionContent({
           <Button
             variant="premium"
             size="sm"
-
+            isLoading={isOpeningPortal}
             onClick={handleBillingPortal}
           >
             <ExternalLink className="mr-1.5 h-4 w-4" />
@@ -170,14 +205,14 @@ function SubscriptionContent({
           </div>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Button variant="outline" size="sm" onClick={handleReactivate}>
+          <Button variant="outline" size="sm" isLoading={isReactivating} onClick={handleReactivate}>
             <RefreshCw className="mr-1.5 h-4 w-4" />
             Reactivate Subscription
           </Button>
           <Button
             variant="ghost"
             size="sm"
-
+            isLoading={isOpeningPortal}
             onClick={handleBillingPortal}
           >
             <ExternalLink className="mr-1.5 h-4 w-4" />
@@ -205,14 +240,14 @@ function SubscriptionContent({
           </div>
         )}
         <div className="flex flex-wrap gap-3">
-          <Button variant="outline" size="sm" onClick={handleCancel}>
+          <Button variant="outline" size="sm" isLoading={isCanceling} onClick={handleCancel}>
             <XCircle className="mr-1.5 h-4 w-4" />
             Cancel Subscription
           </Button>
           <Button
             variant="ghost"
             size="sm"
-
+            isLoading={isOpeningPortal}
             onClick={handleBillingPortal}
           >
             <ExternalLink className="mr-1.5 h-4 w-4" />
@@ -352,7 +387,7 @@ export function AccountPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <SubscriptionContent profile={profile} isPremium={isPremium} />
+            <SubscriptionContent profile={profile} isPremium={isPremium} userUid={user?.uid} />
           </CardContent>
         </Card>
 

@@ -424,7 +424,7 @@ Ordered by impact vs effort:
 | 🔴 P0 | Connect BrowsePage → Firestore for live template data | 2-3h | Site becomes real instead of mock |
 | 🔴 P0 | Deploy Cloud Functions with real Stripe keys + Price IDs | 1h | Enables subscription payments |
 | 🟡 P1 | Add template placeholder images | ✅ Done | picsum.photos seeded URLs + LazyImage wired into BrowsePage, HomePage, TemplateDetailPage |
-| 🟡 P1 | Wire up getDownloadUrl → download buttons | 2h | Enables actual template downloads |
+| 🟡 P1 | Wire up getDownloadUrl → download buttons | ✅ Done | Enables actual template downloads |
 | 🟡 P1 | Add email verification flow | ✅ Done | `sendEmailVerification()` on register, redirect to /login with toast |
 | 🟡 P1 | Set up Firebase Hosting + connect custom domain | 1h | Site goes live at free-templates.cc |
 | 🟡 P1 | Add terms acceptance checkbox to RegisterPage | ✅ Done | zod-validated checkbox, links to /terms and /privacy |
@@ -442,6 +442,16 @@ Ordered by impact vs effort:
 ---
 
 ## Changelog
+
+### 2026-07-30 — Wire up download buttons + real subscription/checkout calls
+
+- **`TemplateDetailPage.tsx`** — Download buttons for free and premium templates now call the `getDownloadUrl` Cloud Function via `handleDownload`. Loading state (`isDownloading`) with button spinner. Opens signed URL in new tab on success. Error toast on failure.
+- **`AccountPage.tsx`** — Cancel, reactivate, and billing portal buttons now call real Cloud Function APIs instead of placeholder toasts. Loading states (`isCanceling`, `isReactivating`, `isOpeningPortal`) wired to Button `isLoading` prop.
+- **`PricingPage.tsx`** — "Upgrade Now" button now calls `createCheckoutSession` Cloud Function instead of showing a toast placeholder. Redirects to Stripe Checkout URL on success. Extracted `PricingCard` component + `handleCheckout` to fix deep-nested ternary oxlint parsing error.
+- **`src/lib/api.ts`** — Added `getDownloadUrl()` API helper (calls `getDownloadUrl` Cloud Function with `templateId` + optional `uid`).
+- **Lint:** 0 errors, 0 warnings across all 62 files.
+- **Tests:** 27/27 passing.
+- **Build:** Clean, zero errors.
 
 ### 2026-07-30 — Documentation & housekeeping
 
