@@ -370,7 +370,7 @@ Comprehensive audit of every component, page, integration, and quality metric.
 
 | Issue | Status | What's Missing |
 |-------|--------|----------------|
-| **Mock data instead of Firestore** | 🔶 All data is mock | BrowsePage, TemplateDetailPage, HomePage (categories), DownloadHistoryPage all use mock data. No Firestore reads exist in the frontend. Swap `fetchTemplates()` → Firestore queries. |
+| **Mock data instead of Firestore** | 🔶 Conditional | `api.ts` now dispatches to Firestore when `VITE_USE_FIREBASE_DATA=true`. Falls back to mock data when unset/false. Templates, template detail, related templates, and download history all have Firestore query implementations. |
 | **Account page subscription UI** | ✅ Real API calls | Cancel/reactivate/portal buttons now call Cloud Function APIs with loading states and toasts. Requires deployed functions. |
 | **PricingPage subscriptions** | ✅ Real checkout | "Upgrade" buttons now call `createCheckoutSession` Cloud Function and redirect to Stripe Checkout. Requires deployed functions. |
 | **Download button** | ✅ Real download flow | TemplateDetailPage download buttons trigger `getDownloadUrl` Cloud Function, open signed URL in new tab. Loading state wired. Requires deployed functions. |
@@ -423,7 +423,7 @@ Ordered by impact vs effort:
 | Priority | Task | Effort | Impact |
 |----------|------|--------|--------|
 | 🔴 P0 | Fill in real Firebase credentials → test dev builds | ✅ Done in GitHub | Unblocks all Firebase features |
-| 🔴 P0 | Connect BrowsePage → Firestore for live template data | 2-3h | Site becomes real instead of mock |
+| 🔴 P0 | Connect BrowsePage → Firestore for live template data | ✅ Done | When VITE_USE_FIREBASE_DATA=true, api.ts queries Firestore instead of mock data. Templates, template detail, related templates, and download history all fetch from Firestore. Falls back to mock data when flag is false (default). |
 | 🔴 P0 | Deploy Cloud Functions with real Stripe keys + Price IDs | 1h | Enables subscription payments |
 | 🟡 P1 | Add template placeholder images | ✅ Done | picsum.photos seeded URLs + LazyImage wired into BrowsePage, HomePage, TemplateDetailPage |
 | 🟡 P1 | Wire up getDownloadUrl → download buttons | ✅ Done | Download buttons trigger getDownloadUrl CF, open signed URL, loading spinner |

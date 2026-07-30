@@ -1,13 +1,16 @@
 /**
  * API layer for templates.
  *
- * Currently returns mock data with realistic structure.
- * Swap the implementations to Firestore queries when the Firebase
- * project is connected — the return types and pagination shapes
- * are designed to remain the same.
+ * Uses Firestore when VITE_USE_FIREBASE_DATA=true, falls back to mock data
+ * for development and testing. The return types and pagination shapes
+ * are consistent between both backends.
  */
 
-import type { Template, TemplateFilters } from '../types'
+import type { Template, TemplateFilters, Download } from '../types'
+import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore'
+import { db } from './firebase'
+
+const USE_FIRESTORE = import.meta.env.VITE_USE_FIREBASE_DATA === 'true'
 
 // ---------------------------------------------------------------------------
 // Mock data
@@ -702,10 +705,80 @@ function delay(ms = 400): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-/**
- * Fetch a paginated, filtered, and sorted list of templates.
- */
+// ---------------------------------------------------------------------------
+// Firestore query helpers
+// ---------------------------------------------------------------------------
+
+async function fetchTemplatesFromFirestore(
+  filters: TemplateFilters,
+  page = 1,
+  pageSize = 9,
+): Promise<PageData<Template>> {
+  const constraints: any[] = [where('published', '==', true)]
+
+  if (filters.category) {
+    constraints.push(where('category', '==', filters.category))
+  }
+  if (filters.framework) {
+    constraints.push(where('framework', '==', filters.framework))
+  }
+  if (filters.priceTier !== 'all') {
+    constraints.push(where('priceTier', '==', filters.priceTier))
+  }
+
+  const templatesRef = collection(db, 'templates')
+  const q = query(templatesRef, ...constraints)
+  const snapshot = await getDocs(q)
+
+  let templates: Template[] = snapshot.docs.map(
+    (d) => ({ id: d.id, ...d.data() }) as Template,
+  )
+
+  // Text search (client-side — Firestore doesn't support full-text)
+  if (filters.search) {
+    const searchStr = filters.search.toLowerCase()
+    templates = templates.filter(
+      (t) =>
+        t.name.toLowerCase().includes(searchStr) ||
+        t.description.toLowerCase().includes(searchStr) ||
+        t.tags.some((tag) => tag.toLowerCase().includes(searchStr)),
+    )
+  }
+
+  // Sort (client-side for flexibility with composite filters)
+  switch (filters.sort) {
+    case 'popular':
+      templates.sort((a, b) => b.downloads - a.downloads)
+      break
+    case 'name':
+      templates.sort((a, b) => a.name.localeCompare(b.name))
+      break
+    case 'newest':
+    default:
+      templates.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)
+      break
+  }
+
+  const total = templates.length
+  const totalPages = Math.max(1, Math.ceil(total / pageSize))
+  const start = (page - 1) * pageSize
+  const items = templates.slice(start, start + pageSize).map(injectImages)
+
+  return { items, total, page, pageSize, totalPages }
+}
+
+/** Public API — dispatches to Firestore or mock based on config. */
 export async function fetchTemplates(
+  filters: TemplateFilters,
+  page = 1,
+  pageSize = 9,
+): Promise<PageData<Template>> {
+  if (USE_FIRESTORE) return fetchTemplatesFromFirestore(filters, page, pageSize)
+  return fetchTemplatesFromMock(filters, page, pageSize)
+}
+
+/** Private mock implementation (kept for dev/testing when Firestore unavailable). */
+async function fetchTemplatesFromMock(
   filters: TemplateFilters,
   page = 1,
   pageSize = 9,
@@ -762,13 +835,48 @@ export async function fetchTemplates(
   return { items, total, page, pageSize, totalPages }
 }
 
+async function fetchTemplateBySlugFromFirestore(slug: string): Promise<Template | null> {
+  const templatesRef = collection(db, 'templates')
+  const q = query(
+    templatesRef,
+    where('slug', '==', slug),
+    where('published', '==', true),
+    limit(1),
+  )
+  const snapshot = await getDocs(q)
+  if (snapshot.empty) return null
+  const d = snapshot.docs[0]!
+  return injectImages({ id: d.id, ...d.data() } as Template)
+}
+
 /**
  * Fetch a single template by its slug.
  */
 export async function fetchTemplateBySlug(slug: string): Promise<Template | null> {
+  if (USE_FIRESTORE) return fetchTemplateBySlugFromFirestore(slug)
   await delay(300)
   const found = allTemplates.find((t) => t.slug === slug)
   return found ? injectImages(found) : null
+}
+
+async function fetchRelatedTemplatesFromFirestore(
+  currentSlug: string,
+  category: string,
+  resultLimit = 4,
+): Promise<Template[]> {
+  const templatesRef = collection(db, 'templates')
+  const q = query(
+    templatesRef,
+    where('category', '==', category),
+    where('published', '==', true),
+    limit(resultLimit + 1),
+  )
+  const snapshot = await getDocs(q)
+  return snapshot.docs
+    .map((d) => ({ id: d.id, ...d.data() }) as Template)
+    .filter((t) => t.slug !== currentSlug)
+    .slice(0, resultLimit)
+    .map(injectImages)
 }
 
 /**
@@ -777,20 +885,19 @@ export async function fetchTemplateBySlug(slug: string): Promise<Template | null
 export async function fetchRelatedTemplates(
   currentSlug: string,
   category: string,
-  limit = 4,
+  resultLimit = 4,
 ): Promise<Template[]> {
+  if (USE_FIRESTORE) return fetchRelatedTemplatesFromFirestore(currentSlug, category, resultLimit)
   await delay(250)
   return allTemplates
     .filter((t) => t.slug !== currentSlug && t.category === category)
-    .slice(0, limit)
+    .slice(0, resultLimit)
     .map(injectImages)
 }
 
 // ---------------------------------------------------------------------------
 // Mock download history
 // ---------------------------------------------------------------------------
-
-import type { Download } from '../types'
 
 const mockDownloads: Download[] = [
   {
@@ -840,10 +947,22 @@ const mockDownloads: Download[] = [
   },
 ]
 
+async function fetchDownloadsFromFirestore(userId: string): Promise<Download[]> {
+  const downloadsRef = collection(db, 'downloads')
+  const q = query(
+    downloadsRef,
+    where('userId', '==', userId),
+    orderBy('downloadedAt', 'desc'),
+  )
+  const snapshot = await getDocs(q)
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as Download)
+}
+
 /**
  * Fetch download history for the current user.
  */
 export async function fetchDownloads(userId: string): Promise<Download[]> {
+  if (USE_FIRESTORE) return fetchDownloadsFromFirestore(userId)
   await delay(350)
   return mockDownloads.filter((d) => d.userId === userId)
 }
