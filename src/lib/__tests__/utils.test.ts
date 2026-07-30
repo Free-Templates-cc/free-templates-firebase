@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { cn, formatNumber, formatDate, slugify, templateImageUrl, templateGalleryUrls } from '../utils'
+import {
+  cn,
+  formatNumber,
+  formatDate,
+  slugify,
+  templateImageUrl,
+  templateGalleryUrls,
+} from '../utils'
 
 describe('cn', () => {
   it('merges class names', () => {

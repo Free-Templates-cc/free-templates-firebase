@@ -388,6 +388,7 @@ Comprehensive audit of every component, page, integration, and quality metric.
 | **Terms acceptance on register** | ✅ Implemented | RegisterPage has terms acceptance checkbox with zod validation (`z.literal(true)`). Links to /terms and /privacy |
 | **Analytics** | 🔴 No tracking | Firebase Analytics or Google Analytics not integrated. Can't measure page views, downloads, conversions |
 | **Domain configuration** | 🔴 custom domain not connected | free-templates.cc → Firebase Hosting custom domain not configured. Site only accessible at firebase- generated URL |
+| **Cloud Functions source** | ✅ Restored 2026-07-30 | 8 functions in `functions/` (was accidentally deleted in commit 331f8ca). Recreated from git history: createCheckoutSession, stripeWebhook, getDownloadUrl, cancelSubscription, reactivateSubscription, createBillingPortalSession, onTemplateDownloaded, cleanupExpiredSubscriptions. npm deps installed. |
 | **Rate limiting on Cloud Functions** | ✅ Implemented | Token-bucket rate limiter (`functions/src/rateLimiter.ts`) applied to createCheckoutSession (10/min/IP), getDownloadUrl (30/min/IP), cancel/reactivate (5/min/uid), billing portal (10/min/uid) |
 | **CSP / security headers** | ✅ Configured | HSTS, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, and Content-Security-Policy added to firebase.json hosting headers |
 | **Image placeholders** | ✅ Done | Deterministic picsum.photos URLs seeded by template slug. LazyImage components now show actual images across BrowsePage, HomePage, and TemplateDetailPage. Ready to swap for real assets. |
@@ -439,6 +440,24 @@ Ordered by impact vs effort:
 ---
 
 ## Changelog
+
+### 2026-07-30 — Restore Cloud Functions (accidentally deleted)
+
+- **Restored `functions/` directory** — was deleted in commit 331f8ca (misleading commit message). Recreated from git history (`331f8ca^`) with all 8 Cloud Functions:
+  - `createCheckoutSession` — Stripe Checkout session with rate limiting (10/min/IP)
+  - `stripeWebhook` — handles checkout.session.completed, invoice.paid/failed, subscription updated/deleted
+  - `getDownloadUrl` — signed URL generation with premium subscription check, rate limited (30/min/IP)
+  - `cancelSubscription` — cancel at period end, rate limited (5/min/uid)
+  - `reactivateSubscription` — remove cancel_at_period_end, rate limited (5/min/uid)
+  - `createBillingPortalSession` — Stripe Customer Portal, rate limited (10/min/uid)
+  - `onTemplateDownloaded` — Firestore trigger auto-increments download counters
+  - `cleanupExpiredSubscriptions` — daily scheduled (03:00 CET) cleanup
+- **Restored `functions/src/rateLimiter.ts`** — token-bucket rate limiter (IP + uid pools)
+- **Restored `functions/src/config.ts`** — Stripe config, plan definitions (price_premium_monthly/yearly)
+- **Restored `functions/package.json` + `tsconfig.json`** — Node 20, firebase-admin, firebase-functions, stripe
+- **Restored frontend API helpers** in `src/lib/api.ts` — `createCheckoutSession`, `cancelSubscription`, `reactivateSubscription`, `createBillingPortalSession` HTTPS call wrappers (were removed in commit 2309f93)
+- `npm install` in `functions/` — 242 packages installed
+- All 27 tests passing, 0 lint errors, 0 TS errors
 
 ### 2026-07-29 — Template placeholder images
 
