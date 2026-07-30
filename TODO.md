@@ -505,13 +505,21 @@ Ordered by impact vs effort:
 - **Unit tests:** 104/104 passing across 9 files
 - **Lint:** 0 errors, 0 warnings (69 files)
 - **Git:** clean, nothing to push
-- **Next:** Waiting on Alchie for Firebase project credentials. Once available: populate `.env`, deploy Cloud Functions (`firebase deploy --only functions`), deploy hosting (`firebase deploy --only hosting`), connect free-templates.cc custom domain, add Analytics, run Lighthouse audit.
+- **Next:** Waiting on Alchie for Firebase project credentials.
 
 #### 05:30 CEST
 - No change from 05:00. All clean, still blocked on Firebase project credentials.
 - **Build:** 1.13s, zero errors
 - **Unit tests:** 104/104 passing across 9 files
 - **Lint:** 0 errors, 0 warnings (57 files)
+- **Git:** clean, nothing to push (last commit 9a68423)
+- **Next:** Waiting on Alchie for Firebase project credentials.
+
+#### 05:45 CEST
+- No change from 05:30. All clean, still blocked on Firebase project credentials.
+- **Build:** 0.84s, zero errors
+- **Unit tests:** 104/104 passing across 9 files
+- **Lint:** 0 errors, 0 warnings (69 files)
 - **Git:** clean, nothing to push (last commit 9a68423)
 - **Next:** Waiting on Alchie for Firebase project credentials.
 
