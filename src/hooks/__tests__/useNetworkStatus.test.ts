@@ -55,7 +55,7 @@ describe('useNetworkStatus', () => {
     expect(result.current).toBe(true)
 
     act(() => {
-      listeners['offline']()
+      listeners['offline']!()
     })
 
     expect(result.current).toBe(false)
@@ -73,7 +73,7 @@ describe('useNetworkStatus', () => {
     expect(result.current).toBe(false)
 
     act(() => {
-      listeners['online']()
+      listeners['online']!()
     })
 
     expect(result.current).toBe(true)
