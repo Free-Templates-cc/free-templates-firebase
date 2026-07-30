@@ -547,7 +547,18 @@ Ordered by impact vs effort:
 - **Build:** Clean, zero errors
 - **Lint:** 0 errors, 0 warnings (73 files)
 - **Git:** commit pending
-- **Next:** Still waiting on Alchie for Firebase project credentials. Remaining untested components: Navbar, Layout, ProtectedRoute, PremiumRoute.
+- **Next:** Still waiting on Alchie for Firebase project credentials.
+
+#### 06:45 CEST
+- **New:** Added ProtectedRoute tests (3 tests) — loading spinner, redirect unauthenticated, renders children.
+- **New:** Added PremiumRoute tests (4 tests) — loading spinner, redirect unauthenticated, redirect non-premium, renders children.
+- **New:** Added Navbar tests (14 tests) — logo, nav links, search form, dark mode toggle/click, auth states (signed out/signed in), user dropdown menu with ARIA, mobile menu toggle/open/close/labels, search input.
+- **New:** Added Layout tests (7 tests) — renders Navbar, Footer, NetworkStatusBanner, skip-to-content link, main content area via Outlet, route switching.
+- **Test count:** 145 → 175 tests across 17 files
+- **Build:** Clean, zero errors
+- **Lint:** 0 errors, 0 warnings (77 files)
+- **Git:** commit pending
+- **Next:** All components tested. Still waiting on Alchie for Firebase project credentials.
 
 ### 2026-07-29 — Template placeholder images
 
