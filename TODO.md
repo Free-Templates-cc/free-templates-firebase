@@ -185,7 +185,7 @@
 - [x] Prettier config (.prettierrc + npm scripts)
 - [x] LazyImage component (IntersectionObserver-based lazy loading)
 - [x] Build chunk splitting (manualChunks for vendor/firebase/UI)
-- [ ] Lighthouse audit (target 90+ across the board) — pending deployment
+- [ ] Lighthouse audit (target 90+ across the board) — 🔴 blocked: needs deployment
 
 ### 6.2 Error Handling & UX
 - [x] Global error boundary
@@ -198,7 +198,7 @@
 - [x] Update README.md with project info, setup instructions, and stack
 - [x] Responsive design (mobile-first) — filters collapse into drawer on mobile, layout breakpoints throughout
 - [x] Cross-browser testing (browserslist config added)
-- [ ] Analytics (Firebase Analytics or Google Analytics) — needs Firebase project
+- [ ] Analytics (Firebase Analytics or Google Analytics) — 🔴 blocked: needs Firebase project
 
 ### 6.4 Testing & CI
 - [x] Set up unit tests (Vitest) — installed, configured, 311 tests passing across 28 test files
@@ -206,7 +206,7 @@
 - [x] CI/CD — GitHub Actions workflows (`.github/workflows/ci.yml` + `deploy.yml`)
 - [x] Firebase Hosting deployment workflow with preview deploys for PRs
 - [x] Cloud Functions deployment in CI/CD
-- [ ] Domain config (free-templates.cc → Firebase Hosting custom domain)
+- [ ] Domain config (free-templates.cc → Firebase Hosting custom domain) — 🔴 blocked: needs Firebase project
 - [x] Create `functions/.env.example` for local Stripe emulation guide
 - [x] Add `.env` and `functions/.env` to `.gitignore`
 - [x] **OpenSpec** — install `@fission-ai/openspec`, review entire codebase, add complete specs for components, hooks, stores, pages, and backend
@@ -474,11 +474,11 @@ Comprehensive test coverage expansion targeting **100% statement, branch, functi
 
 | Metric | Baseline | Current | Target |
 |--------|----------|---------|--------|
-| **Statements** | 88.57% | **96.81%** | 100% |
-| **Branches** | 92.26% | **95.98%** | 100% |
-| **Functions** | 89.77% | **94.40%** | 100% |
-| **Lines** | 88.32% | **97.56%** | 100% |
-| **Test count** | 248 (25 files) | **311 (28 files)** | — |
+| **Statements** | 88.57% | **97.45%** | 100% |
+| **Branches** | 92.26% | **96.38%** | 100% |
+| **Functions** | 89.77% | **95.20%** | 100% |
+| **Lines** | 88.32% | **98.26%** | 100% |
+| **Test count** | 248 (25 files) | **312 (28 files)** | — |
 
 ### ✅ 1. FULLY COVERED — No Changes Needed
 
@@ -784,3 +784,19 @@ Comprehensive test coverage expansion targeting **100% statement, branch, functi
 - **Design artifact created:** `openspec/changes/document-existing-codebase/design.md` with architecture decisions, risk assessment, and migration plan
 - **Spec coverage:** 49 requirements with Gherkin scenarios across all source files
 - **Remaining blocked items** (need Firebase project): Lighthouse audit, Analytics, Domain config, OpenSpec CI integration (deferred)
+
+### 2026-07-30 — 09:21 CEST
+- **Fix:** Properly tested `onRehydrateStorage` callback in uiStore — tests now invoke the real callback via `useUIStore.persist.getOptions()` and `persist.rehydrate()` instead of simulating side effects manually. Exported `UIState` type for test access.
+  - `onRehydrateStorage` applies dark class when isDarkMode is true (triggers `classList.add('dark')` at line 33)
+  - `onRehydrateStorage` removes dark class when isDarkMode is false (triggers `classList.remove('dark')` at line 34-35)
+  - Handles undefined/null state gracefully (first visit / cleared storage)
+- **New:** Added retryDelay test for queryClient — verifies exponential backoff (1s, 2s, 4s, 8s, capped at 10s) by reading the function from `queryClient.getDefaultOptions()`
+- **Coverage improved:**
+  - **uiStore.ts:** 100% across all metrics (was 92.85% stmts, 75% branch — uncovered line 33 now covered)
+  - **queryClient.ts:** 100% lines (was 90.9% — uncovered line 27 retryDelay lambda now tested and instrumented)
+  - **Overall:** 97.45% stmts (+0.64), 96.38% branch (+0.40), 95.20% funcs (+0.80), 98.26% lines (+0.70)
+- **Test count:** 312 (28 files) — up from 311
+- **Lint:** 0 errors, 0 warnings (91 files)
+- **Build:** Clean, zero errors
+- **Remaining uncovered lines:** All V8 instrumentation artifacts or environment-dependent code (Navbar JSX, LazyImage null-ref + aspect-ratio edge cases, Modal focus-trap guards, useNetworkStatus SSR guard, api.ts emulator branch). All blocked on Firebase project credentials.
+- **Blocked items:** Lighthouse audit (needs deployment), Analytics + Domain config (needs Firebase project).

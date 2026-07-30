@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { useUIStore } from '../uiStore'
+import { useUIStore, type UIState } from '../uiStore'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -149,14 +149,21 @@ describe('uiStore', () => {
     expect(useUIStore.getState().isMobileMenuOpen).toBe(false)
   })
 
-  it('onRehydrateStorage applies dark class when isDarkMode is true', () => {
-    // Manually trigger what rehydration does
-    document.documentElement.classList.add('dark')
-    expect(document.documentElement.classList.contains('dark')).toBe(true)
+  it('onRehydrateStorage applies dark class when isDarkMode is true', async () => {
+    // Clear state first
+    document.documentElement.classList.remove('dark')
 
-    // Simulate rehydration setting state
-    useUIStore.setState({ isDarkMode: true })
-    expect(useUIStore.getState().isDarkMode).toBe(true)
+    // Set up localStorage to simulate persisted dark mode
+    localStorage.setItem(
+      'ft-ui-preferences',
+      JSON.stringify({ state: { isDarkMode: true } }),
+    )
+
+    // Manually trigger rehydration so onRehydrateStorage runs
+    await useUIStore.persist.rehydrate()
+
+    // The callback should have added the dark class
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
   })
 
   it('onRehydrateStorage removes dark class when isDarkMode is false', () => {
@@ -164,25 +171,38 @@ describe('uiStore', () => {
     document.documentElement.classList.add('dark')
     expect(document.documentElement.classList.contains('dark')).toBe(true)
 
-    // Simulate rehydration setting state to false
-    useUIStore.setState({ isDarkMode: false })
-    // The onRehydrateStorage callback runs during persist rehydration
-    // which calls document.documentElement.classList.remove('dark')
-    // We model this by directly removing the class
-    document.documentElement.classList.remove('dark')
+    // Access the real onRehydrateStorage callback via persist options
+    const options = useUIStore.persist.getOptions()
+    const onRehydrate = options.onRehydrateStorage
+
+    // Invoke onRehydrate with a state where isDarkMode is false
+    // This triggers the else branch → classList.remove('dark')
+    if (onRehydrate) {
+      const afterRehydrate = onRehydrate({
+        isDarkMode: false,
+        isMobileMenuOpen: false,
+      } as UIState)
+      afterRehydrate?.({ isDarkMode: false, isMobileMenuOpen: false } as UIState, undefined)
+    }
+
     expect(document.documentElement.classList.contains('dark')).toBe(false)
   })
 
-  it('onRehydrateStorage handles null state gracefully', () => {
+  it('onRehydrateStorage handles null/undefined state gracefully (first visit)', () => {
     // Pre-populate dark class
     document.documentElement.classList.add('dark')
     expect(document.documentElement.classList.contains('dark')).toBe(true)
 
-    // Simulate rehydration with null state (first visit / cleared storage)
-    useUIStore.setState({ isDarkMode: false })
-    // When state is null, onRehydrateStorage takes the else branch
-    // which removes the dark class
-    document.documentElement.classList.remove('dark')
+    // Simulate first visit: no stored state → onRehydrateStorage called with undefined
+    const options = useUIStore.persist.getOptions()
+    const onRehydrate = options.onRehydrateStorage
+
+    // When state is undefined, state?.isDarkMode is falsy → else branch → remove class
+    if (onRehydrate) {
+      const afterRehydrate = onRehydrate(undefined as unknown as UIState)
+      afterRehydrate?.(undefined, undefined)
+    }
+
     expect(document.documentElement.classList.contains('dark')).toBe(false)
   })
 })

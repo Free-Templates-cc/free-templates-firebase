@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-interface UIState {
+export interface UIState {
   isDarkMode: boolean
   isMobileMenuOpen: boolean
   toggleDarkMode: () => void
