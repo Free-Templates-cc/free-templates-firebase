@@ -531,6 +531,14 @@ Ordered by impact vs effort:
 - **Git:** commit `702f6af` pushed — `a11y: add skip-to-content link to Layout for keyboard users`
 - **Next:** Still waiting on Alchie for Firebase project credentials.
 
+#### 06:15 CEST
+- **New:** Added Breadcrumbs component tests (12 tests) — covers rendering, aria-current, includeHome toggle, custom className, chevron separators, href fallback, edge cases.
+- **Test count:** 104 → 116 tests across 10 files
+- **Build:** Clean, zero errors
+- **Lint:** 0 errors, 0 warnings (70 files)
+- **Git:** commit `750e9a1` pushed — `test: add Breadcrumbs component tests (12 tests) — 116 total`
+- **Next:** Still waiting on Alchie for Firebase project credentials. Iterating on non-Firebase improvements: remaining components without tests include Footer, Navbar, Layout, ProtectedRoute, PremiumRoute, ErrorBoundary, SEOHead — any of these could get tests in future runs.
+
 ### 2026-07-29 — Template placeholder images
 
 - Added `templateImageUrl()` and `templateGalleryUrls()` utility functions in `src/lib/utils.ts`
