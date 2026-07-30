@@ -201,7 +201,7 @@
 - [ ] Analytics (Firebase Analytics or Google Analytics) — needs Firebase project
 
 ### 6.4 Testing & CI
-- [x] Set up unit tests (Vitest) — installed, configured, 22 tests passing
+- [x] Set up unit tests (Vitest) — installed, configured, 104 tests passing across 9 test files
 - [x] Set up E2E tests (Playwright) — 19 tests across 5 spec files, all passing
 - [x] CI/CD — GitHub Actions workflow (`.github/workflows/ci.yml` + `deploy.yml`) — push blocked by PAT scope; needs commit by admin with `workflow` scope)
 - [x] Firebase Hosting deployment workflow added
@@ -342,7 +342,7 @@ Comprehensive audit of every component, page, integration, and quality metric.
 | Category | Status | Details |
 |----------|--------|--------|
 | **Build** | ✅ Clean | Vite + TypeScript + Tailwind — zero errors, zero warnings |
-| **Tests (unit)** | ✅ 27/27 | Vitest — cn, formatNumber, formatDate, slugify, templateImageUrl, templateGalleryUrls, Button variants/states/ref |
+| **Tests (unit)** | ✅ 104/104 | Vitest — cn, formatNumber, formatDate, slugify, templateImageUrl, templateGalleryUrls, Button, Badge, Card, Input, Modal, Skeleton, LazyImage, NetworkStatusBanner |
 | **Tests (E2E)** | ✅ 19/19 | Playwright — home, browse filters, pricing, static pages, navigation |
 | **Lint** | ✅ 0 warnings | Oxlint — zero warnings across 58 source files |
 | **All 14 pages** | ✅ Built | Home, Browse, TemplateDetail, Pricing, Login, Register, ForgotPassword, Account, DownloadHistory, NotFound, Terms, Privacy, Contact, FAQ |
@@ -477,6 +477,15 @@ Ordered by impact vs effort:
 - **Restored frontend API helpers** in `src/lib/api.ts` — `createCheckoutSession`, `cancelSubscription`, `reactivateSubscription`, `createBillingPortalSession` HTTPS call wrappers (were removed in commit 2309f93)
 - `npm install` in `functions/` — 242 packages installed
 - All 27 tests passing, 0 lint errors, 0 TS errors
+
+### 2026-07-30 — Expanded component test coverage (27 → 104 tests)
+
+- **New test files (7):** Badge (6 tests), Card (13 tests), Input (16 tests), Modal/ConfirmModal (20 tests), Skeleton/SkeletonCard/SkeletonTable (9 tests), LazyImage (10 tests), NetworkStatusBanner (3 tests)
+- **Test count:** 27 → 104 tests across 9 files
+- **Coverage additions:** Component rendering, variants, props, ref forwarding, event handling, aria attributes, focus trap, body scroll lock, IntersectionObserver mock, online/offline states
+- **Lint:** 0 errors, 0 warnings (across 69 files)
+- **Build:** Clean, zero TypeScript errors
+- **Status:** All non-Firebase code work is complete. Remaining items (Firebase project setup, domain config, analytics, Lighthouse audit) require real Firebase credentials.
 
 ### 2026-07-29 — Template placeholder images
 
