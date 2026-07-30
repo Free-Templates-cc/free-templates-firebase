@@ -201,7 +201,7 @@
 - [ ] Analytics (Firebase Analytics or Google Analytics) — needs Firebase project
 
 ### 6.4 Testing & CI
-- [x] Set up unit tests (Vitest) — installed, configured, 104 tests passing across 9 test files
+- [x] Set up unit tests (Vitest) — installed, configured, 248 tests passing across 25 test files
 - [x] Set up E2E tests (Playwright) — 19 tests across 5 spec files, all passing
 - [x] CI/CD — GitHub Actions workflow (`.github/workflows/ci.yml` + `deploy.yml`) — push blocked by PAT scope; needs commit by admin with `workflow` scope)
 - [x] Firebase Hosting deployment workflow added
@@ -574,6 +574,15 @@ Ordered by impact vs effort:
 - **Lint:** 0 errors, 0 warnings (77 files)
 - **Git:** commit pending
 - **Next:** All components tested. Still waiting on Alchie for Firebase project credentials.
+
+#### 07:30 CEST
+- **New:** Added uiStore tests (17 tests) — dark mode toggle + document.dark class management, mobile menu open/close, localStorage persistence via Zustand persist middleware, edge cases (rapid toggles, state independence).
+- **Fix:** Added localStorage mock to `src/test/setup.ts` for Zustand persist middleware compatibility in jsdom.
+- **Test count:** 231 → 248 tests across 25 files
+- **Lint:** 0 errors, 0 warnings (85 files)
+- **Build:** Clean, zero errors
+- **Git:** `3c5cc62` pushed — `test: add 17 uiStore tests — dark mode toggle, mobile menu, localStorage persistence`
+- **Next:** Still waiting on Alchie for Firebase project credentials.
 
 #### 07:15 CEST
 - **Fix:** TypeScript build error in `useNetworkStatus.test.ts` — non-null assertions on mock listener invocations (`listeners[event]!()`)
