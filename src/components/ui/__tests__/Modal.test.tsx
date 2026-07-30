@@ -114,6 +114,46 @@ describe('Modal', () => {
     unmount()
     expect(document.body.style.overflow).toBe('')
   })
+
+  it('traps focus and wraps Tab from last to first focusable', () => {
+    render(
+      <Modal open={true} onClose={vi.fn()} title="Trap">
+        <input data-testid="first-input" />
+        <input data-testid="last-input" />
+      </Modal>,
+    )
+
+    // Focusable order: close button, first-input, last-input
+    const lastInput = screen.getByTestId('last-input')
+    const closeButton = screen.getByLabelText('Close modal')
+
+    // Focus last input (last focusable), then Tab should wrap to close button (first focusable)
+    lastInput.focus()
+    expect(document.activeElement).toBe(lastInput)
+
+    fireEvent.keyDown(document, { key: 'Tab', shiftKey: false })
+    expect(document.activeElement).toBe(closeButton)
+  })
+
+  it('wraps Shift+Tab from first to last focusable', () => {
+    render(
+      <Modal open={true} onClose={vi.fn()} title="Wrap">
+        <input data-testid="first-input" />
+        <input data-testid="last-input" />
+      </Modal>,
+    )
+
+    // Focusable order: close button, first-input, last-input
+    const closeButton = screen.getByLabelText('Close modal')
+    const lastInput = screen.getByTestId('last-input')
+
+    // Focus close button (first focusable), then Shift+Tab should wrap to last input
+    closeButton.focus()
+    expect(document.activeElement).toBe(closeButton)
+
+    fireEvent.keyDown(document, { key: 'Tab', shiftKey: true })
+    expect(document.activeElement).toBe(lastInput)
+  })
 })
 
 describe('ConfirmModal', () => {

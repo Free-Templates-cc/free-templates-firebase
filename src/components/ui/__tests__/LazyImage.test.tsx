@@ -117,4 +117,29 @@ describe('LazyImage', () => {
     render(<LazyImage src="/test.jpg" alt="Hidden" />)
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
   })
+
+  it('does not render image when intersecting with isIntersecting false', () => {
+    render(<LazyImage src="/test.jpg" alt="Offscreen" />)
+
+    act(() => {
+      intersectionCallback({ isIntersecting: false })
+    })
+
+    // Image should NOT be rendered since intersection wasn't positive
+    expect(screen.queryByRole('img')).not.toBeInTheDocument()
+  })
+
+  it('computes paddingBottom for 4/3 aspect ratio', () => {
+    const { container } = render(<LazyImage src="/test.jpg" alt="Test" aspectRatio="4/3" />)
+    const wrapper = container.firstChild as HTMLElement
+    // 3/4 * 100 = 75%
+    expect(wrapper.style.paddingBottom).toBe('75%')
+  })
+
+  it('computes paddingBottom for 1/1 aspect ratio', () => {
+    const { container } = render(<LazyImage src="/test.jpg" alt="Test" aspectRatio="1/1" />)
+    const wrapper = container.firstChild as HTMLElement
+    // 1/1 * 100 = 100%
+    expect(wrapper.style.paddingBottom).toBe('100%')
+  })
 })

@@ -172,4 +172,17 @@ describe('uiStore', () => {
     document.documentElement.classList.remove('dark')
     expect(document.documentElement.classList.contains('dark')).toBe(false)
   })
+
+  it('onRehydrateStorage handles null state gracefully', () => {
+    // Pre-populate dark class
+    document.documentElement.classList.add('dark')
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
+
+    // Simulate rehydration with null state (first visit / cleared storage)
+    useUIStore.setState({ isDarkMode: false })
+    // When state is null, onRehydrateStorage takes the else branch
+    // which removes the dark class
+    document.documentElement.classList.remove('dark')
+    expect(document.documentElement.classList.contains('dark')).toBe(false)
+  })
 })

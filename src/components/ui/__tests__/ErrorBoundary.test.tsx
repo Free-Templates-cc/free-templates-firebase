@@ -113,4 +113,27 @@ describe('ErrorBoundary', () => {
     // Button should contain an SVG icon
     expect(button.querySelector('svg')).toBeInTheDocument()
   })
+
+  it('resets error state when Try Again is clicked', () => {
+    const { rerender } = render(
+      <ErrorBoundary>
+        <ThrowOnRender />
+      </ErrorBoundary>,
+    )
+
+    expect(screen.getByText('Something went wrong')).toBeInTheDocument()
+
+    // First re-render with non-throwing child so ErrorBoundary can recover
+    rerender(
+      <ErrorBoundary>
+        <ThrowOnRender shouldThrow={false} />
+      </ErrorBoundary>,
+    )
+
+    // Now click Try Again — resets error state and child renders
+    fireEvent.click(screen.getByRole('button', { name: /try again/i }))
+
+    expect(screen.getByText('Rendered successfully')).toBeInTheDocument()
+    expect(screen.queryByText('Something went wrong')).not.toBeInTheDocument()
+  })
 })
