@@ -730,9 +730,7 @@ async function fetchTemplatesFromFirestore(
   const q = query(templatesRef, ...constraints)
   const snapshot = await getDocs(q)
 
-  let templates: Template[] = snapshot.docs.map(
-    (d) => ({ id: d.id, ...d.data() }) as Template,
-  )
+  let templates: Template[] = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as Template)
 
   // Text search (client-side — Firestore doesn't support full-text)
   if (filters.search) {
@@ -837,12 +835,7 @@ async function fetchTemplatesFromMock(
 
 async function fetchTemplateBySlugFromFirestore(slug: string): Promise<Template | null> {
   const templatesRef = collection(db, 'templates')
-  const q = query(
-    templatesRef,
-    where('slug', '==', slug),
-    where('published', '==', true),
-    limit(1),
-  )
+  const q = query(templatesRef, where('slug', '==', slug), where('published', '==', true), limit(1))
   const snapshot = await getDocs(q)
   if (snapshot.empty) return null
   const d = snapshot.docs[0]!
@@ -949,11 +942,7 @@ const mockDownloads: Download[] = [
 
 async function fetchDownloadsFromFirestore(userId: string): Promise<Download[]> {
   const downloadsRef = collection(db, 'downloads')
-  const q = query(
-    downloadsRef,
-    where('userId', '==', userId),
-    orderBy('downloadedAt', 'desc'),
-  )
+  const q = query(downloadsRef, where('userId', '==', userId), orderBy('downloadedAt', 'desc'))
   const snapshot = await getDocs(q)
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as Download)
 }
