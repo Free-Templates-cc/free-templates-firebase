@@ -1,6 +1,29 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Badge } from '../Badge'
+import { frameworkBadgeVariant } from '../../../lib/utils'
+
+describe('frameworkBadgeVariant', () => {
+  it.each([
+    ['Next.js', 'nextjs'],
+    ['Gatsby.js', 'gatsby'],
+    ['Nuxt.js', 'nuxt'],
+    ['Vue.js', 'vue'],
+    ['React', 'react'],
+  ])('maps %s to the %s badge variant', (framework, variant) => {
+    expect(frameworkBadgeVariant(framework)).toBe(variant)
+  })
+
+  it('is case-insensitive', () => {
+    expect(frameworkBadgeVariant('next.js')).toBe('nextjs')
+    expect(frameworkBadgeVariant('GATSBY.JS')).toBe('gatsby')
+  })
+
+  it('falls back to default for unknown frameworks', () => {
+    expect(frameworkBadgeVariant('SvelteKit')).toBe('default')
+    expect(frameworkBadgeVariant('')).toBe('default')
+  })
+})
 
 describe('Badge', () => {
   it('renders with default (free) variant', () => {

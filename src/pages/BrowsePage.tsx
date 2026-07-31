@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Badge } from '../components/ui/Badge'
+import { frameworkBadgeVariant } from '../lib/utils'
 import { Button } from '../components/ui/Button'
 import { Skeleton } from '../components/ui/Skeleton'
 import { LazyImage } from '../components/ui/LazyImage'
@@ -19,10 +20,6 @@ const categories = [
   'Agency',
   'Education',
 ]
-
-/** Normalize framework name for Badge variant (e.g. 'Next.js' → 'nextjs'). */
-const fwVariant = (fw: string) =>
-  fw.toLowerCase().replace(/[.\s]/g, '') as 'nextjs' | 'gatsby' | 'nuxt' | 'vue' | 'react'
 
 export function BrowsePage() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -326,7 +323,9 @@ export function BrowsePage() {
                       <Badge variant={tmpl.priceTier === 'premium' ? 'premium' : 'free'}>
                         {tmpl.priceTier === 'premium' ? 'Premium' : 'Free'}
                       </Badge>
-                      <Badge variant={fwVariant(tmpl.framework)}>{tmpl.framework}</Badge>
+                      <Badge variant={frameworkBadgeVariant(tmpl.framework)}>
+                        {tmpl.framework}
+                      </Badge>
                     </div>
                     <h3 className="mt-2 font-semibold text-gray-900 dark:text-white group-hover:text-primary-600">
                       {tmpl.name}

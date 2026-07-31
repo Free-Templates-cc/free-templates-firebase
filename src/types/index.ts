@@ -1,9 +1,9 @@
 import type { Timestamp } from 'firebase/firestore'
 
-export type PriceTier = 'free' | 'premium'
-export type Framework = 'Next.js' | 'Gatsby.js' | 'Nuxt.js' | 'Vue.js' | 'React'
-export type SubscriptionStatus = 'active' | 'past_due' | 'canceled' | 'incomplete'
-export type UserRole = 'user' | 'admin'
+type PriceTier = 'free' | 'premium'
+type Framework = 'Next.js' | 'Gatsby.js' | 'Nuxt.js' | 'Vue.js' | 'React'
+type SubscriptionStatus = 'active' | 'past_due' | 'canceled' | 'incomplete'
+type UserRole = 'user' | 'admin'
 
 export interface Template {
   id: string
@@ -38,7 +38,7 @@ export interface UserProfile {
   updatedAt: Timestamp
 }
 
-export interface UserSubscription {
+interface UserSubscription {
   status: SubscriptionStatus
   stripeCustomerId?: string
   stripeSubscriptionId?: string

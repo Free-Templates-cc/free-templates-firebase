@@ -86,9 +86,36 @@ describe('api — Firestore mode (VITE_USE_FIREBASE_DATA=true)', () => {
     it('queries Firestore and returns paginated, image-injected results', async () => {
       mocks.getDocs.mockResolvedValue(
         makeSnapshot([
-          { id: 'a', data: { ...templateData, slug: 'alpha', name: 'Alpha', downloads: 10, createdAt: { seconds: 1, nanoseconds: 0 } } },
-          { id: 'b', data: { ...templateData, slug: 'beta', name: 'Beta', downloads: 20, createdAt: { seconds: 2, nanoseconds: 0 } } },
-          { id: 'c', data: { ...templateData, slug: 'gamma', name: 'Gamma', downloads: 30, createdAt: { seconds: 3, nanoseconds: 0 } } },
+          {
+            id: 'a',
+            data: {
+              ...templateData,
+              slug: 'alpha',
+              name: 'Alpha',
+              downloads: 10,
+              createdAt: { seconds: 1, nanoseconds: 0 },
+            },
+          },
+          {
+            id: 'b',
+            data: {
+              ...templateData,
+              slug: 'beta',
+              name: 'Beta',
+              downloads: 20,
+              createdAt: { seconds: 2, nanoseconds: 0 },
+            },
+          },
+          {
+            id: 'c',
+            data: {
+              ...templateData,
+              slug: 'gamma',
+              name: 'Gamma',
+              downloads: 30,
+              createdAt: { seconds: 3, nanoseconds: 0 },
+            },
+          },
         ]),
       )
 
@@ -151,7 +178,13 @@ describe('api — Firestore mode (VITE_USE_FIREBASE_DATA=true)', () => {
       mocks.getDocs.mockResolvedValue(makeSnapshot([]))
 
       await fetchTemplates(
-        { search: '', category: 'Portfolio', framework: 'Next.js', priceTier: 'free', sort: 'newest' },
+        {
+          search: '',
+          category: 'Portfolio',
+          framework: 'Next.js',
+          priceTier: 'free',
+          sort: 'newest',
+        },
         1,
         9,
       )
@@ -160,7 +193,13 @@ describe('api — Firestore mode (VITE_USE_FIREBASE_DATA=true)', () => {
       expect(mocks.where).toHaveBeenCalledWith('category', '==', 'Portfolio')
       expect(mocks.where).toHaveBeenCalledWith('framework', '==', 'Next.js')
       expect(mocks.where).toHaveBeenCalledWith('priceTier', '==', 'free')
-      expect(mocks.query).toHaveBeenCalledWith('templatesRef', 'whereRef', 'whereRef', 'whereRef', 'whereRef')
+      expect(mocks.query).toHaveBeenCalledWith(
+        'templatesRef',
+        'whereRef',
+        'whereRef',
+        'whereRef',
+        'whereRef',
+      )
     })
   })
 

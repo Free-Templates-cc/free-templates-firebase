@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Badge } from '../components/ui/Badge'
+import { frameworkBadgeVariant } from '../lib/utils'
 import { Button } from '../components/ui/Button'
 import { Skeleton } from '../components/ui/Skeleton'
 import { LazyImage } from '../components/ui/LazyImage'
@@ -19,10 +20,6 @@ function LiveDownloadCount({ slug, staticCount }: { slug: string; staticCount: n
     liveCount !== undefined ? liveCount.toLocaleString() : staticCount.toLocaleString()
   return <>{display}</>
 }
-
-/** Normalize framework name for Badge variant (e.g. 'Next.js' → 'nextjs'). */
-const fwVariant = (fw: string) =>
-  fw.toLowerCase().replace(/[.\\s]/g, '') as 'nextjs' | 'gatsby' | 'nuxt' | 'vue' | 'react'
 
 export function TemplateDetailPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -152,7 +149,7 @@ export function TemplateDetailPage() {
             <Badge variant={template.priceTier}>
               {template.priceTier === 'premium' ? 'Premium' : 'Free'}
             </Badge>
-            <Badge variant={fwVariant(template.framework)}>{template.framework}</Badge>
+            <Badge variant={frameworkBadgeVariant(template.framework)}>{template.framework}</Badge>
           </div>
           <h1 className="mt-3 text-3xl font-bold text-gray-900 dark:text-white">{template.name}</h1>
           <p className="mt-3 text-gray-600 dark:text-gray-400">{template.description}</p>
@@ -292,7 +289,7 @@ export function TemplateDetailPage() {
                   <Badge variant={rt.priceTier}>
                     {rt.priceTier === 'premium' ? 'Premium' : 'Free'}
                   </Badge>
-                  <Badge variant={fwVariant(rt.framework)}>{rt.framework}</Badge>
+                  <Badge variant={frameworkBadgeVariant(rt.framework)}>{rt.framework}</Badge>
                 </div>
                 <h3 className="mt-2 font-semibold text-gray-900 dark:text-white group-hover:text-primary-600">
                   {rt.name}

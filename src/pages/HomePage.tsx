@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { Badge } from '../components/ui/Badge'
+import { frameworkBadgeVariant } from '../lib/utils'
 import { LazyImage } from '../components/ui/LazyImage'
 import { SEOHead } from '../components/seo/SEOHead'
 import { Search, ArrowRight, Star, Download, Grid3X3, Layers } from 'lucide-react'
@@ -226,14 +227,7 @@ export function HomePage() {
                   <Badge variant={tmpl.tier === 'premium' ? 'premium' : 'free'}>
                     {tmpl.tier === 'premium' ? 'Premium' : 'Free'}
                   </Badge>
-                  <Badge
-                    variant={
-                      tmpl.framework.toLowerCase().replace(/[.\s]/g, '') as
-                        'nextjs' | 'gatsby' | 'nuxt' | 'vue' | 'react'
-                    }
-                  >
-                    {tmpl.framework}
-                  </Badge>
+                  <Badge variant={frameworkBadgeVariant(tmpl.framework)}>{tmpl.framework}</Badge>
                 </div>
                 <h3 className="mt-3 font-semibold text-gray-900 dark:text-white">{tmpl.name}</h3>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{tmpl.description}</p>

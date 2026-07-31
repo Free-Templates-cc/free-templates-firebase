@@ -17,7 +17,9 @@ const app = initializeApp(firebaseConfig)
 
 export const auth = getAuth(app)
 export const db = getFirestore(app)
-export const storage = getStorage(app)
+
+// Storage is only used to wire up the storage emulator in development.
+const storage = getStorage(app)
 
 // Connect to emulators in development
 if (import.meta.env.DEV) {

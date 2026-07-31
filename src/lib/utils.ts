@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import type { BadgeVariant } from '../components/ui/Badge'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -46,4 +47,26 @@ export function templateImageUrl(
  */
 export function templateGalleryUrls(slug: string, count = 5): string[] {
   return Array.from({ length: count }, (_, i) => templateImageUrl(slug, `preview-${i + 1}`))
+}
+
+/**
+ * Map a template framework name (e.g. 'Next.js') to a Badge variant key.
+ * Falls back to 'default' for unknown frameworks instead of returning an
+ * undefined variant.
+ */
+export function frameworkBadgeVariant(framework: string): BadgeVariant {
+  switch (framework.toLowerCase()) {
+    case 'next.js':
+      return 'nextjs'
+    case 'gatsby.js':
+      return 'gatsby'
+    case 'nuxt.js':
+      return 'nuxt'
+    case 'vue.js':
+      return 'vue'
+    case 'react':
+      return 'react'
+    default:
+      return 'default'
+  }
 }
