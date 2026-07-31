@@ -7,6 +7,7 @@ import { Skeleton } from '../components/ui/Skeleton'
 import { LazyImage } from '../components/ui/LazyImage'
 import { SEOHead } from '../components/seo/SEOHead'
 import { useTemplates, filtersFromParams } from '../hooks/useTemplates'
+import type { TemplateFilters } from '../types'
 import { Search, SlidersHorizontal, X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const frameworks = ['Next.js', 'Gatsby.js', 'Nuxt.js', 'Vue.js', 'React']
@@ -26,7 +27,7 @@ export function BrowsePage() {
   const [showFilters, setShowFilters] = useState(false)
 
   const filters = filtersFromParams(searchParams)
-  const page = Number(searchParams.get('page')) || 1
+  const page = Math.max(1, Number(searchParams.get('page')) || 1)
 
   const pageTitle = searchParams.get('search')
     ? `Search: ${searchParams.get('search')} — Templates`
@@ -34,7 +35,7 @@ export function BrowsePage() {
 
   const { data, isLoading, isFetching, isError } = useTemplates({ filters, page })
 
-  const updateFilter = (key: string, value: string) => {
+  const updateFilter = (key: keyof TemplateFilters, value: string) => {
     const params = new URLSearchParams(searchParams)
     if (value) {
       params.set(key, value)

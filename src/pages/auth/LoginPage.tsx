@@ -149,7 +149,14 @@ export function LoginPage() {
 
         <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
           Don't have an account?{' '}
-          <Link to="/register" className="font-medium text-primary-600 hover:text-primary-500">
+          <Link
+            to={
+              redirectTo === '/'
+                ? '/register'
+                : `/register?redirect=${encodeURIComponent(redirectTo)}`
+            }
+            className="font-medium text-primary-600 hover:text-primary-500"
+          >
             Sign up
           </Link>
         </p>

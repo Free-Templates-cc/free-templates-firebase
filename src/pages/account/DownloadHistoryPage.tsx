@@ -1,11 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import { useDownloads } from '../../hooks/useDownloads'
 import { SEOHead } from '../../components/seo/SEOHead'
 import { Card, CardContent } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
 import { Skeleton } from '../../components/ui/Skeleton'
-import { Navigate } from 'react-router-dom'
 import { Download, ArrowLeft, FileCode, Calendar, ExternalLink } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 
@@ -41,6 +40,7 @@ function DownloadHistorySkeleton() {
 export function DownloadHistoryPage() {
   const { user, isLoading: authLoading } = useAuthStore()
   const { data: downloads, isLoading, isError } = useDownloads(user?.uid)
+  const location = useLocation()
 
   if (authLoading) {
     return (
@@ -52,7 +52,13 @@ export function DownloadHistoryPage() {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />
+    // Send the user back here after they sign in.
+    return (
+      <Navigate
+        to={`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`}
+        replace
+      />
+    )
   }
 
   return (

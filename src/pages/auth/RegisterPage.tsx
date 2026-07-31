@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -13,6 +13,7 @@ import { auth, db } from '../../lib/firebase'
 import { trackSignUp } from '../../lib/analytics'
 import { getFirebaseAuthErrorMessage } from '../../lib/errors'
 import { useGoogleSignIn } from '../../hooks/useGoogleSignIn'
+import { sanitizeRedirectPath } from '../../lib/utils'
 import toast from 'react-hot-toast'
 import { Mail, Lock, User } from 'lucide-react'
 
@@ -33,15 +34,33 @@ const registerSchema = z
 
 type RegisterForm = z.infer<typeof registerSchema>
 
+const createUserDoc = async (uid: string, name: string, email: string) => {
+  await setDoc(doc(db, 'users', uid), {
+    uid,
+    displayName: name,
+    email,
+    role: 'user',
+    subscription: {
+      status: 'incomplete',
+      tier: 'free',
+    },
+    downloadCount: 0,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  })
+}
+
 export function RegisterPage() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const redirectTo = sanitizeRedirectPath(searchParams.get('redirect'))
   const [error, setError] = useState('')
 
   const { handleSignIn: handleGoogleRegister, isLoading: googleLoading } = useGoogleSignIn({
     onSuccess: async (user, isNewUser) => {
       await createUserDoc(user.uid, user.displayName || 'User', user.email ?? '')
       if (isNewUser) void trackSignUp('google')
-      navigate('/')
+      navigate(redirectTo)
     },
     onError: setError,
   })
@@ -53,22 +72,6 @@ export function RegisterPage() {
   } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
   })
-
-  const createUserDoc = async (uid: string, name: string, email: string) => {
-    await setDoc(doc(db, 'users', uid), {
-      uid,
-      displayName: name,
-      email,
-      role: 'user',
-      subscription: {
-        status: 'incomplete',
-        tier: 'free',
-      },
-      downloadCount: 0,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    })
-  }
 
   const onEmailRegister = async (data: RegisterForm) => {
     setError('')
@@ -83,7 +86,9 @@ export function RegisterPage() {
         'Account created! Please check your email to verify your address before signing in.',
         { duration: 6000 },
       )
-      navigate('/login')
+      // Carry the intended destination through to the login page so the user
+      // lands where they originally wanted to go after verifying + signing in.
+      navigate(redirectTo === '/' ? '/login' : `/login?redirect=${encodeURIComponent(redirectTo)}`)
     } catch (err) {
       setError(getFirebaseAuthErrorMessage(err, 'Unable to create account. Please try again.'))
     }
@@ -247,7 +252,14 @@ export function RegisterPage() {
 
         <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
           Already have an account?{' '}
-          <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">
+          <Link
+            to={
+              redirectTo === '/'
+                ? '/login'
+                : `/login?redirect=${encodeURIComponent(redirectTo)}`
+            }
+            className="font-medium text-primary-600 hover:text-primary-500"
+          >
             Sign in
           </Link>
         </p>

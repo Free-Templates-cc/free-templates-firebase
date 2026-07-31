@@ -4,7 +4,7 @@ import { Button } from '../components/ui/Button'
 import { Card, CardContent, CardHeader } from '../components/ui/Card'
 import { Input } from '../components/ui/Input'
 import { SEOHead } from '../components/seo/SEOHead'
-import { Navigate, Link } from 'react-router-dom'
+import { Navigate, Link, useLocation } from 'react-router-dom'
 import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
 import {
   cancelSubscription as apiCancelSubscription,
@@ -288,6 +288,7 @@ function SubscriptionContent({
 
 export function AccountPage() {
   const { user, profile, isLoading } = useAuthStore()
+  const location = useLocation()
 
   // Change password state
   const [showPasswordForm, setShowPasswordForm] = useState(false)
@@ -309,7 +310,13 @@ export function AccountPage() {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />
+    // Send the user back here after they sign in.
+    return (
+      <Navigate
+        to={`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`}
+        replace
+      />
+    )
   }
 
   const handleChangePassword = async (e: React.FormEvent) => {
