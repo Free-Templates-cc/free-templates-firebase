@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '../../components/ui/Button'
+import { Input } from '../../components/ui/Input'
 import { AuthDivider } from '../../components/auth/AuthDivider'
 import { GoogleSignInButton } from '../../components/auth/GoogleSignInButton'
 import { SEOHead } from '../../components/seo/SEOHead'
@@ -49,6 +50,8 @@ const createUserDoc = async (uid: string, name: string, email: string) => {
     updatedAt: serverTimestamp(),
   })
 }
+
+const iconClass = 'h-4 w-4'
 
 export function RegisterPage() {
   const navigate = useNavigate()
@@ -116,107 +119,45 @@ export function RegisterPage() {
         )}
 
         <form onSubmit={handleSubmit(onEmailRegister)} className="mt-8 space-y-4">
-          <div>
-            <label
-              htmlFor="register-name"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-              Name
-            </label>
-            <div className="relative mt-1">
-              <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <input
-                id="register-name"
-                type="text"
-                {...register('displayName')}
-                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus-visible:ring-2 dark:bg-gray-900 dark:text-white ${
-                  errors.displayName
-                    ? 'border-red-300 focus:border-red-500 focus-visible:ring-red-500/20'
-                    : 'border-gray-300 focus:border-primary-500 focus-visible:ring-primary-500/20 dark:border-gray-700'
-                }`}
-                placeholder="Your name"
-              />
-            </div>
-            {errors.displayName && (
-              <p className="mt-1 text-xs text-red-500">{errors.displayName.message}</p>
-            )}
-          </div>
+          <Input
+            id="register-name"
+            label="Name"
+            type="text"
+            icon={<User className={iconClass} />}
+            placeholder="Your name"
+            error={errors.displayName?.message}
+            {...register('displayName')}
+          />
 
-          <div>
-            <label
-              htmlFor="register-email"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-              Email
-            </label>
-            <div className="relative mt-1">
-              <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <input
-                id="register-email"
-                type="email"
-                {...register('email')}
-                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus-visible:ring-2 dark:bg-gray-900 dark:text-white ${
-                  errors.email
-                    ? 'border-red-300 focus:border-red-500 focus-visible:ring-red-500/20'
-                    : 'border-gray-300 focus:border-primary-500 focus-visible:ring-primary-500/20 dark:border-gray-700'
-                }`}
-                placeholder="you@example.com"
-              />
-            </div>
-            {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
-          </div>
+          <Input
+            id="register-email"
+            label="Email"
+            type="email"
+            icon={<Mail className={iconClass} />}
+            placeholder="you@example.com"
+            error={errors.email?.message}
+            {...register('email')}
+          />
 
-          <div>
-            <label
-              htmlFor="register-password"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-              Password
-            </label>
-            <div className="relative mt-1">
-              <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <input
-                id="register-password"
-                type="password"
-                {...register('password')}
-                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus-visible:ring-2 dark:bg-gray-900 dark:text-white ${
-                  errors.password
-                    ? 'border-red-300 focus:border-red-500 focus-visible:ring-red-500/20'
-                    : 'border-gray-300 focus:border-primary-500 focus-visible:ring-primary-500/20 dark:border-gray-700'
-                }`}
-                placeholder="••••••••"
-              />
-            </div>
-            {errors.password && (
-              <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>
-            )}
-          </div>
+          <Input
+            id="register-password"
+            label="Password"
+            type="password"
+            icon={<Lock className={iconClass} />}
+            placeholder="••••••••"
+            error={errors.password?.message}
+            {...register('password')}
+          />
 
-          <div>
-            <label
-              htmlFor="register-confirm-password"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-              Confirm Password
-            </label>
-            <div className="relative mt-1">
-              <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <input
-                id="register-confirm-password"
-                type="password"
-                {...register('confirmPassword')}
-                className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-sm focus:outline-none focus-visible:ring-2 dark:bg-gray-900 dark:text-white ${
-                  errors.confirmPassword
-                    ? 'border-red-300 focus:border-red-500 focus-visible:ring-red-500/20'
-                    : 'border-gray-300 focus:border-primary-500 focus-visible:ring-primary-500/20 dark:border-gray-700'
-                }`}
-                placeholder="••••••••"
-              />
-            </div>
-            {errors.confirmPassword && (
-              <p className="mt-1 text-xs text-red-500">{errors.confirmPassword.message}</p>
-            )}
-          </div>
+          <Input
+            id="register-confirm-password"
+            label="Confirm Password"
+            type="password"
+            icon={<Lock className={iconClass} />}
+            placeholder="••••••••"
+            error={errors.confirmPassword?.message}
+            {...register('confirmPassword')}
+          />
 
           {/* Terms acceptance */}
           <div className="flex items-start gap-2">
@@ -253,11 +194,7 @@ export function RegisterPage() {
         <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
           Already have an account?{' '}
           <Link
-            to={
-              redirectTo === '/'
-                ? '/login'
-                : `/login?redirect=${encodeURIComponent(redirectTo)}`
-            }
+            to={redirectTo === '/' ? '/login' : `/login?redirect=${encodeURIComponent(redirectTo)}`}
             className="font-medium text-primary-600 hover:text-primary-500"
           >
             Sign in

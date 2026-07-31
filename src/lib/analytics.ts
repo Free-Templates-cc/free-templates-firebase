@@ -12,6 +12,7 @@
  */
 
 import type { Analytics } from 'firebase/analytics'
+import app from './firebase'
 
 let instance: Analytics | null | undefined // undefined = not resolved yet
 
@@ -31,10 +32,7 @@ async function getInstance(): Promise<Analytics | null> {
     return instance
   }
   try {
-    const [{ getAnalytics }, { default: app }] = await Promise.all([
-      import('firebase/analytics'),
-      import('./firebase'),
-    ])
+    const { getAnalytics } = await import('firebase/analytics')
     instance = getAnalytics(app)
   } catch {
     instance = null

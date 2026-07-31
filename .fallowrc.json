@@ -1,6 +1,6 @@
 {
   "ignorePatterns": ["functions/**"],
-  "ignoreDependencies": ["@fission-ai/openspec"],
+  "ignoreDependencies": ["@fission-ai/openspec", "firebase-admin", "tailwindcss"],
   "ignoreUnresolvedImports": ["./firebase", "**/firebase"],
   "duplicates": {
     "ignore": ["src/pages/static/**"]
@@ -70,9 +70,9 @@
       {
         "files": ["src/pages/auth/RegisterPage.tsx"],
         "functions": ["RegisterPage"],
-        "maxCyclomatic": 13,
-        "maxCognitive": 16,
-        "maxCrap": 150,
+        "maxCyclomatic": 10,
+        "maxCognitive": 10,
+        "maxCrap": 80,
         "reason": "Registration form with validation, terms, and OAuth flows."
       }
     ]

@@ -100,10 +100,15 @@ export const createCheckoutSession = onRequest(
         })
         stripeCustomerId = customer.id
 
-        // Persist customer ID immediately
-        await db.collection('users').doc(uid).update({
-          'subscription.stripeCustomerId': stripeCustomerId,
-        })
+        // Persist customer ID immediately. Use merge so the doc is created for
+        // users without a profile yet (e.g. Google sign-in via the login page)
+        // instead of failing with NOT_FOUND.
+        await db.collection('users').doc(uid).set(
+          {
+            'subscription.stripeCustomerId': stripeCustomerId,
+          },
+          { merge: true },
+        )
       }
 
       // Create the checkout session
