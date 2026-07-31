@@ -9,6 +9,7 @@ import { useAuthStore } from '../stores/authStore'
 import { useTemplate, useRelatedTemplates } from '../hooks/useTemplate'
 import { useTemplateDownloadCount } from '../hooks/useTemplateDownloadCount'
 import { getDownloadUrl } from '../lib/api'
+import { trackTemplateDownload } from '../lib/analytics'
 import toast from 'react-hot-toast'
 import { ArrowLeft, Download, ExternalLink, GitFork, Check } from 'lucide-react'
 
@@ -38,6 +39,7 @@ export function TemplateDetailPage() {
       const { url } = await getDownloadUrl(template.id, user?.uid)
       window.open(url, '_blank', 'noopener,noreferrer')
       toast.success('Download started!')
+      void trackTemplateDownload(template)
     } catch (err: any) {
       toast.error(err.message || 'Failed to start download. Please try again.')
     } finally {

@@ -5,8 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '../../components/ui/Button'
 import { SEOHead } from '../../components/seo/SEOHead'
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, getAdditionalUserInfo } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
+import { trackSignUp } from '../../lib/analytics'
 import { Mail, Lock } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -53,7 +54,10 @@ export function LoginPage() {
     setError('')
     setGoogleLoading(true)
     try {
-      await signInWithPopup(auth, new GoogleAuthProvider())
+      const result = await signInWithPopup(auth, new GoogleAuthProvider())
+      if (getAdditionalUserInfo(result)?.isNewUser) {
+        void trackSignUp('google')
+      }
       navigate(redirectTo)
     } catch (err: any) {
       if (err.code !== 'auth/popup-closed-by-user') {

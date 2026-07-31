@@ -198,7 +198,7 @@
 - [x] Update README.md with project info, setup instructions, and stack
 - [x] Responsive design (mobile-first) — filters collapse into drawer on mobile, layout breakpoints throughout
 - [x] Cross-browser testing (browserslist config added)
-- [ ] Analytics (Firebase Analytics or Google Analytics) — 🔴 blocked: needs Firebase project
+- [x] Analytics (Firebase Analytics / GA4) — code-complete: `analytics.ts` lazy-loader + `usePageTracking` hook + event trackers (page_view, template_download, begin_checkout, sign_up). Active once `VITE_FIREBASE_MEASUREMENT_ID` is set in `.env` (no-op without it). 339 tests passing
 
 ### 6.4 Testing & CI
 - [x] Set up unit tests (Vitest) — installed, configured, 311 tests passing across 28 test files
@@ -390,7 +390,7 @@ Comprehensive audit of every component, page, integration, and quality metric.
 | **Live template images** | 🟡 Placeholders added | All 24 mock templates now have deterministic placeholder URLs via picsum.photos (seeded by slug). LazyImage wired into BrowsePage cards, HomePage featured section, TemplateDetailPage gallery + related templates. Swap picsum URLs for real uploaded images when available. |
 | **Email verification** | ✅ Implemented | `sendEmailVerification()` called after account creation. User navigated to /login with toast to verify before signing in |
 | **Terms acceptance on register** | ✅ Implemented | RegisterPage has terms acceptance checkbox with zod validation (`z.literal(true)`). Links to /terms and /privacy |
-| **Analytics** | 🔴 No tracking | Firebase Analytics or Google Analytics not integrated. Can't measure page views, downloads, conversions |
+| **Analytics** | ✅ Implemented 2026-07-31 | `src/lib/analytics.ts` — lazy dynamic import of `firebase/analytics`, no-op until `VITE_FIREBASE_PROJECT_ID` + `VITE_FIREBASE_MEASUREMENT_ID` both set. `usePageTracking` fires `page_view` on every route change (App.tsx). `trackTemplateDownload` on detail page downloads, `trackCheckoutStarted` on pricing checkout, `trackSignUp` on register (email + Google) and login-via-Google when `isNewUser`. 13 tests in analytics.test.ts + 3 in usePageTracking.test.tsx. Just needs the measurement ID in `.env` to go live |
 | **Domain configuration** | 🔴 custom domain not connected | free-templates.cc → Firebase Hosting custom domain not configured. Site only accessible at firebase- generated URL |
 | **Cloud Functions source** | ✅ Restored 2026-07-30 | 8 functions in `functions/` (was accidentally deleted in commit 331f8ca). Recreated from git history: createCheckoutSession, stripeWebhook, getDownloadUrl, cancelSubscription, reactivateSubscription, createBillingPortalSession, onTemplateDownloaded, cleanupExpiredSubscriptions. npm deps installed. |
 | **Rate limiting on Cloud Functions** | ✅ Implemented | Token-bucket rate limiter (`functions/src/rateLimiter.ts`) applied to createCheckoutSession (10/min/IP), getDownloadUrl (30/min/IP), cancel/reactivate (5/min/uid), billing portal (10/min/uid) |
@@ -435,7 +435,7 @@ Ordered by impact vs effort:
 | 🟢 P2 | Wire up AccountPage subscription actions | ✅ Done | Cancel/reactivate/portal buttons call real CF APIs with loading states |
 | 🟢 P2 | Add rate limiting to critical Cloud Functions | ✅ Done | Token-bucket rate limiter on all payment/download endpoints |
 | 🟢 P2 | Configure CSP + security headers in firebase.json | ✅ Done | HSTS, CSP, X-Content-Type-Options, Referrer-Policy, Permissions-Policy |
-| 🟢 P2 | Integrate Firebase Analytics | 1h | User behavior insights |
+| 🟢 P2 | Integrate Firebase Analytics | ✅ Done 2026-07-31 | GA4 via `firebase/analytics` lazy import; page views, template downloads, checkout starts, sign-ups; 16 new tests; no-op until measurement ID is set |
 | 🔵 P3 | Tighten TypeScript config (strict: true) | ✅ Done | Added strict + strictNullChecks + noUncheckedIndexedAccess, build passes clean |
 | 🔵 P3 | Swap picsum placeholders for real uploaded images | when ready | Production-ready visual polish |
 | 🔵 P3 | Run Lighthouse audit | 30 min | Performance baseline |
@@ -824,3 +824,13 @@ Comprehensive test coverage expansion targeting **100% statement, branch, functi
 - **Remaining (3):** Lighthouse audit, Analytics, Domain config — all need Firebase project/deployment.
 - **Minor:** Consolidated repetitive hourly health-check entries.
 - **Next:** Awaiting Alchie to populate `.env` with real Firebase credentials and deploy.
+
+### 2026-07-31 — 06:40 CEST
+- **Analytics integration complete (GA4 via Firebase Analytics):**
+  - `src/lib/analytics.ts` — lazy dynamic import of `firebase/analytics` (keeps main bundle lean); no-op until `VITE_FIREBASE_PROJECT_ID` + `VITE_FIREBASE_MEASUREMENT_ID` are both set; best-effort (errors swallowed). Trackers: `trackPageView`, `trackTemplateDownload`, `trackCheckoutStarted`, `trackSignUp`.
+  - `src/hooks/usePageTracking.ts` — fires `page_view` on every route change (mounted once in App.tsx inside BrowserRouter).
+  - Wired into: App.tsx (PageTracker), PricingPage (begin_checkout on Stripe checkout), TemplateDetailPage (template_download on successful download), RegisterPage (sign_up email + Google), LoginPage (sign_up Google only when `getAdditionalUserInfo(result).isNewUser` — Firebase SDK 12 removed `UserCredential.additionalUserInfo`, use `getAdditionalUserInfo()`).
+  - `VITE_FIREBASE_MEASUREMENT_ID` added to `.env.example` + `firebase.ts` config.
+  - Tests: analytics.test.ts (13), usePageTracking.test.tsx (3), api-firestore.test.ts (9 — new: covers Firestore-mode API dispatch, `VITE_USE_FIREBASE_DATA=true` path). **339/339 tests passing (31 files)**, lint 0/0 (93 files), build clean.
+- **Housekeeping:** `coverage/` removed from git tracking (46 files) + added to `.gitignore` — stops repo churn on every test run.
+- **Remaining blocked (2):** Lighthouse audit (needs deployment), Domain config (needs Firebase project + DNS). Analytics code is live-ready; just needs `VITE_FIREBASE_MEASUREMENT_ID` in `.env` to start tracking.

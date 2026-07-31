@@ -28,3 +28,6 @@ playwright-report
 *.sln
 *.sw?
 /.github
+
+# Test coverage output (regenerated on every run)
+coverage/

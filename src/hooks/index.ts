@@ -4,6 +4,7 @@ export { useTemplates, filtersFromParams } from './useTemplates'
 export { useTemplate, useRelatedTemplates } from './useTemplate'
 export { useDownloads } from './useDownloads'
 export { useNetworkStatus } from './useNetworkStatus'
+export { usePageTracking } from './usePageTracking'
 export { useTemplateDownloadCount } from './useTemplateDownloadCount'
 export {
   fetchTemplates,

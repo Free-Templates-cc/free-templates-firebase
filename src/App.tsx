@@ -7,6 +7,7 @@ import { queryClient } from './lib/queryClient'
 import { Layout } from './components/layout/Layout'
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { Skeleton } from './components/ui/Skeleton'
+import { usePageTracking } from './hooks'
 
 // Route-level code splitting
 const HomePage = lazy(() => import('./pages/HomePage').then((m) => ({ default: m.HomePage })))
@@ -59,12 +60,19 @@ function PageLoader() {
   )
 }
 
+// Tracks GA4 page views on route changes (no-op until analytics is configured)
+function PageTracker() {
+  usePageTracking()
+  return null
+}
+
 export default function App() {
   return (
     <ErrorBoundary>
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
+            <PageTracker />
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 <Route element={<Layout />}>

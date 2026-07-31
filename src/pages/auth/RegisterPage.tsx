@@ -14,6 +14,7 @@ import {
 } from 'firebase/auth'
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '../../lib/firebase'
+import { trackSignUp } from '../../lib/analytics'
 import toast from 'react-hot-toast'
 import { Mail, Lock, User } from 'lucide-react'
 
@@ -71,6 +72,7 @@ export function RegisterPage() {
       await createUserDoc(cred.user.uid, data.displayName, data.email)
       // Send email verification
       await sendEmailVerification(cred.user)
+      void trackSignUp('email')
       toast.success(
         'Account created! Please check your email to verify your address before signing in.',
         { duration: 6000 },
@@ -87,6 +89,7 @@ export function RegisterPage() {
     try {
       const result = await signInWithPopup(auth, new GoogleAuthProvider())
       await createUserDoc(result.user.uid, result.user.displayName || 'User', result.user.email!)
+      void trackSignUp('google')
       navigate('/')
     } catch (err: any) {
       if (err.code !== 'auth/popup-closed-by-user') {
