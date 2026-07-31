@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { Layout } from '../Layout'
@@ -21,8 +21,14 @@ function renderWithRouter(ui: React.ReactElement, { initialEntries = ['/'] } = {
 }
 
 describe('Layout', () => {
+  beforeEach(() => {
+    // useScrollToTop scrolls on mount — jsdom doesn't implement window.scrollTo
+    window.scrollTo = vi.fn()
+  })
+
   afterEach(() => {
     cleanup()
+    vi.restoreAllMocks()
   })
 
   it('renders the Navbar', () => {

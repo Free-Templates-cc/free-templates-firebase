@@ -5,6 +5,7 @@ import { SEOHead } from '../components/seo/SEOHead'
 import { useAuthStore } from '../stores/authStore'
 import { createCheckoutSession } from '../lib/api'
 import { trackCheckoutStarted } from '../lib/analytics'
+import { getErrorMessage } from '../lib/errors'
 import toast from 'react-hot-toast'
 import { Check, X } from 'lucide-react'
 
@@ -164,8 +165,8 @@ export function PricingPage() {
       )
       void trackCheckoutStarted(planKey, annual ? 'yearly' : 'monthly')
       window.location.href = url
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to start checkout. Please try again.')
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Failed to start checkout. Please try again.'))
     } finally {
       setIsCreatingCheckout(false)
     }

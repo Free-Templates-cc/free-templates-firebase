@@ -22,6 +22,7 @@ export function LazyImage({
 }: LazyImageProps) {
   const [loaded, setLoaded] = useState(false)
   const [inView, setInView] = useState(false)
+  const [hasError, setHasError] = useState(false)
   const imgRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -42,6 +43,14 @@ export function LazyImage({
     return () => observer.disconnect()
   }, [])
 
+  // Reset loading/error state when the source changes so the new image is
+  // requested, faded in, and errors are surfaced again (component is reused
+  // across gallery/navigation src changes).
+  useEffect(() => {
+    setLoaded(false)
+    setHasError(false)
+  }, [src])
+
   const paddingBottom = aspectRatio
     ? `${(100 * parseFloat(aspectRatio.split('/')[1]!)) / parseFloat(aspectRatio.split('/')[0]!)}%`
     : undefined
@@ -55,13 +64,14 @@ export function LazyImage({
       {/* Placeholder — decorative only */}
       {!loaded && <div className={cn('absolute inset-0', placeholder)} aria-hidden="true" />}
 
-      {/* Actual image — loaded only when in view */}
-      {inView && (
+      {/* Actual image — loaded only when in view; hidden again if it fails to load */}
+      {inView && !hasError && (
         <img
           src={src}
           alt={alt}
           loading="lazy"
           onLoad={() => setLoaded(true)}
+          onError={() => setHasError(true)}
           className={cn(
             'transition-opacity duration-300',
             loaded ? 'opacity-100' : 'opacity-0',

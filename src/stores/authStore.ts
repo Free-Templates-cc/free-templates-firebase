@@ -29,28 +29,48 @@ let profileUnsubscribe: (() => void) | null = null
 export function initAuthListener() {
   if (authUnsubscribe) return // already initialized
 
-  authUnsubscribe = onAuthStateChanged(auth, (user) => {
-    if (user) {
-      useAuthStore.setState({ user, isLoading: true })
+  authUnsubscribe = onAuthStateChanged(
+    auth,
+    (user) => {
+      if (user) {
+        useAuthStore.setState({ user, isLoading: true })
 
-      // Listen to user profile in Firestore
-      const userDocRef = doc(db, 'users', user.uid)
-      profileUnsubscribe = onSnapshot(
-        userDocRef,
-        (snapshot) => {
-          if (snapshot.exists()) {
-            const profile = snapshot.data() as UserProfile
-            useAuthStore.setState({
-              profile,
-              isPremium:
-                profile.subscription?.tier === 'premium' &&
-                profile.subscription?.status === 'active',
-              isAdmin: profile.role === 'admin',
-              isLoading: false,
-              initialized: true,
-            })
-          } else {
-            // User document doesn't exist yet (just signed up)
+        // onAuthStateChanged re-fires on token refresh / sign-in changes —
+        // unsubscribe the previous profile listener before attaching a new one.
+        if (profileUnsubscribe) {
+          profileUnsubscribe()
+          profileUnsubscribe = null
+        }
+
+        // Listen to user profile in Firestore
+        const userDocRef = doc(db, 'users', user.uid)
+        profileUnsubscribe = onSnapshot(
+          userDocRef,
+          (snapshot) => {
+            if (snapshot.exists()) {
+              const profile = snapshot.data() as UserProfile
+              useAuthStore.setState({
+                profile,
+                isPremium:
+                  profile.subscription?.tier === 'premium' &&
+                  profile.subscription?.status === 'active',
+                isAdmin: profile.role === 'admin',
+                isLoading: false,
+                initialized: true,
+              })
+            } else {
+              // User document doesn't exist yet (just signed up)
+              useAuthStore.setState({
+                profile: null,
+                isPremium: false,
+                isAdmin: false,
+                isLoading: false,
+                initialized: true,
+              })
+            }
+          },
+          (error) => {
+            console.error('Firestore onSnapshot error for user profile:', error)
             useAuthStore.setState({
               profile: null,
               isPremium: false,
@@ -58,21 +78,27 @@ export function initAuthListener() {
               isLoading: false,
               initialized: true,
             })
-          }
-        },
-        (error) => {
-          console.error('Firestore onSnapshot error for user profile:', error)
-          useAuthStore.setState({
-            profile: null,
-            isPremium: false,
-            isAdmin: false,
-            isLoading: false,
-            initialized: true,
-          })
-        },
-      )
-    } else {
-      // Clean up profile listener
+          },
+        )
+      } else {
+        // Clean up profile listener
+        if (profileUnsubscribe) {
+          profileUnsubscribe()
+          profileUnsubscribe = null
+        }
+        useAuthStore.setState({
+          user: null,
+          profile: null,
+          isPremium: false,
+          isAdmin: false,
+          isLoading: false,
+          initialized: true,
+        })
+      }
+    },
+    (error) => {
+      // Auth state could not be determined (e.g. token refresh failure)
+      console.error('Auth state change error:', error)
       if (profileUnsubscribe) {
         profileUnsubscribe()
         profileUnsubscribe = null
@@ -85,8 +111,8 @@ export function initAuthListener() {
         isLoading: false,
         initialized: true,
       })
-    }
-  })
+    },
+  )
 }
 
 export function cleanupAuthListener() {

@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { Badge } from '../components/ui/Badge'
 import { frameworkBadgeVariant } from '../lib/utils'
@@ -86,6 +87,15 @@ const stats = [
 ]
 
 export function HomePage() {
+  const navigate = useNavigate()
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const query = searchQuery.trim()
+    navigate(query ? `/templates?search=${encodeURIComponent(query)}` : '/templates')
+  }
+
   return (
     <div>
       <SEOHead
@@ -123,7 +133,7 @@ export function HomePage() {
             </div>
 
             {/* Search */}
-            <div className="mx-auto mt-12 max-w-xl">
+            <form className="mx-auto mt-12 max-w-xl" onSubmit={handleSearchSubmit} role="search">
               <div className="relative">
                 <label htmlFor="hero-search" className="sr-only">
                   Search templates
@@ -132,6 +142,8 @@ export function HomePage() {
                 <input
                   id="hero-search"
                   type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search templates..."
                   className="w-full rounded-xl border border-gray-300 bg-white py-3.5 pl-12 pr-4 text-base shadow-sm focus:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
                 />
@@ -148,7 +160,7 @@ export function HomePage() {
                   </Link>
                 ))}
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </section>
@@ -181,7 +193,7 @@ export function HomePage() {
             {categories.map((cat) => (
               <Link
                 key={cat.name}
-                to={`/templates?category=${cat.name.toLowerCase()}`}
+                to={`/templates?category=${encodeURIComponent(cat.name)}`}
                 className={`rounded-xl p-6 text-center transition-all hover:-translate-y-0.5 hover:shadow-md ${cat.color}`}
               >
                 <p className="font-semibold">{cat.name}</p>

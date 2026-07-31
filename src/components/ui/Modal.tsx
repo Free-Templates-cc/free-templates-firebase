@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef, type ReactNode } from 'react'
+import { useEffect, useCallback, useRef, useId, type ReactNode } from 'react'
 import { X } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { Button } from './Button'
@@ -19,8 +19,6 @@ const sizeClasses = {
   md: 'max-w-lg',
   lg: 'max-w-2xl',
 }
-
-const TITLE_ID = 'modal-title'
 
 /**
  * Trap focus within the modal when open.
@@ -81,6 +79,8 @@ export function Modal({
   showClose = true,
 }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null)
+  // Unique per-instance id so multiple modals never share a duplicate id.
+  const titleId = useId()
 
   // Close on Escape
   const handleKeyDown = useCallback(
@@ -119,7 +119,7 @@ export function Modal({
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? TITLE_ID : undefined}
+        aria-labelledby={title ? titleId : undefined}
         className={cn(
           'relative w-full rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-900',
           sizeClasses[size],
@@ -130,7 +130,7 @@ export function Modal({
           <div className="flex items-start justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-800">
             <div>
               {title && (
-                <h2 id={TITLE_ID} className="text-lg font-semibold text-gray-900 dark:text-white">
+                <h2 id={titleId} className="text-lg font-semibold text-gray-900 dark:text-white">
                   {title}
                 </h2>
               )}

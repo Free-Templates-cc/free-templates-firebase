@@ -35,7 +35,10 @@ describe('Modal', () => {
     render(<Modal open={true} onClose={vi.fn()} title="Dialog" />)
     const dialog = screen.getByRole('dialog')
     expect(dialog).toHaveAttribute('aria-modal', 'true')
-    expect(dialog).toHaveAttribute('aria-labelledby', 'modal-title')
+    // Title id is generated per instance (useId) and must reference the heading
+    const labelledby = dialog.getAttribute('aria-labelledby')
+    expect(labelledby).toBeTruthy()
+    expect(document.getElementById(labelledby!)).toHaveTextContent('Dialog')
   })
 
   it('calls onClose when Escape is pressed', () => {

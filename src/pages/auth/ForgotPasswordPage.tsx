@@ -4,6 +4,7 @@ import { Button } from '../../components/ui/Button'
 import { SEOHead } from '../../components/seo/SEOHead'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
+import { getFirebaseAuthErrorMessage } from '../../lib/errors'
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react'
 
 export function ForgotPasswordPage() {
@@ -19,8 +20,8 @@ export function ForgotPasswordPage() {
     try {
       await sendPasswordResetEmail(auth, email)
       setSent(true)
-    } catch (err: any) {
-      setError(err.message.replace('Firebase: ', '').replace(/\(.*\)/, ''))
+    } catch (err) {
+      setError(getFirebaseAuthErrorMessage(err, 'Unable to send reset link. Please try again.'))
     } finally {
       setIsLoading(false)
     }
@@ -81,12 +82,16 @@ export function ForgotPasswordPage() {
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label
+              htmlFor="forgot-email"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
               Email
             </label>
             <div className="relative mt-1">
               <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
+                id="forgot-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

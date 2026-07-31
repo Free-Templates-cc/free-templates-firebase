@@ -10,6 +10,7 @@ import { SEOHead } from '../../components/seo/SEOHead'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
 import { trackSignUp } from '../../lib/analytics'
+import { getFirebaseAuthErrorMessage } from '../../lib/errors'
 import { useGoogleSignIn } from '../../hooks/useGoogleSignIn'
 import { Mail, Lock } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -55,8 +56,8 @@ export function LoginPage() {
         )
       }
       navigate(redirectTo)
-    } catch (err: any) {
-      setError(err.message.replace('Firebase: ', '').replace(/\(.*\)/, ''))
+    } catch (err) {
+      setError(getFirebaseAuthErrorMessage(err, 'Unable to sign in. Please try again.'))
     }
   }
 

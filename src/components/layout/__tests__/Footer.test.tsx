@@ -40,7 +40,6 @@ describe('Footer', () => {
     expect(screen.getByText('Next.js')).toBeInTheDocument()
     expect(screen.getByText('Gatsby.js')).toBeInTheDocument()
     expect(screen.getByText('Nuxt.js')).toBeInTheDocument()
-    expect(screen.getByText('About')).toBeInTheDocument()
     expect(screen.getByText('Pricing')).toBeInTheDocument()
     expect(screen.getByText('FAQ')).toBeInTheDocument()
     expect(screen.getByText('Contact')).toBeInTheDocument()

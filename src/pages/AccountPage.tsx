@@ -11,6 +11,7 @@ import {
   reactivateSubscription as apiReactivateSubscription,
   createBillingPortalSession,
 } from '../lib/api'
+import { getErrorMessage } from '../lib/errors'
 import toast from 'react-hot-toast'
 import {
   User,
@@ -117,8 +118,8 @@ function SubscriptionContent({
     try {
       await apiCancelSubscription(userUid)
       toast.success('Subscription will be canceled at the end of the billing period.')
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to cancel subscription. Please try again.')
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Failed to cancel subscription. Please try again.'))
     } finally {
       setIsCanceling(false)
     }
@@ -130,8 +131,8 @@ function SubscriptionContent({
     try {
       await apiReactivateSubscription(userUid)
       toast.success('Subscription reactivated successfully!')
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to reactivate subscription. Please try again.')
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Failed to reactivate subscription. Please try again.'))
     } finally {
       setIsReactivating(false)
     }
@@ -143,8 +144,8 @@ function SubscriptionContent({
     try {
       const { url } = await createBillingPortalSession(userUid)
       window.open(url, '_blank', 'noopener,noreferrer')
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to open billing portal. Please try again.')
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Failed to open billing portal. Please try again.'))
     } finally {
       setIsOpeningPortal(false)
     }
@@ -327,7 +328,7 @@ export function AccountPage() {
     setIsUpdatingPassword(true)
     try {
       // Re-authenticate first
-      const credential = EmailAuthProvider.credential(user.email!, currentPassword)
+      const credential = EmailAuthProvider.credential(user.email ?? '', currentPassword)
       await reauthenticateWithCredential(user, credential)
       await updatePassword(user, newPassword)
 
@@ -336,8 +337,12 @@ export function AccountPage() {
       setCurrentPassword('')
       setNewPassword('')
       setConfirmPassword('')
-    } catch (err: any) {
-      const msg = err.code ? err.code.replace('auth/', '').replace(/-/g, ' ') : err.message
+    } catch (err) {
+      const code =
+        err instanceof Error && 'code' in err && typeof err.code === 'string' ? err.code : ''
+      const msg = code
+        ? code.replace('auth/', '').replace(/-/g, ' ')
+        : getErrorMessage(err, 'Failed to update password. Please try again.')
       toast.error(msg.charAt(0).toUpperCase() + msg.slice(1))
     } finally {
       setIsUpdatingPassword(false)

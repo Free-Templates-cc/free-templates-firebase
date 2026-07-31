@@ -11,6 +11,7 @@ import { useTemplate, useRelatedTemplates } from '../hooks/useTemplate'
 import { useTemplateDownloadCount } from '../hooks/useTemplateDownloadCount'
 import { getDownloadUrl } from '../lib/api'
 import { trackTemplateDownload } from '../lib/analytics'
+import { getErrorMessage } from '../lib/errors'
 import toast from 'react-hot-toast'
 import { ArrowLeft, Download, ExternalLink, GitFork, Check } from 'lucide-react'
 
@@ -37,8 +38,8 @@ export function TemplateDetailPage() {
       window.open(url, '_blank', 'noopener,noreferrer')
       toast.success('Download started!')
       void trackTemplateDownload(template)
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to start download. Please try again.')
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Failed to start download. Please try again.'))
     } finally {
       setIsDownloading(false)
     }

@@ -8,6 +8,7 @@
 
 import type { Template, TemplateFilters, Download } from '../types'
 import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore'
+import type { QueryConstraint, Timestamp } from 'firebase/firestore'
 import { db } from './firebase'
 
 const USE_FIRESTORE = import.meta.env.VITE_USE_FIREBASE_DATA === 'true'
@@ -15,6 +16,13 @@ const USE_FIRESTORE = import.meta.env.VITE_USE_FIREBASE_DATA === 'true'
 // ---------------------------------------------------------------------------
 // Mock data
 // ---------------------------------------------------------------------------
+
+/**
+ * Minimal Firestore `Timestamp` shape for mock data — mirrors the fields the
+ * app actually reads (`.seconds`). Cast once here so the mock catalog can use
+ * the `Template` type without per-field `as any` assertions.
+ */
+const mockTimestamp = (seconds: number) => ({ seconds, nanoseconds: 0 }) as unknown as Timestamp
 
 const allTemplates: Template[] = [
   {
@@ -42,8 +50,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 3421,
     published: true,
-    createdAt: { seconds: 1690000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1690000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1690000000),
+    updatedAt: mockTimestamp(1690000000),
   },
   {
     id: '2',
@@ -70,8 +78,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 2890,
     published: true,
-    createdAt: { seconds: 1689000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1689000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1689000000),
+    updatedAt: mockTimestamp(1689000000),
   },
   {
     id: '3',
@@ -98,8 +106,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 1756,
     published: true,
-    createdAt: { seconds: 1688000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1688000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1688000000),
+    updatedAt: mockTimestamp(1688000000),
   },
   {
     id: '4',
@@ -126,8 +134,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 1203,
     published: true,
-    createdAt: { seconds: 1687000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1687000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1687000000),
+    updatedAt: mockTimestamp(1687000000),
   },
   {
     id: '5',
@@ -154,8 +162,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 4521,
     published: true,
-    createdAt: { seconds: 1686000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1686000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1686000000),
+    updatedAt: mockTimestamp(1686000000),
   },
   {
     id: '6',
@@ -182,8 +190,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 3100,
     published: true,
-    createdAt: { seconds: 1685000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1685000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1685000000),
+    updatedAt: mockTimestamp(1685000000),
   },
   {
     id: '7',
@@ -210,8 +218,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 2100,
     published: true,
-    createdAt: { seconds: 1684000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1684000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1684000000),
+    updatedAt: mockTimestamp(1684000000),
   },
   {
     id: '8',
@@ -238,8 +246,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 5300,
     published: true,
-    createdAt: { seconds: 1683000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1683000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1683000000),
+    updatedAt: mockTimestamp(1683000000),
   },
   {
     id: '9',
@@ -259,8 +267,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 1980,
     published: true,
-    createdAt: { seconds: 1682000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1682000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1682000000),
+    updatedAt: mockTimestamp(1682000000),
   },
   {
     id: '10',
@@ -287,8 +295,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 1640,
     published: true,
-    createdAt: { seconds: 1681000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1681000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1681000000),
+    updatedAt: mockTimestamp(1681000000),
   },
   {
     id: '11',
@@ -315,8 +323,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 2800,
     published: true,
-    createdAt: { seconds: 1680000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1680000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1680000000),
+    updatedAt: mockTimestamp(1680000000),
   },
   {
     id: '12',
@@ -343,8 +351,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 1450,
     published: true,
-    createdAt: { seconds: 1679000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1679000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1679000000),
+    updatedAt: mockTimestamp(1679000000),
   },
   {
     id: '13',
@@ -371,8 +379,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 920,
     published: true,
-    createdAt: { seconds: 1678000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1678000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1678000000),
+    updatedAt: mockTimestamp(1678000000),
   },
   {
     id: '14',
@@ -399,8 +407,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 780,
     published: true,
-    createdAt: { seconds: 1677000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1677000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1677000000),
+    updatedAt: mockTimestamp(1677000000),
   },
   {
     id: '15',
@@ -427,8 +435,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 1150,
     published: true,
-    createdAt: { seconds: 1676000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1676000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1676000000),
+    updatedAt: mockTimestamp(1676000000),
   },
   {
     id: '16',
@@ -455,8 +463,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 1980,
     published: true,
-    createdAt: { seconds: 1675000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1675000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1675000000),
+    updatedAt: mockTimestamp(1675000000),
   },
   {
     id: '17',
@@ -482,8 +490,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 4200,
     published: true,
-    createdAt: { seconds: 1674000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1674000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1674000000),
+    updatedAt: mockTimestamp(1674000000),
   },
   {
     id: '18',
@@ -503,8 +511,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 640,
     published: true,
-    createdAt: { seconds: 1673000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1673000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1673000000),
+    updatedAt: mockTimestamp(1673000000),
   },
   {
     id: '19',
@@ -523,8 +531,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 1340,
     published: true,
-    createdAt: { seconds: 1672000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1672000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1672000000),
+    updatedAt: mockTimestamp(1672000000),
   },
   {
     id: '20',
@@ -551,8 +559,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 820,
     published: true,
-    createdAt: { seconds: 1671000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1671000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1671000000),
+    updatedAt: mockTimestamp(1671000000),
   },
   {
     id: '21',
@@ -579,8 +587,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 2050,
     published: true,
-    createdAt: { seconds: 1670000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1670000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1670000000),
+    updatedAt: mockTimestamp(1670000000),
   },
   {
     id: '22',
@@ -607,8 +615,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 670,
     published: true,
-    createdAt: { seconds: 1669000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1669000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1669000000),
+    updatedAt: mockTimestamp(1669000000),
   },
   {
     id: '23',
@@ -635,8 +643,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 930,
     published: true,
-    createdAt: { seconds: 1668000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1668000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1668000000),
+    updatedAt: mockTimestamp(1668000000),
   },
   {
     id: '24',
@@ -663,8 +671,8 @@ const allTemplates: Template[] = [
     downloadUrl: '',
     downloads: 1160,
     published: true,
-    createdAt: { seconds: 1667000000, nanoseconds: 0 } as any,
-    updatedAt: { seconds: 1667000000, nanoseconds: 0 } as any,
+    createdAt: mockTimestamp(1667000000),
+    updatedAt: mockTimestamp(1667000000),
   },
 ]
 
@@ -714,7 +722,7 @@ async function fetchTemplatesFromFirestore(
   page = 1,
   pageSize = 9,
 ): Promise<PageData<Template>> {
-  const constraints: any[] = [where('published', '==', true)]
+  const constraints: QueryConstraint[] = [where('published', '==', true)]
 
   if (filters.category) {
     constraints.push(where('category', '==', filters.category))
