@@ -50,6 +50,18 @@ export function templateGalleryUrls(slug: string, count = 5): string[] {
 }
 
 /**
+ * Normalize a `?redirect=` style path so it can only ever be an internal,
+ * same-origin path. External URLs (https://…), protocol-relative URLs
+ * (//host), and backslash variants are rejected and fall back to `fallback`.
+ */
+export function sanitizeRedirectPath(path: string | null, fallback = '/'): string {
+  if (path && path.startsWith('/') && !path.startsWith('//') && !path.startsWith('/\\')) {
+    return path
+  }
+  return fallback
+}
+
+/**
  * Map a template framework name (e.g. 'Next.js') to a Badge variant key.
  * Falls back to 'default' for unknown frameworks instead of returning an
  * undefined variant.

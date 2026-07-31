@@ -53,41 +53,63 @@ export function ContactPage() {
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label
+                  htmlFor="contact-name"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   Name
                 </label>
                 <input
+                  id="contact-name"
+                  name="name"
                   type="text"
                   required
+                  autoComplete="name"
                   className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label
+                  htmlFor="contact-email"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   Email
                 </label>
                 <input
+                  id="contact-email"
+                  name="email"
                   type="email"
                   required
+                  autoComplete="email"
                   className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="contact-subject"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 Subject
               </label>
               <input
+                id="contact-subject"
+                name="subject"
                 type="text"
                 required
                 className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="contact-message"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 Message
               </label>
               <textarea
+                id="contact-message"
+                name="message"
                 rows={5}
                 required
                 className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white"

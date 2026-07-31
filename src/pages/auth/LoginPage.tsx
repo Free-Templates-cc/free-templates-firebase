@@ -12,6 +12,7 @@ import { auth } from '../../lib/firebase'
 import { trackSignUp } from '../../lib/analytics'
 import { getFirebaseAuthErrorMessage } from '../../lib/errors'
 import { useGoogleSignIn } from '../../hooks/useGoogleSignIn'
+import { sanitizeRedirectPath } from '../../lib/utils'
 import { Mail, Lock } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -25,7 +26,7 @@ type LoginForm = z.infer<typeof loginSchema>
 export function LoginPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const redirectTo = searchParams.get('redirect') || '/'
+  const redirectTo = sanitizeRedirectPath(searchParams.get('redirect'))
   const [error, setError] = useState('')
 
   const { handleSignIn: handleGoogleLogin, isLoading: googleLoading } = useGoogleSignIn({

@@ -6,6 +6,7 @@ import {
   slugify,
   templateImageUrl,
   templateGalleryUrls,
+  sanitizeRedirectPath,
 } from '../utils'
 
 describe('cn', () => {
@@ -114,5 +115,36 @@ describe('templateGalleryUrls', () => {
   it('defaults to 5 previews', () => {
     const urls = templateGalleryUrls('test')
     expect(urls).toHaveLength(5)
+  })
+})
+
+describe('sanitizeRedirectPath', () => {
+  it('keeps internal absolute paths', () => {
+    expect(sanitizeRedirectPath('/pricing')).toBe('/pricing')
+    expect(sanitizeRedirectPath('/account?checkout=success')).toBe('/account?checkout=success')
+  })
+
+  it('falls back for null or empty values', () => {
+    expect(sanitizeRedirectPath(null)).toBe('/')
+    expect(sanitizeRedirectPath('')).toBe('/')
+  })
+
+  it('rejects external URLs', () => {
+    expect(sanitizeRedirectPath('https://evil.example.com')).toBe('/')
+    expect(sanitizeRedirectPath('http://evil.example.com/path')).toBe('/')
+  })
+
+  it('rejects protocol-relative and backslash URLs', () => {
+    expect(sanitizeRedirectPath('//evil.example.com')).toBe('/')
+    expect(sanitizeRedirectPath('/\\evil.example.com')).toBe('/')
+  })
+
+  it('rejects non-path values', () => {
+    expect(sanitizeRedirectPath('javascript:alert(1)')).toBe('/')
+    expect(sanitizeRedirectPath('pricing')).toBe('/')
+  })
+
+  it('respects a custom fallback', () => {
+    expect(sanitizeRedirectPath('https://evil.example.com', '/templates')).toBe('/templates')
   })
 })

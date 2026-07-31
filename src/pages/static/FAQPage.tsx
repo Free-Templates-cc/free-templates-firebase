@@ -74,8 +74,11 @@ export function FAQPage() {
         {faqs.map((faq, i) => (
           <div key={i} className="py-4">
             <button
+              type="button"
               onClick={() => setOpenIndex(openIndex === i ? null : i)}
               className="flex w-full items-center justify-between gap-4 text-left"
+              aria-expanded={openIndex === i}
+              aria-controls={`faq-panel-${i}`}
             >
               <span className="text-sm font-medium text-gray-900 dark:text-white">{faq.q}</span>
               <ChevronDown
@@ -85,7 +88,10 @@ export function FAQPage() {
               />
             </button>
             {openIndex === i && (
-              <div className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+              <div
+                id={`faq-panel-${i}`}
+                className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400"
+              >
                 {faq.a}
               </div>
             )}
