@@ -4,6 +4,7 @@ import {
   fetchTemplateBySlug,
   fetchRelatedTemplates,
   fetchDownloads,
+  recordDownload,
   createCheckoutSession,
   cancelSubscription,
   reactivateSubscription,
@@ -274,6 +275,24 @@ describe('api', () => {
     it('returns empty array for unknown userId', async () => {
       const downloads = await fetchDownloads('unknown-user')
       expect(downloads).toHaveLength(0)
+    })
+  })
+
+  describe('recordDownload', () => {
+    it('is a no-op in mock mode (no Firestore write)', async () => {
+      // In mock mode recordDownload must resolve without touching Firestore.
+      await expect(
+        recordDownload(
+          {
+            id: '2',
+            name: 'Business Plus',
+            slug: 'business-plus',
+            category: 'Business',
+            priceTier: 'premium',
+          },
+          'u1',
+        ),
+      ).resolves.toBeUndefined()
     })
   })
 

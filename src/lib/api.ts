@@ -7,7 +7,7 @@
  */
 
 import type { Template, TemplateFilters, Download } from '../types'
-import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore'
+import { collection, query, where, orderBy, limit, getDocs, addDoc } from 'firebase/firestore'
 import type { QueryConstraint, Timestamp } from 'firebase/firestore'
 import { db } from './firebase'
 
@@ -953,6 +953,35 @@ async function fetchDownloadsFromFirestore(userId: string): Promise<Download[]> 
   const q = query(downloadsRef, where('userId', '==', userId), orderBy('downloadedAt', 'desc'))
   const snapshot = await getDocs(q)
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as Download)
+}
+
+/**
+ * Record a template download in Firestore (`downloads/{id}`).
+ *
+ * The `onTemplateDownloaded` Cloud Function listens for these documents to
+ * increment the template download counter and the user's download count.
+ * No-op in mock mode; failures are swallowed because recording is
+ * best-effort and must never fail the download itself.
+ */
+export async function recordDownload(
+  template: Pick<Template, 'id' | 'name' | 'slug' | 'category' | 'priceTier'>,
+  userId: string,
+): Promise<void> {
+  if (!USE_FIRESTORE) return
+  try {
+    await addDoc(collection(db, 'downloads'), {
+      userId,
+      templateId: template.id,
+      templateName: template.name,
+      templateSlug: template.slug,
+      templateCategory: template.category,
+      priceTier: template.priceTier,
+      downloadedAt: new Date().toISOString(),
+    })
+  } catch (err) {
+    // Non-critical — the download already succeeded.
+    console.error('Failed to record download:', err)
+  }
 }
 
 /**

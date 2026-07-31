@@ -9,7 +9,7 @@ import { AuthDivider } from '../../components/auth/AuthDivider'
 import { GoogleSignInButton } from '../../components/auth/GoogleSignInButton'
 import { SEOHead } from '../../components/seo/SEOHead'
 import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth'
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '../../lib/firebase'
 import { trackSignUp } from '../../lib/analytics'
 import { getFirebaseAuthErrorMessage } from '../../lib/errors'
@@ -36,7 +36,14 @@ const registerSchema = z
 type RegisterForm = z.infer<typeof registerSchema>
 
 const createUserDoc = async (uid: string, name: string, email: string) => {
-  await setDoc(doc(db, 'users', uid), {
+  // Only create the profile on first sign-up. Returning users (e.g. a Google
+  // account that already exists) must keep their existing document — a plain
+  // set() would wipe subscription state and the Stripe customer ID.
+  const userDocRef = doc(db, 'users', uid)
+  const userDoc = await getDoc(userDocRef)
+  if (userDoc.exists()) return
+
+  await setDoc(userDocRef, {
     uid,
     displayName: name,
     email,

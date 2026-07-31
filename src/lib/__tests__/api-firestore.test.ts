@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
   getDocs: vi.fn(),
+  addDoc: vi.fn(),
   collection: vi.fn(() => 'templatesRef'),
   query: vi.fn(() => 'queryRef'),
   where: vi.fn(() => 'whereRef'),
@@ -16,6 +17,7 @@ vi.mock('firebase/firestore', () => ({
   orderBy: mocks.orderBy,
   limit: mocks.limit,
   getDocs: mocks.getDocs,
+  addDoc: mocks.addDoc,
   // firebase.ts imports these — vitest v4 validates mock exports against the
   // real module's evaluation, so they must exist
   getFirestore: vi.fn(() => ({ mockFirestore: true })),
@@ -37,6 +39,7 @@ import {
   fetchTemplateBySlug,
   fetchRelatedTemplates,
   fetchDownloads,
+  recordDownload,
   createCheckoutSession,
 } from '../api'
 
@@ -70,6 +73,7 @@ function makeSnapshot(docs: Array<{ id: string; data: Record<string, unknown> }>
 describe('api — Firestore mode (VITE_USE_FIREBASE_DATA=true)', () => {
   beforeEach(() => {
     mocks.getDocs.mockReset()
+    mocks.addDoc.mockReset()
     mocks.collection.mockClear()
     mocks.query.mockClear()
     mocks.where.mockClear()
@@ -241,6 +245,52 @@ describe('api — Firestore mode (VITE_USE_FIREBASE_DATA=true)', () => {
       expect(mocks.limit).toHaveBeenCalledWith(3)
       expect(result.map((t) => t.slug)).toEqual(['related-1', 'related-2'])
       expect(result[0]?.mainImage).toContain('picsum.photos/seed/related-1')
+    })
+  })
+
+  describe('recordDownload', () => {
+    it('writes a download record to the downloads collection', async () => {
+      mocks.addDoc.mockResolvedValue({ id: 'dl-new' })
+
+      await recordDownload(
+        {
+          id: '2',
+          name: 'Business Plus',
+          slug: 'business-plus',
+          category: 'Business',
+          priceTier: 'premium',
+        },
+        'u1',
+      )
+
+      expect(mocks.collection).toHaveBeenCalledWith(expect.anything(), 'downloads')
+      expect(mocks.addDoc).toHaveBeenCalledTimes(1)
+      expect(mocks.addDoc).toHaveBeenCalledWith('templatesRef', {
+        userId: 'u1',
+        templateId: '2',
+        templateName: 'Business Plus',
+        templateSlug: 'business-plus',
+        templateCategory: 'Business',
+        priceTier: 'premium',
+        downloadedAt: expect.any(String),
+      })
+    })
+
+    it('swallows Firestore errors so the download is never blocked', async () => {
+      mocks.addDoc.mockRejectedValue(new Error('permission-denied'))
+
+      await expect(
+        recordDownload(
+          {
+            id: '2',
+            name: 'Business Plus',
+            slug: 'business-plus',
+            category: 'Business',
+            priceTier: 'premium',
+          },
+          'u1',
+        ),
+      ).resolves.toBeUndefined()
     })
   })
 

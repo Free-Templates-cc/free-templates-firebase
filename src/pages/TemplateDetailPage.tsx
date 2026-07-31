@@ -9,7 +9,7 @@ import { SEOHead } from '../components/seo/SEOHead'
 import { useAuthStore } from '../stores/authStore'
 import { useTemplate, useRelatedTemplates } from '../hooks/useTemplate'
 import { useTemplateDownloadCount } from '../hooks/useTemplateDownloadCount'
-import { getDownloadUrl } from '../lib/api'
+import { getDownloadUrl, recordDownload } from '../lib/api'
 import { trackTemplateDownload } from '../lib/analytics'
 import { getErrorMessage } from '../lib/errors'
 import toast from 'react-hot-toast'
@@ -38,6 +38,11 @@ export function TemplateDetailPage() {
       window.open(url, '_blank', 'noopener,noreferrer')
       toast.success('Download started!')
       void trackTemplateDownload(template)
+      // Record the download in Firestore (no-op in mock mode) so the
+      // download counter, account stats, and history stay accurate.
+      if (user?.uid) {
+        void recordDownload(template, user.uid)
+      }
     } catch (err) {
       toast.error(getErrorMessage(err, 'Failed to start download. Please try again.'))
     } finally {

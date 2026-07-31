@@ -722,11 +722,16 @@ export const onTemplateDownloaded = onDocumentCreated(
           downloads: admin.firestore.FieldValue.increment(1),
         })
 
-      // Increment user download count
+      // Increment user download count. Use merge so the count still works
+      // for users without a profile doc yet (e.g. Google sign-in via the
+      // login page) instead of failing with NOT_FOUND.
       if (userId) {
-        await db.collection('users').doc(userId).update({
-          downloadCount: admin.firestore.FieldValue.increment(1),
-        })
+        await db.collection('users').doc(userId).set(
+          {
+            downloadCount: admin.firestore.FieldValue.increment(1),
+          },
+          { merge: true },
+        )
       }
 
       logger.info(`Download recorded: template=${templateId}, user=${userId || 'anonymous'}`)
