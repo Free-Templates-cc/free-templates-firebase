@@ -1,75 +1,123 @@
 {
-  "ignorePatterns": ["functions/**"],
-  "ignoreDependencies": ["@fission-ai/openspec", "firebase-admin", "tailwindcss"],
-  "ignoreUnresolvedImports": ["./firebase", "**/firebase"],
+  "ignorePatterns": [
+    "functions/**"
+  ],
+  "ignoreDependencies": [
+    "@fission-ai/openspec",
+    "firebase-admin",
+    "tailwindcss"
+  ],
+  "ignoreUnresolvedImports": [
+    "./firebase",
+    "**/firebase",
+    "**/__/firebase/**"
+  ],
   "duplicates": {
-    "ignore": ["src/pages/static/**"]
+    "ignore": [
+      "src/pages/static/**"
+    ]
   },
   "health": {
     "maxCyclomatic": 25,
     "maxCognitive": 25,
     "maxCrap": 100,
-    "ignore": ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"],
+    "ignore": [
+      "**/__tests__/**",
+      "**/*.test.ts",
+      "**/*.test.tsx"
+    ],
     "thresholdOverrides": [
       {
-        "files": ["src/pages/BrowsePage.tsx"],
-        "functions": ["BrowsePage"],
+        "files": [
+          "src/pages/BrowsePage.tsx"
+        ],
+        "functions": [
+          "BrowsePage"
+        ],
         "maxCyclomatic": 31,
         "maxCognitive": 32,
         "maxCrap": 950,
         "reason": "Large page component (filters, URL params, pagination); extracting sub-components is a tracked follow-up refactor."
       },
       {
-        "files": ["src/pages/TemplateDetailPage.tsx"],
-        "functions": ["TemplateDetailPage"],
+        "files": [
+          "src/pages/TemplateDetailPage.tsx"
+        ],
+        "functions": [
+          "TemplateDetailPage"
+        ],
         "maxCyclomatic": 23,
         "maxCognitive": 28,
         "maxCrap": 500,
         "reason": "Large detail page (gallery, download flow, related templates); extraction is a tracked follow-up refactor."
       },
       {
-        "files": ["src/pages/AccountPage.tsx"],
-        "functions": ["AccountPage"],
+        "files": [
+          "src/pages/AccountPage.tsx"
+        ],
+        "functions": [
+          "AccountPage"
+        ],
         "maxCyclomatic": 19,
         "maxCognitive": 17,
         "maxCrap": 350,
         "reason": "Account page render with subscription-state branches; extraction is a tracked follow-up refactor."
       },
       {
-        "files": ["src/pages/AccountPage.tsx"],
-        "functions": ["SubscriptionContent"],
+        "files": [
+          "src/pages/AccountPage.tsx"
+        ],
+        "functions": [
+          "SubscriptionContent"
+        ],
         "maxCyclomatic": 18,
         "maxCognitive": 15,
         "maxCrap": 300,
         "reason": "Subscription status matrix (active/past_due/canceled/free) rendered in one component."
       },
       {
-        "files": ["src/pages/account/DownloadHistoryPage.tsx"],
-        "functions": ["DownloadHistoryPage"],
+        "files": [
+          "src/pages/account/DownloadHistoryPage.tsx"
+        ],
+        "functions": [
+          "DownloadHistoryPage"
+        ],
         "maxCyclomatic": 16,
         "maxCognitive": 10,
         "maxCrap": 250,
         "reason": "History page with loading/error/empty/list states."
       },
       {
-        "files": ["src/pages/PricingPage.tsx"],
-        "functions": ["PricingCard"],
+        "files": [
+          "src/pages/PricingPage.tsx"
+        ],
+        "functions": [
+          "PricingCard"
+        ],
         "maxCyclomatic": 15,
         "maxCognitive": 21,
         "maxCrap": 200,
         "reason": "Pricing card with plan feature lists and CTA variants."
       },
       {
-        "files": ["vite.config.ts"],
-        "functions": ["manualChunks"],
+        "files": [
+          "vite.config.ts"
+        ],
+        "functions": [
+          "manualChunks"
+        ],
         "maxCyclomatic": 14,
         "maxCognitive": 11,
         "maxCrap": 180,
         "reason": "manualChunks splitting function for the Firebase SDK."
       },
       {
-        "files": ["src/pages/auth/RegisterPage.tsx"],
-        "functions": ["RegisterPage"],
+        "files": [
+          "src/pages/auth/RegisterPage.tsx"
+        ],
+        "functions": [
+          "RegisterPage"
+        ],
         "maxCyclomatic": 10,
         "maxCognitive": 10,
         "maxCrap": 80,
