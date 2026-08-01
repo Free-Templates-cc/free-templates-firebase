@@ -1022,9 +1022,22 @@ async function callFunction<T>(name: string, payload: Record<string, unknown>): 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
-  const body: FunctionResponse<T> = await res.json()
-  if (!res.ok || body.error) {
-    throw new Error(body.error || `Function returned ${res.status}`)
+
+  // Parse the body defensively: non-JSON responses (e.g. HTML error pages
+  // from the hosting layer) must not mask the real HTTP error with a
+  // confusing SyntaxError from res.json().
+  let body: FunctionResponse<T> | null = null
+  try {
+    body = (await res.json()) as FunctionResponse<T>
+  } catch {
+    body = null
+  }
+
+  if (!res.ok || body?.error) {
+    throw new Error(body?.error || `Function returned ${res.status}`)
+  }
+  if (!body) {
+    throw new Error('Function returned an empty response.')
   }
   return body as T
 }

@@ -30,6 +30,33 @@ initializeApp()
 const db = getFirestore()
 const storage = getStorage()
 
+/**
+ * Hosts allowed as Stripe Checkout return URLs. Stripe does not restrict
+ * `success_url`/`cancel_url`, so without this check an attacker could craft
+ * a session that bounces the customer to a lookalike page after payment.
+ */
+const ALLOWED_RETURN_HOSTS = ['free-templates.cc']
+
+function isAllowedReturnUrl(url: string | undefined): boolean {
+  if (!url) return true
+  try {
+    const parsed = new URL(url)
+    if (parsed.protocol === 'https:' && ALLOWED_RETURN_HOSTS.includes(parsed.hostname)) {
+      return true
+    }
+    // Local development (Firebase emulators + Vite dev server)
+    if (
+      parsed.protocol === 'http:' &&
+      (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1')
+    ) {
+      return true
+    }
+  } catch {
+    // Malformed URL — rejected below
+  }
+  return false
+}
+
 // ---------------------------------------------------------------------------
 // 1. createCheckoutSession
 // ---------------------------------------------------------------------------
@@ -76,6 +103,16 @@ export const createCheckoutSession = onRequest(
       // Validate uid
       if (!uid || typeof uid !== 'string') {
         res.status(400).json({ error: 'Missing or invalid uid.' })
+        return
+      }
+
+      // Reject return URLs that don't point back at our own app
+      if (successUrl && !isAllowedReturnUrl(successUrl)) {
+        res.status(400).json({ error: 'Invalid successUrl.' })
+        return
+      }
+      if (cancelUrl && !isAllowedReturnUrl(cancelUrl)) {
+        res.status(400).json({ error: 'Invalid cancelUrl.' })
         return
       }
 
@@ -134,6 +171,10 @@ export const createCheckoutSession = onRequest(
         allow_promotion_codes: true,
       })
 
+      if (!session.url) {
+        res.status(500).json({ error: 'Checkout session returned no URL.' })
+        return
+      }
       res.json({ url: session.url })
     } catch (err) {
       logger.error('createCheckoutSession failed', err)
@@ -235,17 +276,21 @@ async function handleCheckoutCompleted(
   session: Stripe.Checkout.Session,
   stripe: Stripe,
 ): Promise<void> {
-  const firebaseUID = session.metadata?.firebaseUID
-  if (!firebaseUID) {
-    logger.warn('checkout.session.completed missing firebaseUID metadata')
-    return
-  }
-
   const subscriptionId = session.subscription as string
   if (!subscriptionId) return
 
   // Fetch full subscription details
   const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+
+  // The firebaseUID is written to the subscription via
+  // `subscription_data.metadata` when the session is created; session-level
+  // metadata only exists when top-level `metadata` was passed. Read both so
+  // activation doesn't silently depend on a later `subscription.updated`.
+  const firebaseUID = session.metadata?.firebaseUID ?? subscription.metadata?.firebaseUID
+  if (!firebaseUID) {
+    logger.warn('checkout.session.completed missing firebaseUID metadata')
+    return
+  }
 
   const tier = subscription.metadata?.tier ?? 'premium'
   const currentPeriodEnd = new Date(subscription.current_period_end * 1000)

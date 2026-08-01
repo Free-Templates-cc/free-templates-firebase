@@ -35,7 +35,15 @@ export function BrowsePage() {
 
   const { data, isLoading, isFetching, isError } = useTemplates({ filters, page })
 
-  const updateFilter = (key: keyof TemplateFilters, value: string) => {
+  /**
+   * Update a single filter in the URL params.
+   *
+   * `replace` is used for the free-text search input so typing doesn't push
+   * a new history entry per keystroke; discrete filters and pagination keep
+   * the default push semantics so back/forward still navigates between
+   * filter states.
+   */
+  const updateFilter = (key: keyof TemplateFilters, value: string, replace = false) => {
     const params = new URLSearchParams(searchParams)
     if (value) {
       params.set(key, value)
@@ -44,7 +52,7 @@ export function BrowsePage() {
     }
     // Reset to page 1 when filters change
     params.delete('page')
-    setSearchParams(params)
+    setSearchParams(params, { replace })
   }
 
   const goToPage = (p: number) => {
@@ -100,7 +108,7 @@ export function BrowsePage() {
           <input
             type="text"
             value={filters.search}
-            onChange={(e) => updateFilter('search', e.target.value)}
+            onChange={(e) => updateFilter('search', e.target.value, true)}
             placeholder="Search templates..."
             className="w-full rounded-lg border border-gray-300 bg-gray-50 py-2 pl-10 pr-4 text-sm focus:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
           />
@@ -463,11 +471,9 @@ function EmptyState({
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
           This page is out of range. Head back to the first page to keep browsing.
         </p>
-        <button onClick={onGoToFirstPage} className="mt-4">
-          <Button variant="outline" size="sm">
-            Go to first page
-          </Button>
-        </button>
+        <Button variant="outline" size="sm" className="mt-4" onClick={onGoToFirstPage}>
+          Go to first page
+        </Button>
       </>
     )
   }
@@ -479,11 +485,9 @@ function EmptyState({
         Try adjusting your search or filters to find what you're looking for.
       </p>
       {hasFilters && (
-        <button onClick={onClearFilters} className="mt-4">
-          <Button variant="outline" size="sm">
-            Clear all filters
-          </Button>
-        </button>
+        <Button variant="outline" size="sm" className="mt-4" onClick={onClearFilters}>
+          Clear all filters
+        </Button>
       )}
     </>
   )

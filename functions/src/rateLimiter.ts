@@ -22,21 +22,33 @@ interface Bucket {
 // Map of IP → { tokens, lastRefill }
 const buckets = new Map<string, Bucket>()
 
+/**
+ * Map of uid → { tokens, lastRefill }.
+ * Separate bucket pool from the IP limiter.
+ */
+const uidBuckets = new Map<string, Bucket>()
+
 // Clean up stale entries every 5 minutes to prevent memory leaks
 const CLEANUP_INTERVAL_MS = 5 * 60 * 1000
 const MAX_AGE_MS = 10 * 60 * 1000
 
 let lastCleanup = Date.now()
 
+/** Drop buckets that haven't been touched within `MAX_AGE_MS`. */
+function purgeStale(entries: Map<string, Bucket>, now: number) {
+  for (const [key, bucket] of entries) {
+    if (now - bucket.lastRefill > MAX_AGE_MS) {
+      entries.delete(key)
+    }
+  }
+}
+
 function cleanup() {
   const now = Date.now()
   if (now - lastCleanup < CLEANUP_INTERVAL_MS) return
   lastCleanup = now
-  for (const [key, bucket] of buckets) {
-    if (now - bucket.lastRefill > MAX_AGE_MS) {
-      buckets.delete(key)
-    }
-  }
+  purgeStale(buckets, now)
+  purgeStale(uidBuckets, now)
 }
 
 /**
@@ -84,8 +96,6 @@ export function rateLimitByIp(
  * Simple in-memory rate limiter keyed by a custom identifier (e.g. uid).
  * Separate bucket pool from IP limiter.
  */
-const uidBuckets = new Map<string, Bucket>()
-
 export function rateLimitByUid(
   uid: string | undefined,
   maxRequests: number,
