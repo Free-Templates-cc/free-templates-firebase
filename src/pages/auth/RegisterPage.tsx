@@ -9,12 +9,12 @@ import { AuthDivider } from '../../components/auth/AuthDivider'
 import { GoogleSignInButton } from '../../components/auth/GoogleSignInButton'
 import { SEOHead } from '../../components/seo/SEOHead'
 import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth'
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
-import { auth, db } from '../../lib/firebase'
+import { auth } from '../../lib/firebase'
 import { trackSignUp } from '../../lib/analytics'
 import { getFirebaseAuthErrorMessage } from '../../lib/errors'
-import { useGoogleSignIn } from '../../hooks/useGoogleSignIn'
+import { useGoogleAuthFlow } from '../../hooks/useGoogleAuthFlow'
 import { sanitizeRedirectPath } from '../../lib/utils'
+import { createUserDoc } from '../../lib/userProfile'
 import toast from 'react-hot-toast'
 import { Mail, Lock, User } from 'lucide-react'
 
@@ -35,29 +35,6 @@ const registerSchema = z
 
 type RegisterForm = z.infer<typeof registerSchema>
 
-const createUserDoc = async (uid: string, name: string, email: string) => {
-  // Only create the profile on first sign-up. Returning users (e.g. a Google
-  // account that already exists) must keep their existing document — a plain
-  // set() would wipe subscription state and the Stripe customer ID.
-  const userDocRef = doc(db, 'users', uid)
-  const userDoc = await getDoc(userDocRef)
-  if (userDoc.exists()) return
-
-  await setDoc(userDocRef, {
-    uid,
-    displayName: name,
-    email,
-    role: 'user',
-    subscription: {
-      status: 'incomplete',
-      tier: 'free',
-    },
-    downloadCount: 0,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  })
-}
-
 const iconClass = 'h-4 w-4'
 
 export function RegisterPage() {
@@ -66,14 +43,10 @@ export function RegisterPage() {
   const redirectTo = sanitizeRedirectPath(searchParams.get('redirect'))
   const [error, setError] = useState('')
 
-  const { handleSignIn: handleGoogleRegister, isLoading: googleLoading } = useGoogleSignIn({
-    onSuccess: async (user, isNewUser) => {
-      await createUserDoc(user.uid, user.displayName || 'User', user.email ?? '')
-      if (isNewUser) void trackSignUp('google')
-      navigate(redirectTo)
-    },
-    onError: setError,
-  })
+  const { handleSignIn: handleGoogleRegister, isLoading: googleLoading } = useGoogleAuthFlow(
+    redirectTo,
+    setError,
+  )
 
   const {
     register,

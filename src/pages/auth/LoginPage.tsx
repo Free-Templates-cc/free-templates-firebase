@@ -9,9 +9,8 @@ import { GoogleSignInButton } from '../../components/auth/GoogleSignInButton'
 import { SEOHead } from '../../components/seo/SEOHead'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../lib/firebase'
-import { trackSignUp } from '../../lib/analytics'
 import { getFirebaseAuthErrorMessage } from '../../lib/errors'
-import { useGoogleSignIn } from '../../hooks/useGoogleSignIn'
+import { useGoogleAuthFlow } from '../../hooks/useGoogleAuthFlow'
 import { sanitizeRedirectPath } from '../../lib/utils'
 import { Mail, Lock } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -29,13 +28,10 @@ export function LoginPage() {
   const redirectTo = sanitizeRedirectPath(searchParams.get('redirect'))
   const [error, setError] = useState('')
 
-  const { handleSignIn: handleGoogleLogin, isLoading: googleLoading } = useGoogleSignIn({
-    onSuccess: async (_, isNewUser) => {
-      if (isNewUser) void trackSignUp('google')
-      navigate(redirectTo)
-    },
-    onError: setError,
-  })
+  const { handleSignIn: handleGoogleLogin, isLoading: googleLoading } = useGoogleAuthFlow(
+    redirectTo,
+    setError,
+  )
 
   const {
     register,
