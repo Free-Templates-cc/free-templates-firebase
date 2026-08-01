@@ -53,14 +53,17 @@ export function initAuthListener() {
               useAuthStore.setState({
                 profile,
                 // Mirror the server-side gate in the getDownloadUrl Cloud
-                // Function: premium access requires an unexpired billing
-                // period, not just tier/status. Otherwise a subscriber whose
-                // period ended (but who hasn't been flipped by the daily
-                // cleanup job yet) keeps premium UI and passes PremiumRoute
-                // while the backend correctly rejects downloads with 403.
+                // Function and the Storage rules: premium access requires an
+                // unexpired billing period, and `past_due` subscribers keep
+                // access during the Stripe grace period. Anything stricter
+                // would show non-premium UI to users the backend still lets
+                // download (and anything looser would keep premium UI after
+                // the period ended but before the daily cleanup job flipped
+                // the status — while the backend correctly 403s the download).
                 isPremium:
                   profile.subscription?.tier === 'premium' &&
-                  profile.subscription?.status === 'active' &&
+                  (profile.subscription?.status === 'active' ||
+                    profile.subscription?.status === 'past_due') &&
                   (periodEnd ? periodEnd.toDate() > new Date() : false),
                 isAdmin: profile.role === 'admin',
                 isLoading: false,

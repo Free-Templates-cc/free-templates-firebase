@@ -172,6 +172,41 @@ describe('authStore', () => {
     expect(state.isAdmin).toBe(false)
   })
 
+  it('keeps premium access for past_due subscribers within the grace period', () => {
+    // Mirrors the server-side gate (getDownloadUrl CF + Storage rules): a
+    // past_due subscriber with an unexpired billing period still has access.
+    const mockUser = { uid: 'pastdue-uid', email: 'pastdue@example.com' }
+
+    mockOnAuthStateChanged.mockImplementation(
+      (_auth: unknown, callback: (user: unknown) => void) => {
+        callback(mockUser)
+        return vi.fn()
+      },
+    )
+
+    mockOnSnapshot.mockImplementation((_docRef: unknown, onNext: (snapshot: unknown) => void) => {
+      onNext({
+        exists: () => true,
+        data: () => ({
+          displayName: 'Past Due User',
+          email: 'pastdue@example.com',
+          role: 'user',
+          subscription: {
+            tier: 'premium',
+            status: 'past_due', // invoice failed, but grace period not over
+            currentPeriodEnd: { toDate: () => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) },
+          },
+        }),
+      })
+      return mockUnsubscribe
+    })
+
+    initAuthListener()
+
+    const state = useAuthStore.getState()
+    expect(state.isPremium).toBe(true)
+  })
+
   it('does not treat an expired subscription as premium', () => {
     const mockUser = { uid: 'expired-uid', email: 'expired@example.com' }
 

@@ -845,3 +845,12 @@ Comprehensive test coverage expansion targeting **100% statement, branch, functi
   - `e2e/pricing.spec.ts` — toggle test asserts `€12`/`€96`.
 - **Audit verification:** tsc -b clean, oxlint 0/0, 358/358 unit tests passing, fallow audit/health/dead-code/dupes clean (4 security candidates verified as false positives: CF-backed Stripe/Storage URLs + fixed-host function fetch), knip clean.
 - **Still blocked (3):** Lighthouse audit (needs deployment), Domain config (needs Firebase project), OpenSpec CI integration (deferred — interactive mode).
+
+### 2026-08-01 — Continuous implementation audit (2nd pass)
+- **Fix:** Client `isPremium` gate now fully mirrors the server-side gate (getDownloadUrl Cloud Function + Storage rules): `past_due` subscribers with an unexpired billing period keep premium access during the Stripe grace period. Previously the client only accepted `status === 'active'`, so a subscriber whose payment failed saw "You still have full access during the grace period" on the Account page while the UI (TemplateDetailPage download button, PremiumRoute) locked them out — even though the backend allowed the download.
+  - `src/stores/authStore.ts` — `isPremium` accepts `active` or `past_due` with unexpired `currentPeriodEnd`.
+  - `src/pages/AccountPage.tsx` — uses the store's `isPremium` instead of recomputing it locally without the period-end check (a subscriber whose period ended, but who hadn't been flipped by the daily cleanup job yet, was shown the Premium badge + Cancel button while downloads 403'd).
+  - `src/pages/PricingPage.tsx` — "Current Plan" state now uses the store's `isPremium` instead of a tier-only check (expired subscribers are offered "Upgrade Now" instead of a dead "Current Plan" button).
+  - `src/stores/__tests__/authStore.test.ts` — new test: past_due + unexpired period ⇒ `isPremium === true`.
+- **Audit verification:** tsc -b clean, oxlint 0/0, 359/359 unit tests passing, fallow audit/health/dead-code/dupes clean, knip clean.
+- **Still blocked (3):** Lighthouse audit (needs deployment), Domain config (needs Firebase project), OpenSpec CI integration (deferred — interactive mode).

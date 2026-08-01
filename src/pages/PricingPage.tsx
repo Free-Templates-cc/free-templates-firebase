@@ -44,14 +44,14 @@ function PricingCard({
   plan,
   annual,
   user,
-  profile,
+  isPremium,
   isCreatingCheckout,
   onCheckout,
 }: {
   plan: (typeof plans)[number]
   annual: boolean
   user: { uid: string } | null
-  profile: { subscription?: { tier?: string } } | null
+  isPremium: boolean
   isCreatingCheckout: boolean
   onCheckout: (planKey: string) => void
 }) {
@@ -105,7 +105,7 @@ function PricingCard({
       <div className="mt-8">
         {user ? (
           plan.name === 'Premium' ? (
-            profile?.subscription?.tier === 'premium' ? (
+            isPremium ? (
               <Button variant="outline" size="lg" className="w-full" disabled>
                 Current Plan
               </Button>
@@ -149,7 +149,7 @@ function PricingCard({
 export function PricingPage() {
   const [annual, setAnnual] = useState(false)
   const [isCreatingCheckout, setIsCreatingCheckout] = useState(false)
-  const { user, profile } = useAuthStore()
+  const { user, isPremium } = useAuthStore()
 
   const handleCheckout = async (planKey: string) => {
     if (!user?.uid) {
@@ -224,7 +224,7 @@ export function PricingPage() {
             plan={plan}
             annual={annual}
             user={user}
-            profile={profile}
+            isPremium={isPremium}
             isCreatingCheckout={isCreatingCheckout}
             onCheckout={handleCheckout}
           />

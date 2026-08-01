@@ -189,8 +189,9 @@ function SubscriptionContent({
   }
 
   // --- Canceled at period end, still within the billing period ---
-  // `isPremium` already requires status 'active', so the scheduled-cancellation
-  // state is identified by the presence of `canceledAt` (set by the
+  // `isPremium` already requires an unexpired billing period (status
+  // 'active' or 'past_due'), so the scheduled-cancellation state is
+  // identified by the presence of `canceledAt` (set by the
   // cancelSubscription Cloud Function), not by status === 'canceled'.
   if (isPremium && canceledAt) {
     return (
@@ -290,7 +291,7 @@ function SubscriptionContent({
 // ---------------------------------------------------------------------------
 
 export function AccountPage() {
-  const { user, profile, isLoading } = useAuthStore()
+  const { user, profile, isLoading, isPremium } = useAuthStore()
   const location = useLocation()
 
   // Change password state
@@ -360,8 +361,6 @@ export function AccountPage() {
   }
 
   const isGoogleUser = user.providerData.some((p) => p?.providerId === 'google.com')
-  const isPremium =
-    profile?.subscription?.tier === 'premium' && profile?.subscription?.status === 'active'
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
