@@ -1,5 +1,10 @@
 @import 'tailwindcss';
 
+/* The app toggles dark mode via a `.dark` class on <html> (see stores/uiStore),
+ * so `dark:` utilities must respond to the class instead of the OS
+ * `prefers-color-scheme` media query (Tailwind v4 default). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary-50: #eef2ff;
   --color-primary-100: #e0e7ff;
