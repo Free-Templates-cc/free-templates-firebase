@@ -49,11 +49,19 @@ export function initAuthListener() {
           (snapshot) => {
             if (snapshot.exists()) {
               const profile = snapshot.data() as UserProfile
+              const periodEnd = profile.subscription?.currentPeriodEnd
               useAuthStore.setState({
                 profile,
+                // Mirror the server-side gate in the getDownloadUrl Cloud
+                // Function: premium access requires an unexpired billing
+                // period, not just tier/status. Otherwise a subscriber whose
+                // period ended (but who hasn't been flipped by the daily
+                // cleanup job yet) keeps premium UI and passes PremiumRoute
+                // while the backend correctly rejects downloads with 403.
                 isPremium:
                   profile.subscription?.tier === 'premium' &&
-                  profile.subscription?.status === 'active',
+                  profile.subscription?.status === 'active' &&
+                  (periodEnd ? periodEnd.toDate() > new Date() : false),
                 isAdmin: profile.role === 'admin',
                 isLoading: false,
                 initialized: true,

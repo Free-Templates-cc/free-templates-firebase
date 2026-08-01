@@ -155,7 +155,11 @@ describe('authStore', () => {
           displayName: 'Premium User',
           email: 'premium@example.com',
           role: 'user',
-          subscription: { tier: 'premium', status: 'active' },
+          subscription: {
+            tier: 'premium',
+            status: 'active',
+            currentPeriodEnd: { toDate: () => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) },
+          },
         }),
       })
       return mockUnsubscribe
@@ -166,6 +170,39 @@ describe('authStore', () => {
     const state = useAuthStore.getState()
     expect(state.isPremium).toBe(true)
     expect(state.isAdmin).toBe(false)
+  })
+
+  it('does not treat an expired subscription as premium', () => {
+    const mockUser = { uid: 'expired-uid', email: 'expired@example.com' }
+
+    mockOnAuthStateChanged.mockImplementation(
+      (_auth: unknown, callback: (user: unknown) => void) => {
+        callback(mockUser)
+        return vi.fn()
+      },
+    )
+
+    mockOnSnapshot.mockImplementation((_docRef: unknown, onNext: (snapshot: unknown) => void) => {
+      onNext({
+        exists: () => true,
+        data: () => ({
+          displayName: 'Expired User',
+          email: 'expired@example.com',
+          role: 'user',
+          subscription: {
+            tier: 'premium',
+            status: 'active', // cleanup job hasn't flipped it yet
+            currentPeriodEnd: { toDate: () => new Date(Date.now() - 24 * 60 * 60 * 1000) },
+          },
+        }),
+      })
+      return mockUnsubscribe
+    })
+
+    initAuthListener()
+
+    const state = useAuthStore.getState()
+    expect(state.isPremium).toBe(false)
   })
 
   it('detects admin role', () => {
