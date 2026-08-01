@@ -1,11 +1,9 @@
-import { Helmet } from 'react-helmet-async'
+import { SEOHead } from '../../components/seo/SEOHead'
 
 export function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-      <Helmet>
-        <title>Privacy Policy — Free Templates</title>
-      </Helmet>
+      <SEOHead title="Privacy Policy — Free Templates" />
       <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Privacy Policy</h1>
       <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Last updated: July 29, 2026</p>
 

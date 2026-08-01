@@ -10,6 +10,7 @@
  */
 
 import * as logger from 'firebase-functions/logger'
+import { setGlobalOptions } from 'firebase-functions/v2'
 import { onDocumentCreated } from 'firebase-functions/v2/firestore'
 import { onSchedule } from 'firebase-functions/v2/scheduler'
 import { onRequest } from 'firebase-functions/v2/https'
@@ -21,6 +22,11 @@ import * as admin from 'firebase-admin'
 import { PLANS, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, APP_CURRENCY } from './config'
 import { rateLimitByIp, rateLimitByUid } from './rateLimiter'
 import type { PlanKey } from './config'
+
+// The web app resolves function URLs against `europe-west1` (see
+// `getFunctionUrl` in src/lib/api.ts), so all functions must deploy to the
+// same region or every client call 404s in production.
+setGlobalOptions({ region: 'europe-west1' })
 
 // ---------------------------------------------------------------------------
 // Initialize Firebase Admin

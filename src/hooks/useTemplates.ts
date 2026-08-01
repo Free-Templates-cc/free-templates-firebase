@@ -24,13 +24,19 @@ export function useTemplates({ filters, page = 1, pageSize = 9 }: UseTemplatesOp
 
 /**
  * Convenience: extract the default filters object from URLSearchParams.
+ *
+ * `priceTier`/`sort` are validated against the known values so a hand-edited
+ * or stale URL (e.g. `?priceTier=bogus`) falls back to the defaults instead
+ * of producing an empty result grid with a misleading active-filter chip.
  */
 export function filtersFromParams(params: URLSearchParams): TemplateFilters {
+  const priceTier = params.get('priceTier')
+  const sort = params.get('sort')
   return {
     search: params.get('search') || '',
     category: params.get('category') || '',
     framework: params.get('framework') || '',
-    priceTier: (params.get('priceTier') as TemplateFilters['priceTier']) || 'all',
-    sort: (params.get('sort') as TemplateFilters['sort']) || 'newest',
+    priceTier: priceTier === 'free' || priceTier === 'premium' ? priceTier : 'all',
+    sort: sort === 'popular' || sort === 'name' ? sort : 'newest',
   }
 }

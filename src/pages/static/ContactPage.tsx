@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Helmet } from 'react-helmet-async'
+import { SEOHead } from '../../components/seo/SEOHead'
 import { Button } from '../../components/ui/Button'
 import { Mail, MessageSquare, Send } from 'lucide-react'
 
@@ -13,9 +13,7 @@ export function ContactPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
-      <Helmet>
-        <title>Contact Us — Free Templates</title>
-      </Helmet>
+      <SEOHead title="Contact Us — Free Templates" />
 
       {sent ? (
         <div className="text-center">

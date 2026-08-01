@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Helmet } from 'react-helmet-async'
+import { SEOHead } from '../../components/seo/SEOHead'
 import { ChevronDown } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 
@@ -60,9 +60,7 @@ export function FAQPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-      <Helmet>
-        <title>FAQ — Free Templates</title>
-      </Helmet>
+      <SEOHead title="FAQ — Free Templates" />
       <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
         Frequently Asked Questions
       </h1>

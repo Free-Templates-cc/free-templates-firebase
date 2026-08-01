@@ -250,7 +250,7 @@ describe('filtersFromParams', () => {
 
   it('defaults priceTier to "all" for invalid values', () => {
     const filters = filtersFromParams(new URLSearchParams('priceTier=invalid'))
-    expect(filters.priceTier).toBe('invalid' as any)
+    expect(filters.priceTier).toBe('all')
   })
 
   it('parses sort param', () => {
@@ -260,6 +260,11 @@ describe('filtersFromParams', () => {
 
   it('defaults sort to "newest" for missing param', () => {
     const filters = filtersFromParams(new URLSearchParams(''))
+    expect(filters.sort).toBe('newest')
+  })
+
+  it('defaults sort to "newest" for invalid values', () => {
+    const filters = filtersFromParams(new URLSearchParams('sort=invalid'))
     expect(filters.sort).toBe('newest')
   })
 

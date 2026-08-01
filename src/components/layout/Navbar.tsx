@@ -6,6 +6,7 @@ import { Search, Menu, X, Moon, Sun, Download, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 import { auth } from '../../lib/firebase'
 import { signOut } from 'firebase/auth'
+import toast from 'react-hot-toast'
 
 export function Navbar() {
   const { user, profile } = useAuthStore()
@@ -26,9 +27,15 @@ export function Navbar() {
   }
 
   const handleSignOut = async () => {
-    await signOut(auth)
-    setShowUserMenu(false)
-    navigate('/')
+    try {
+      await signOut(auth)
+      setShowUserMenu(false)
+      navigate('/')
+    } catch {
+      // signOut can reject when the network is unavailable — keep the menu
+      // usable instead of leaving an unhandled rejection.
+      toast.error('Failed to sign out. Please try again.')
+    }
   }
 
   return (

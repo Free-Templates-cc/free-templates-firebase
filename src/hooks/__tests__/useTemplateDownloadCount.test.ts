@@ -58,13 +58,7 @@ describe('useTemplateDownloadCount', () => {
 
   it('fetches download count for a template', async () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.5)
-    ;(api.fetchTemplates as Mock).mockResolvedValue({
-      items: [mockTemplate],
-      total: 1,
-      page: 1,
-      pageSize: 100,
-      totalPages: 1,
-    })
+    ;(api.fetchTemplateBySlug as Mock).mockResolvedValue(mockTemplate)
 
     const { result } = renderHook(() => useTemplateDownloadCount('portfolio-pro'), {
       wrapper: Wrapper,
@@ -74,22 +68,12 @@ describe('useTemplateDownloadCount', () => {
 
     // Math.random returns 0.5, so delta = floor(0.5 * 3) - 1 = 1 - 1 = 0
     expect(result.current.data).toBe(3421)
-    expect(api.fetchTemplates).toHaveBeenCalledWith(
-      { search: '', category: '', framework: '', priceTier: 'all', sort: 'popular' },
-      1,
-      100,
-    )
+    expect(api.fetchTemplateBySlug).toHaveBeenCalledWith('portfolio-pro')
   })
 
   it('applies a small random delta to simulate live count', async () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.95)
-    ;(api.fetchTemplates as Mock).mockResolvedValue({
-      items: [mockTemplate],
-      total: 1,
-      page: 1,
-      pageSize: 100,
-      totalPages: 1,
-    })
+    ;(api.fetchTemplateBySlug as Mock).mockResolvedValue(mockTemplate)
 
     const { result } = renderHook(() => useTemplateDownloadCount('portfolio-pro'), {
       wrapper: Wrapper,
@@ -103,13 +87,7 @@ describe('useTemplateDownloadCount', () => {
 
   it('allows negative delta', async () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
-    ;(api.fetchTemplates as Mock).mockResolvedValue({
-      items: [mockTemplate],
-      total: 1,
-      page: 1,
-      pageSize: 100,
-      totalPages: 1,
-    })
+    ;(api.fetchTemplateBySlug as Mock).mockResolvedValue(mockTemplate)
 
     const { result } = renderHook(() => useTemplateDownloadCount('portfolio-pro'), {
       wrapper: Wrapper,
@@ -122,13 +100,7 @@ describe('useTemplateDownloadCount', () => {
   })
 
   it('throws error when template is not found', async () => {
-    ;(api.fetchTemplates as Mock).mockResolvedValue({
-      items: [],
-      total: 0,
-      page: 1,
-      pageSize: 100,
-      totalPages: 0,
-    })
+    ;(api.fetchTemplateBySlug as Mock).mockResolvedValue(null)
 
     const { result } = renderHook(() => useTemplateDownloadCount('nonexistent'), {
       wrapper: Wrapper,
@@ -140,13 +112,7 @@ describe('useTemplateDownloadCount', () => {
 
   it('has polling interval configured', async () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.5)
-    ;(api.fetchTemplates as Mock).mockResolvedValue({
-      items: [mockTemplate],
-      total: 1,
-      page: 1,
-      pageSize: 100,
-      totalPages: 1,
-    })
+    ;(api.fetchTemplateBySlug as Mock).mockResolvedValue(mockTemplate)
 
     const { result } = renderHook(() => useTemplateDownloadCount('portfolio-pro'), {
       wrapper: Wrapper,

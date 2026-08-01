@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { fetchTemplates } from '../lib/api'
-import type { Template, TemplateFilters } from '../types'
+import { fetchTemplateBySlug } from '../lib/api'
 
 /**
  * Mock hook for live download counter — fetches a single template
@@ -12,15 +11,7 @@ export function useTemplateDownloadCount(slug: string) {
   return useQuery({
     queryKey: ['template', slug, 'download-count'],
     queryFn: async (): Promise<number> => {
-      const filters: TemplateFilters = {
-        search: '',
-        category: '',
-        framework: '',
-        priceTier: 'all',
-        sort: 'popular',
-      }
-      const templates = await fetchTemplates(filters, 1, 100)
-      const template = templates.items.find((t: Template) => t.slug === slug)
+      const template = await fetchTemplateBySlug(slug)
       if (!template) throw new Error('Template not found')
       // Simulate a live-ish count by toggling a small random delta
       return template.downloads + Math.floor(Math.random() * 3) - 1
