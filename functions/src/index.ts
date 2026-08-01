@@ -381,14 +381,24 @@ async function handleSubscriptionUpdated(
 
   const currentPeriodEnd = new Date(subscription.current_period_end * 1000)
 
-  await db.collection('users').doc(firebaseUID).update({
+  // Preserve the cancellation marker while a period-end cancellation is
+  // scheduled: Stripe keeps `status: 'active'` with `cancel_at_period_end: true`
+  // until the period actually ends, so naively mapping canceledAt from the
+  // status alone would wipe the marker right after the user cancels.
+  const update: Record<string, unknown> = {
     'subscription.status': status,
     'subscription.tier': subscription.metadata?.tier ?? 'premium',
     'subscription.currentPeriodEnd': currentPeriodEnd,
-    'subscription.canceledAt':
-      status === 'canceled' ? new Date() : null,
     updatedAt: new Date(),
-  })
+  }
+  if (status === 'canceled') {
+    update['subscription.canceledAt'] = new Date()
+  } else if (!subscription.cancel_at_period_end) {
+    // Active again (e.g. reactivated) — clear any stale cancellation marker.
+    update['subscription.canceledAt'] = null
+  }
+
+  await db.collection('users').doc(firebaseUID).update(update)
 
   logger.info(`Subscription updated for ${firebaseUID} → ${status}`)
 }

@@ -188,8 +188,11 @@ function SubscriptionContent({
     )
   }
 
-  // --- Canceled (but still active) ---
-  if (status === 'canceled' && isPremium) {
+  // --- Canceled at period end, still within the billing period ---
+  // `isPremium` already requires status 'active', so the scheduled-cancellation
+  // state is identified by the presence of `canceledAt` (set by the
+  // cancelSubscription Cloud Function), not by status === 'canceled'.
+  if (isPremium && canceledAt) {
     return (
       <div className="space-y-4">
         <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/50 dark:bg-amber-950/20">
