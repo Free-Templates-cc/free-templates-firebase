@@ -12,7 +12,7 @@ import { Check, X } from 'lucide-react'
 const plans = [
   {
     name: 'Free',
-    price: { monthly: '$0', yearly: '$0' },
+    price: { monthly: '€0', yearly: '€0' },
     description: 'Get started with free templates.',
     features: [
       { name: 'Browse all templates', included: true },
@@ -25,7 +25,8 @@ const plans = [
   },
   {
     name: 'Premium',
-    price: { monthly: '$12', yearly: '$99' },
+    // Matches the Stripe Price IDs in functions/src/config.ts (EUR): €12.00/month, €96.00/year
+    price: { monthly: '€12', yearly: '€96' },
     description: 'Unlock all premium templates.',
     popular: true,
     features: [

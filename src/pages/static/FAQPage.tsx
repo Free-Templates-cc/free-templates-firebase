@@ -19,7 +19,7 @@ const faqs: FAQ[] = [
   },
   {
     q: 'What does the Premium subscription include?',
-    a: 'Premium members get unlimited access to all premium templates, priority support, and early access to new template releases. Plans start at $12/month or $99/year.',
+    a: 'Premium members get unlimited access to all premium templates, priority support, and early access to new template releases. Plans start at €12/month or €96/year.',
   },
   {
     q: 'Can I use templates for commercial projects?',
