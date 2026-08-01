@@ -7,3 +7,6 @@ coverage/
 *.png
 *.jpg
 *.webp
+# Hand-maintained status doc — prettier's markdown blank-line-after-heading
+# rule would churn the whole file on every commit (see lint-staged).
+TODO.md

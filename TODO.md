@@ -834,3 +834,14 @@ Comprehensive test coverage expansion targeting **100% statement, branch, functi
   - Tests: analytics.test.ts (13), usePageTracking.test.tsx (3), api-firestore.test.ts (9 — new: covers Firestore-mode API dispatch, `VITE_USE_FIREBASE_DATA=true` path). **339/339 tests passing (31 files)**, lint 0/0 (93 files), build clean.
 - **Housekeeping:** `coverage/` removed from git tracking (46 files) + added to `.gitignore` — stops repo churn on every test run.
 - **Remaining blocked (2):** Lighthouse audit (needs deployment), Domain config (needs Firebase project + DNS). Analytics code is live-ready; just needs `VITE_FIREBASE_MEASUREMENT_ID` in `.env` to start tracking.
+
+### 2026-08-01 — Continuous implementation audit
+- **Fix:** `authStore.isPremium` now mirrors the server-side gate in `getDownloadUrl` — premium access requires an unexpired `currentPeriodEnd` in addition to `tier === 'premium'` + `status === 'active'`. Previously a subscriber whose billing period ended (but who hadn't been flipped by the daily cleanup job yet) kept premium UI and passed `PremiumRoute` while the backend correctly rejected downloads with 403.
+  - `src/stores/authStore.ts` — period-end check added.
+  - `src/stores/__tests__/authStore.test.ts` — premium test now includes a future `currentPeriodEnd`; new test: expired `currentPeriodEnd` ⇒ `isPremium === false`.
+- **Fix:** Pricing display now matches what Stripe actually charges. Frontend showed USD (`$12`/`$99`) while `functions/src/config.ts` charges EUR (`€12.00`/`€96.00` per the Stripe Price IDs). Customers were quoted more than they'd be charged (and the wrong currency).
+  - `src/pages/PricingPage.tsx` — `€0`/`€12`/`€96` (yearly aligned to €96, not $99).
+  - `src/pages/static/FAQPage.tsx` — FAQ answer updated to `€12/month or €96/year`.
+  - `e2e/pricing.spec.ts` — toggle test asserts `€12`/`€96`.
+- **Audit verification:** tsc -b clean, oxlint 0/0, 358/358 unit tests passing, fallow audit/health/dead-code/dupes clean (4 security candidates verified as false positives: CF-backed Stripe/Storage URLs + fixed-host function fetch), knip clean.
+- **Still blocked (3):** Lighthouse audit (needs deployment), Domain config (needs Firebase project), OpenSpec CI integration (deferred — interactive mode).
