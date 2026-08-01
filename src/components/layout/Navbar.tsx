@@ -20,6 +20,9 @@ export function Navbar() {
       navigate(`/templates?search=${encodeURIComponent(searchQuery.trim())}`)
       setSearchQuery('')
     }
+    // Close the mobile menu when a search is submitted so it doesn't stay
+    // open over the results page.
+    setMobileMenuOpen(false)
   }
 
   const handleSignOut = async () => {

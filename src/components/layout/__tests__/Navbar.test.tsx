@@ -357,4 +357,23 @@ describe('Navbar', () => {
 
     expect(mockSignOut).toHaveBeenCalledTimes(1)
   })
+
+  it('closes the mobile menu when a search is submitted from the mobile menu', () => {
+    const setMobileMenuOpen = vi.fn()
+    mockUseUIStore.mockReturnValue({
+      isDarkMode: false,
+      toggleDarkMode: vi.fn(),
+      isMobileMenuOpen: true,
+      setMobileMenuOpen,
+    })
+    renderWithRouter(<Navbar />)
+
+    const searchInputs = screen.getAllByPlaceholderText('Search templates...')
+    // Desktop form renders first, mobile form second (both in the DOM in jsdom).
+    expect(searchInputs.length).toBeGreaterThanOrEqual(2)
+    fireEvent.change(searchInputs[1]!, { target: { value: 'react' } })
+    fireEvent.submit(searchInputs[1]!.closest('form')!)
+
+    expect(setMobileMenuOpen).toHaveBeenCalledWith(false)
+  })
 })

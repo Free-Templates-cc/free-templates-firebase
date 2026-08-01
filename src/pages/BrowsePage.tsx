@@ -62,8 +62,9 @@ export function BrowsePage() {
     setSearchParams({})
   }
 
-  const hasFilters =
-    filters.search || filters.category || filters.framework || filters.priceTier !== 'all'
+  const hasFilters = Boolean(
+    filters.search || filters.category || filters.framework || filters.priceTier !== 'all',
+  )
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -280,19 +281,13 @@ export function BrowsePage() {
           ) : data && data.items.length === 0 ? (
             /* Empty state */
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <p className="text-lg font-medium text-gray-900 dark:text-white">
-                No templates found
-              </p>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                Try adjusting your search or filters to find what you're looking for.
-              </p>
-              {hasFilters && (
-                <button onClick={clearFilters} className="mt-4">
-                  <Button variant="outline" size="sm">
-                    Clear all filters
-                  </Button>
-                </button>
-              )}
+              <EmptyState
+                page={page}
+                totalPages={data.totalPages}
+                hasFilters={hasFilters}
+                onGoToFirstPage={() => goToPage(1)}
+                onClearFilters={clearFilters}
+              />
             </div>
           ) : (
             <>
@@ -436,4 +431,60 @@ function generatePageNumbers(current: number, total: number): (number | '...')[]
   }
 
   return pages
+}
+
+interface EmptyStateProps {
+  page: number
+  totalPages: number
+  hasFilters: boolean
+  onGoToFirstPage: () => void
+  onClearFilters: () => void
+}
+
+/**
+ * Empty-state content for the template grid.
+ *
+ * When the requested page is beyond the last one (e.g. a stale deep link to
+ * `?page=99`), offer a way back to the first page instead of a dead end.
+ */
+function EmptyState({
+  page,
+  totalPages,
+  hasFilters,
+  onGoToFirstPage,
+  onClearFilters,
+}: EmptyStateProps) {
+  if (page > totalPages) {
+    return (
+      <>
+        <p className="text-lg font-medium text-gray-900 dark:text-white">
+          Page {page} doesn't exist
+        </p>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          This page is out of range. Head back to the first page to keep browsing.
+        </p>
+        <button onClick={onGoToFirstPage} className="mt-4">
+          <Button variant="outline" size="sm">
+            Go to first page
+          </Button>
+        </button>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <p className="text-lg font-medium text-gray-900 dark:text-white">No templates found</p>
+      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        Try adjusting your search or filters to find what you're looking for.
+      </p>
+      {hasFilters && (
+        <button onClick={onClearFilters} className="mt-4">
+          <Button variant="outline" size="sm">
+            Clear all filters
+          </Button>
+        </button>
+      )}
+    </>
+  )
 }
