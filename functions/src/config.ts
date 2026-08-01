@@ -39,4 +39,3 @@ export type PlanKey = keyof typeof PLANS
 // App
 // ---------------------------------------------------------------------------
 export const APP_CURRENCY = 'eur'
-export const TRIAL_PERIOD_DAYS = 0           // no trial period
