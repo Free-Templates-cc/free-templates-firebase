@@ -9,7 +9,7 @@
 import type { Template, TemplateFilters, Download } from '../types'
 import { collection, query, where, orderBy, limit, getDocs, addDoc } from 'firebase/firestore'
 import type { QueryConstraint, Timestamp } from 'firebase/firestore'
-import { db } from './firebase'
+import { db, auth } from './firebase'
 
 const USE_FIRESTORE = import.meta.env.VITE_USE_FIREBASE_DATA === 'true'
 
@@ -1015,11 +1015,30 @@ interface FunctionResponse<T> {
   error?: string
 }
 
+/**
+ * Resolve the current user's Firebase ID token, or null when signed out or
+ * the token cannot be obtained. The token is sent to the Cloud Functions so
+ * they can verify the caller instead of trusting the uid in the payload
+ * (a body-supplied uid would let anyone act on another user's subscription).
+ */
+async function getCurrentIdToken(): Promise<string | null> {
+  try {
+    const user = auth.currentUser
+    return user ? await user.getIdToken() : null
+  } catch {
+    return null
+  }
+}
+
 async function callFunction<T>(name: string, payload: Record<string, unknown>): Promise<T> {
   const url = getFunctionUrl(name)
+  const token = await getCurrentIdToken()
   const res = await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
     body: JSON.stringify(payload),
   })
 

@@ -93,15 +93,16 @@ function SubscriptionBadge({ status, isPremium }: { status?: string; isPremium: 
 
 function SubscriptionContent({
   profile,
+  status,
   isPremium,
   userUid,
 }: {
   profile: UserProfile | null
+  status: string | undefined
   isPremium: boolean
   userUid: string | undefined
 }) {
   const sub = profile?.subscription
-  const status = sub?.status
   const periodEnd = formatDate(sub?.currentPeriodEnd)
   const canceledAt = formatDate(sub?.canceledAt)
 
@@ -151,7 +152,10 @@ function SubscriptionContent({
     }
   }
 
-  // --- Past Due ---
+  // --- Past Due (grace period still running) ---
+  // `status` is normalized by the parent: a past_due subscription whose
+  // billing period has ended is treated as canceled, so this branch only
+  // renders while the Stripe grace period is actually active.
   if (status === 'past_due') {
     return (
       <div className="space-y-4">
@@ -179,11 +183,9 @@ function SubscriptionContent({
             Update Payment Method
           </Button>
         </div>
-        {isInGracePeriod(profile) && (
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            You still have full access during the grace period.
-          </p>
-        )}
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          You still have full access during the grace period.
+        </p>
       </div>
     )
   }
@@ -294,6 +296,14 @@ export function AccountPage() {
   const { user, profile, isLoading, isPremium } = useAuthStore()
   const location = useLocation()
 
+  // Normalize the subscription status for display: a `past_due` subscription
+  // whose billing period has ended has no grace period left (the daily
+  // cleanup job will flip it to `canceled`), so treat it as canceled right
+  // away. This keeps the badge and the content below coherent — the "Payment
+  // Issue" state only renders while the Stripe grace period is active.
+  const rawStatus = profile?.subscription?.status
+  const subStatus = rawStatus === 'past_due' && !isInGracePeriod(profile) ? 'canceled' : rawStatus
+
   // Change password state
   const [showPasswordForm, setShowPasswordForm] = useState(false)
   const [currentPassword, setCurrentPassword] = useState('')
@@ -397,11 +407,16 @@ export function AccountPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <h2 className="font-semibold text-gray-900 dark:text-white">Subscription</h2>
-              <SubscriptionBadge status={profile?.subscription?.status} isPremium={isPremium} />
+              <SubscriptionBadge status={subStatus} isPremium={isPremium} />
             </div>
           </CardHeader>
           <CardContent>
-            <SubscriptionContent profile={profile} isPremium={isPremium} userUid={user?.uid} />
+            <SubscriptionContent
+              profile={profile}
+              status={subStatus}
+              isPremium={isPremium}
+              userUid={user?.uid}
+            />
           </CardContent>
         </Card>
 
