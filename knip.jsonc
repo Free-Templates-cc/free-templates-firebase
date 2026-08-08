@@ -1,10 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  // functions/ is a separate Firebase Cloud Functions deployable: it has its own
-  // package.json, tsc build (main: lib/index.js) and `firebase deploy` flow, and
-  // is intentionally not reachable from the Vite app entry points. Excluded here
-  // so knip does not report its files/exports as unused by the web app.
-  "ignore": ["functions/**"],
   // @fission-ai/openspec is invoked as a CLI by the OpenSpec agent commands in
   // .opencode/commands + skills (no package.json script references it, so knip
   // cannot see the usage).
